@@ -2,1542 +2,1014 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ArtFrame — Android TV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>ArtFrame — Galerie d'Art</title>
   <style>
     :root {
-      --bg:       oklch(8% 0.003 95);
-      --surface:  oklch(14% 0.005 95);
-      --fg:       oklch(92% 0.003 95);
-      --muted:    oklch(55% 0.012 95);
-      --border:   oklch(22% 0.008 95);
-      --accent:   oklch(70% 0.13 85);
+      --bg: oklch(8% 0.003 95);
+      --surface: oklch(14% 0.005 95);
+      --surface2: oklch(18% 0.006 95);
+      --fg: oklch(92% 0.003 95);
+      --muted: oklch(55% 0.012 95);
+      --border: oklch(22% 0.008 95);
+      --accent: oklch(70% 0.13 85);
       --accent-dim: oklch(55% 0.08 85);
-      --danger:   oklch(58% 0.19 25);
-      --success:  oklch(62% 0.14 160);
-      --font-display: 'Georgia', 'Iowan Old Style', 'Times New Roman', serif;
+      --font-display: 'Georgia', 'Iowan Old Style', serif;
       --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
+      --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); font-family:var(--font-body); color:var(--fg); -webkit-font-smoothing:antialiased; user-select:none; }
+    body { display:flex; align-items:center; justify-content:center; }
 
-    html, body {
-      width: 100%; height: 100%; overflow: hidden;
-      background: var(--bg);
-      font-family: var(--font-body);
-      color: var(--fg);
-      -webkit-font-smoothing: antialiased;
-      user-select: none;
-    }
+    .tv-frame { width:1920px; height:1080px; position:relative; overflow:hidden; background:var(--bg); transform-origin:top left; }
+    @media (max-width:1920px),(max-height:1080px) { .tv-frame { transform:scale(calc(min(100vw/1920,100vh/1080))); } }
 
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    /* ============ ART MODE ============ */
+    .art-mode { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:var(--bg); z-index:1; }
+    .artwork { position:absolute; inset:0; transition:opacity 0.9s cubic-bezier(0.4,0,0.2,1); background-size:contain; background-position:center; background-repeat:no-repeat; }
+    .artwork.fading { opacity:0; }
+    .vignette-overlay { position:absolute; inset:0; pointer-events:none; z-index:1; background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%); }
+    .frame-overlay { position:absolute; inset:0; pointer-events:none; z-index:2; transition:all 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .canvas-texture { position:absolute; inset:0; pointer-events:none; z-index:3; opacity:0; transition:opacity 0.6s;
+      background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(180,160,130,0.03) 2px,rgba(180,160,130,0.03) 3px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(160,140,110,0.02) 3px,rgba(160,140,110,0.02) 4px); }
+    .canvas-texture.on { opacity:1; }
+    .ambient-filter { position:absolute; inset:0; pointer-events:none; z-index:4; transition:opacity 0.5s; }
+    .artwork-info { position:absolute; bottom:28px; right:28px; z-index:6; text-align:right; opacity:0; transition:opacity 0.5s; }
+    .artwork-info.visible { opacity:1; }
+    .artwork-info .art-title { font-family:var(--font-display); font-size:18px; letter-spacing:0.02em; color:var(--fg); text-shadow:0 2px 12px rgba(0,0,0,0.6); }
+    .artwork-info .art-artist { font-size:14px; letter-spacing:0.04em; color:var(--muted); text-shadow:0 2px 8px rgba(0,0,0,0.4); }
+    .timer-indicator { position:absolute; bottom:28px; left:28px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; color:oklch(35% 0.006 95); z-index:6; opacity:0; transition:opacity 0.5s; }
+    .timer-indicator.visible { opacity:1; }
+    .count-badge { position:absolute; top:20px; left:20px; z-index:6; font-family:var(--font-mono); font-size:12px; color:var(--muted); opacity:0; transition:opacity 0.5s; background:rgba(0,0,0,0.5); padding:6px 14px; border-radius:8px; }
+    .count-badge.visible { opacity:1; }
 
-    .tv-frame {
-      width: 1920px; height: 1080px;
-      position: relative;
-      overflow: hidden;
-      background: var(--bg);
-      transform-origin: top left;
-    }
+    /* ============ GALLERY BROWSER ============ */
+    .gallery-browser { position:absolute; inset:0; z-index:10; background:var(--bg); display:flex; flex-direction:column; overflow:hidden; }
+    .gallery-browser.hidden { display:none; }
 
-    /* === ART MODE === */
+    .gb-header { padding:28px 40px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .gb-header h1 { font-family:var(--font-display); font-size:32px; letter-spacing:-0.01em; font-weight:400; }
+    .gb-header .gb-count { font-size:14px; color:var(--muted); font-family:var(--font-mono); }
+    .gb-header-actions { display:flex; gap:16px; align-items:center; }
+    .btn-primary {
+      padding:12px 36px; border-radius:10px; border:1.5px solid var(--accent); background:var(--accent); color:var(--bg);
+      font-family:var(--font-body); font-size:16px; letter-spacing:0.04em; cursor:pointer; transition:all 0.2s;
+    }
+    .btn-primary:hover,.btn-primary.dpad-focused { background:transparent; color:var(--accent); }
+    .btn-secondary {
+      padding:10px 24px; border-radius:8px; border:1.5px solid var(--border); background:transparent; color:var(--fg);
+      font-family:var(--font-body); font-size:14px; cursor:pointer; transition:all 0.2s;
+    }
+    .btn-secondary:hover,.btn-secondary.dpad-focused { border-color:var(--accent); color:var(--accent); }
 
-    .art-mode {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg);
-      z-index: 1;
+    .gb-filters { display:flex; gap:8px; padding:16px 40px; flex-wrap:wrap; border-bottom:1px solid var(--border); flex-shrink:0; overflow-x:auto; }
+    .filter-chip {
+      padding:8px 18px; border-radius:20px; border:1.5px solid var(--border); background:transparent; color:var(--muted);
+      font-family:var(--font-body); font-size:13px; cursor:pointer; transition:all 0.2s; white-space:nowrap;
     }
+    .filter-chip:hover,.filter-chip.dpad-focused { border-color:var(--accent); color:var(--fg); }
+    .filter-chip.active { border-color:var(--accent); color:var(--accent); background:rgba(255,255,255,0.04); }
 
-    .artwork {
-      position: absolute;
-      inset: 0;
-      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-      background-size: cover;
-      background-position: center;
+    .gb-grid { flex:1; overflow-y:auto; padding:20px 40px 40px; display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; }
+    .gb-item {
+      border-radius:8px; overflow:hidden; cursor:pointer; border:2px solid var(--border); transition:all 0.2s;
+      background:var(--surface); position:relative; aspect-ratio:4/3; display:flex; flex-direction:column;
     }
-    .artwork.fading { opacity: 0; }
+    .gb-item:hover,.gb-item.dpad-focused { border-color:var(--accent); transform:translateY(-2px); }
+    .gb-item.active { border-color:var(--accent); }
+    .gb-item .gb-thumb { flex:1; background-size:cover; background-position:center; min-height:0; }
+    .gb-item .gb-label { padding:6px 8px; font-size:11px; line-height:1.3; background:var(--surface2); }
+    .gb-item .gb-label .gb-title { font-weight:500; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .gb-item .gb-label .gb-artist { color:var(--muted); font-size:10px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .gb-item .gb-check {
+      position:absolute; top:6px; right:6px; width:22px; height:22px; border-radius:50%; border:2px solid rgba(255,255,255,0.4);
+      background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; font-size:12px; color:transparent;
+    }
+    .gb-item.active .gb-check { border-color:var(--accent); background:var(--accent); color:var(--bg); }
 
-    .vignette-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-      background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%);
+    /* ============ SETTINGS BAR ============ */
+    .settings-bar {
+      position:absolute; bottom:0; left:0; right:0; height:140px; background:linear-gradient(to top, rgba(8,7,5,0.97), transparent);
+      z-index:20; display:flex; align-items:flex-end; justify-content:center; padding-bottom:28px; gap:60px;
+      transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
     }
+    .settings-bar.visible { transform:translateY(0); }
+    .settings-bar .sb-item {
+      display:flex; flex-direction:column; align-items:center; gap:10px; cursor:pointer; padding:8px 16px; border-radius:10px;
+      border:2px solid transparent; background:none; color:var(--fg); font-family:var(--font-body); font-size:13px; transition:all 0.2s; min-width:100px;
+    }
+    .settings-bar .sb-item:hover,.settings-bar .sb-item.dpad-focused { border-color:var(--accent); background:rgba(255,255,255,0.04); }
+    .settings-bar .sb-item .sb-icon { width:36px;height:36px;display:grid;place-items:center; border-radius:50%; background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.08); }
+    .settings-bar .sb-item.dpad-focused .sb-icon { background:rgba(255,255,255,0.10); border-color:var(--accent); }
+    .settings-bar .sb-item svg { width:18px;height:18px;stroke:var(--fg);stroke-width:1.6;fill:none; }
+    .settings-bar .sb-item.dpad-focused svg { stroke:var(--accent); }
+    .settings-bar .sb-item span { opacity:0.7; }
+    .settings-bar .sb-item.dpad-focused span { opacity:1; color:var(--accent); }
 
-    .matte-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 2;
-      transition: box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    /* ============ SIDEBAR ============ */
+    .sidebar-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.5); z-index:30; opacity:0; pointer-events:none; transition:opacity 0.35s; }
+    .sidebar-overlay.open { opacity:1; pointer-events:auto; }
+    .sidebar { position:absolute; top:0; right:0; bottom:0; width:520px; background:var(--surface); border-left:1px solid var(--border); z-index:31;
+      transform:translateX(100%); transition:transform 0.4s cubic-bezier(0.22,1,0.36,1); display:flex; flex-direction:column; overflow:hidden; }
+    .sidebar.open { transform:translateX(0); }
+    .sidebar-header { padding:28px 32px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .sidebar-header h2 { font-family:var(--font-display); font-size:24px; font-weight:400; }
+    .sidebar-close { width:36px;height:36px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:50%; color:var(--muted); font-size:18px; cursor:pointer; display:grid;place-items:center; }
+    .sidebar-close:hover,.sidebar-close.dpad-focused { border-color:var(--accent); color:var(--accent); }
+    .sidebar-nav { padding:12px 32px; display:flex; flex-direction:column; gap:2px; }
+    .sidebar-nav-item { display:flex;align-items:center;gap:14px;padding:14px 20px;border-radius:8px;cursor:pointer;background:none;border:1.5px solid transparent;color:var(--fg);font-size:15px;transition:all 0.2s;text-align:left;width:100%; }
+    .sidebar-nav-item:hover,.sidebar-nav-item.dpad-focused { background:rgba(255,255,255,0.04); border-color:var(--border); }
+    .sidebar-nav-item .nav-label { flex:1;font-weight:450; }
+    .sidebar-nav-item .nav-value { font-family:var(--font-mono);font-size:12px;color:var(--muted); }
+    .sidebar-nav-item .nav-arrow { color:var(--muted);font-size:12px; }
+    .sidebar-content { flex:1; overflow-y:auto; padding:0 32px 32px; }
+    .sub-screen { display:none; flex-direction:column; gap:24px; padding-top:16px; }
+    .sub-screen.active { display:flex; }
+    .sub-screen h3 { font-family:var(--font-mono); font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted); }
+    .option-group { display:flex; flex-direction:column; gap:10px; }
+    .option-group label { font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--font-mono); }
+    .option-row { display:flex; gap:10px; }
+    .option-chip { flex:1;padding:12px 16px;border-radius:8px;border:1.5px solid var(--border);background:rgba(255,255,255,0.02);color:var(--fg);font-size:14px;cursor:pointer;text-align:center;transition:all 0.2s;display:flex;flex-direction:column;gap:4px;align-items:center; }
+    .option-chip small { font-size:10px;color:var(--muted); }
+    .option-chip:hover,.option-chip.dpad-focused { border-color:var(--accent);background:rgba(255,255,255,0.04); }
+    .option-chip.selected { border-color:var(--accent);background:rgba(255,255,255,0.06); }
+    .color-swatch-row { display:flex; gap:14px; }
+    .color-swatch { width:44px;height:44px;border-radius:8px;border:2px solid transparent;cursor:pointer;transition:all 0.2s; }
+    .color-swatch:hover,.color-swatch.dpad-focused { border-color:var(--accent); transform:scale(1.08); }
+    .color-swatch.selected { border-color:var(--fg); }
+    .slider-row { display:flex;flex-direction:column;gap:8px; }
+    .slider-row .slider-label { display:flex;justify-content:space-between; }
+    .slider-row .slider-label span:last-child { font-family:var(--font-mono);font-size:11px;color:var(--muted); }
+    input[type="range"] { -webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;background:var(--border);outline:none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);border:2px solid var(--surface);cursor:pointer;box-shadow:0 0 10px rgba(0,0,0,0.4); }
+    .toggle-switch { width:44px;height:26px;border-radius:13px;background:var(--border);cursor:pointer;position:relative;transition:background 0.2s;border:none; flex-shrink:0; }
+    .toggle-switch.on { background:var(--accent-dim); }
+    .toggle-switch::after { content:''; position:absolute; top:3px; left:3px; width:20px;height:20px; border-radius:50%; background:#fff; transition:transform 0.2s; }
+    .toggle-switch.on::after { transform:translateX(18px); }
+    .frame-option { width:64px;height:48px;border-radius:6px;border:2px solid var(--border);cursor:pointer;transition:all 0.2s;overflow:hidden; }
+    .frame-option.dpad-focused { border-color:var(--accent);transform:scale(1.05); }
+    .frame-option.selected { border-color:var(--fg); }
+    .toggle-row { display:flex;align-items:center;justify-content:space-between;padding:12px 0; }
+    .toggle-row span { font-size:14px; }
+    .gb-item .gallery-badge { position:absolute;top:6px;left:6px;padding:2px 8px;border-radius:4px;font-size:9px;background:rgba(0,0,0,0.6);color:var(--muted); }
 
-    .canvas-texture {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 3;
-      opacity: 0;
-      transition: opacity 0.6s;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(180,160,130,0.03) 2px, rgba(180,160,130,0.03) 3px),
-        repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(160,140,110,0.02) 3px, rgba(160,140,110,0.02) 4px);
-    }
-    .canvas-texture.on { opacity: 1; }
+    /* ============ AUTH ============ */
+    .auth-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.85); z-index:40; display:flex;align-items:center;justify-content:center; opacity:0;pointer-events:none;transition:opacity 0.4s; }
+    .auth-overlay.open { opacity:1;pointer-events:auto; }
+    .auth-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:48px 64px; text-align:center; max-width:560px; display:flex;flex-direction:column;align-items:center; gap:24px; }
+    .auth-card h2 { font-family:var(--font-display);font-size:28px;font-weight:400; }
+    .auth-card p { font-size:14px;line-height:1.6;color:var(--muted);max-width:400px; }
+    .auth-code-display { font-family:var(--font-mono);font-size:36px;letter-spacing:0.12em;color:var(--accent);background:rgba(255,255,255,0.03);border:1.5px solid var(--border);border-radius:10px;padding:12px 32px; }
+    .auth-url { font-family:var(--font-mono);font-size:13px;color:var(--muted); }
+    .auth-btn { padding:14px 40px;border-radius:8px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:15px;cursor:pointer; }
+    .auth-btn:hover,.auth-btn.dpad-focused { background:var(--accent);color:var(--bg); }
+    .auth-btn.secondary { border-color:var(--border);color:var(--muted); }
 
-    .ambient-filter {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 4;
-      transition: opacity 0.5s;
-    }
+    /* ============ FOCUS ============ */
+    :focus-visible { box-shadow:0 0 0 3px var(--accent),0 0 14px 2px var(--accent-dim); outline:none; }
+    .dpad-focused { border-color:var(--accent)!important; box-shadow:0 0 0 3px var(--accent),0 0 18px 3px var(--accent-dim); outline:none; }
+    .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
 
-    .pixel-shift-indicator {
-      position: absolute;
-      top: 16px; right: 20px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      color: oklch(40% 0.006 95);
-      z-index: 5;
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
+    /* Loading */
+    .loading-screen { position:absolute; inset:0; z-index:100; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:24px; transition:opacity 0.6s; }
+    .loading-screen.done { opacity:0;pointer-events:none; }
+    .loading-screen .spinner { width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .loading-screen p { color:var(--muted); font-size:14px; }
 
-    /* === BOTTOM MENU === */
+    /* Animations */
+    @keyframes art-appear { 0%{filter:brightness(0.4)saturate(0.3);transform:scale(1.04)} 100%{filter:brightness(1)saturate(1);transform:scale(1)} }
+    .artwork.launching { animation:art-appear 2.2s cubic-bezier(0.22,1,0.36,1) forwards; }
 
-    .bottom-menu {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 200px;
-      background: linear-gradient(to bottom, transparent, rgba(8,7,5,0.97) 40%);
-      z-index: 10;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 48px;
-      gap: 80px;
-      transform: translateY(100%);
-      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .bottom-menu.visible { transform: translateY(0); }
-
-    .menu-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      cursor: pointer;
-      padding: 12px 24px;
-      border-radius: 12px;
-      transition: all 0.2s;
-      border: 2px solid transparent;
-      background: none;
-      color: var(--fg);
-      font-family: var(--font-body);
-      font-size: 15px;
-      letter-spacing: 0.02em;
-      min-width: 140px;
-    }
-    .menu-item:hover,
-    .menu-item:focus,
-    .menu-item.focused {
-      border-color: var(--accent);
-      background: rgba(255,255,255,0.04);
-    }
-    .menu-item .menu-icon {
-      width: 44px; height: 44px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.06);
-      border: 1.5px solid rgba(255,255,255,0.08);
-      transition: all 0.2s;
-    }
-    .menu-item.focused .menu-icon {
-      background: rgba(255,255,255,0.10);
-      border-color: var(--accent);
-    }
-    .menu-item .menu-icon svg {
-      width: 22px; height: 22px;
-      stroke: var(--fg);
-      stroke-width: 1.6;
-      fill: none;
-    }
-    .menu-item.focused .menu-icon svg { stroke: var(--accent); }
-    .menu-item span { opacity: 0.7; transition: opacity 0.2s; }
-    .menu-item.focused span { opacity: 1; color: var(--accent); }
-
-    /* === SIDEBAR === */
-
-    .sidebar-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 20;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s;
-    }
-    .sidebar-overlay.open { opacity: 1; pointer-events: auto; }
-
-    .sidebar {
-      position: absolute;
-      top: 0; right: 0; bottom: 0;
-      width: 560px;
-      background: var(--surface);
-      border-left: 1px solid var(--border);
-      z-index: 21;
-      transform: translateX(100%);
-      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .sidebar.open { transform: translateX(0); }
-
-    .sidebar-header {
-      padding: 40px 48px 24px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .sidebar-header h2 {
-      font-family: var(--font-display);
-      font-size: 28px;
-      letter-spacing: -0.01em;
-      font-weight: 400;
-    }
-    .sidebar-close {
-      width: 40px; height: 40px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      color: var(--muted);
-      font-size: 20px;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      transition: all 0.2s;
-    }
-    .sidebar-close:hover, .sidebar-close.focused {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(255,255,255,0.08);
-    }
-
-    .sidebar-nav {
-      padding: 20px 48px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .sidebar-nav-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 18px 24px;
-      border-radius: 10px;
-      cursor: pointer;
-      background: none;
-      border: 1.5px solid transparent;
-      color: var(--fg);
-      font-family: var(--font-body);
-      font-size: 16px;
-      letter-spacing: 0.02em;
-      transition: all 0.2s;
-      text-align: left;
-      width: 100%;
-    }
-    .sidebar-nav-item:hover,
-    .sidebar-nav-item.focused {
-      background: rgba(255,255,255,0.04);
-      border-color: var(--border);
-    }
-    .sidebar-nav-item .nav-label {
-      flex: 1;
-      font-weight: 450;
-    }
-    .sidebar-nav-item .nav-value {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      letter-spacing: 0.04em;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-    .sidebar-nav-item .nav-arrow {
-      color: var(--muted);
-      font-size: 14px;
-      letter-spacing: 0.1em;
-    }
-
-    .sidebar-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0 48px 48px;
-    }
-
-    /* === SUB-SCREENS inside sidebar === */
-
-    .sub-screen {
-      display: none;
-      flex-direction: column;
-      gap: 32px;
-      padding-top: 24px;
-    }
-    .sub-screen.active { display: flex; }
-
-    .sub-screen h3 {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-    }
-
-    .option-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .option-group label {
-      font-size: 14px;
-      letter-spacing: 0.02em;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-family: var(--font-mono);
-      font-size: 11px;
-    }
-
-    .option-row {
-      display: flex;
-      gap: 12px;
-    }
-
-    .option-chip {
-      flex: 1;
-      padding: 16px 20px;
-      border-radius: 10px;
-      border: 1.5px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      color: var(--fg);
-      font-family: var(--font-body);
-      font-size: 15px;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      align-items: center;
-    }
-    .option-chip small {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-    }
-    .option-chip:hover, .option-chip.focused {
-      border-color: var(--accent);
-      background: rgba(255,255,255,0.04);
-    }
-    .option-chip.selected {
-      border-color: var(--accent);
-      background: rgba(255,255,255,0.06);
-    }
-
-    .color-swatch-row {
-      display: flex;
-      gap: 16px;
-    }
-    .color-swatch {
-      width: 52px; height: 52px;
-      border-radius: 10px;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-    }
-    .color-swatch:hover, .color-swatch.focused {
-      border-color: var(--accent);
-      transform: scale(1.08);
-    }
-    .color-swatch.selected { border-color: var(--fg); }
-
-    .slider-group {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-    .slider-row {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .slider-row .slider-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .slider-row .slider-label label,
-    .slider-row .slider-label span:first-child {
-      font-size: 14px;
-      letter-spacing: 0.02em;
-    }
-    .slider-row .slider-label span:last-child {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      color: var(--muted);
-    }
-
-    input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 6px;
-      border-radius: 3px;
-      background: var(--border);
-      outline: none;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 24px; height: 24px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: 2px solid var(--surface);
-      cursor: pointer;
-      box-shadow: 0 0 12px rgba(0,0,0,0.4);
-    }
-
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 0;
-    }
-    .toggle-row span {
-      font-size: 14px;
-      letter-spacing: 0.02em;
-    }
-    .toggle-switch {
-      width: 52px; height: 30px;
-      border-radius: 15px;
-      background: var(--border);
-      cursor: pointer;
-      position: relative;
-      transition: background 0.2s;
-      border: none;
-    }
-    .toggle-switch.on { background: var(--accent-dim); }
-    .toggle-switch::after {
-      content: '';
-      position: absolute;
-      top: 4px; left: 4px;
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      background: #fff;
-      transition: transform 0.2s;
-    }
-    .toggle-switch.on::after { transform: translateX(22px); }
-    .toggle-switch:focus { box-shadow: 0 0 0 2px var(--accent); }
-
-    /* === GOOGLE AUTH OVERLAY === */
-
-    .auth-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 30;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s;
-    }
-    .auth-overlay.open { opacity: 1; pointer-events: auto; }
-
-    .auth-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 64px 80px;
-      text-align: center;
-      max-width: 640px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 32px;
-    }
-    .auth-card h2 {
-      font-family: var(--font-display);
-      font-size: 32px;
-      letter-spacing: -0.01em;
-      font-weight: 400;
-    }
-    .auth-card p {
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--muted);
-      max-width: 440px;
-    }
-
-    .qr-code {
-      width: 200px; height: 200px;
-      background: #fff;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .qr-code svg { width: 180px; height: 180px; }
-
-    .auth-code-display {
-      font-family: var(--font-mono);
-      font-size: 42px;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      background: rgba(255,255,255,0.03);
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 40px;
-    }
-    .auth-code-display.focused {
-      border-color: var(--accent);
-    }
-
-    .auth-url {
-      font-family: var(--font-mono);
-      font-size: 14px;
-      letter-spacing: 0.04em;
-      color: var(--muted);
-    }
-
-    .auth-btn {
-      padding: 16px 48px;
-      border-radius: 10px;
-      border: 1.5px solid var(--accent);
-      background: transparent;
-      color: var(--accent);
-      font-family: var(--font-body);
-      font-size: 16px;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .auth-btn:hover, .auth-btn.focused {
-      background: var(--accent);
-      color: var(--bg);
-    }
-    .auth-btn.secondary {
-      border-color: var(--border);
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* === TIMER indicator === */
-
-    .timer-indicator {
-      position: absolute;
-      bottom: 28px; left: 28px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      color: oklch(35% 0.006 95);
-      z-index: 6;
-      opacity: 0;
-      transition: opacity 0.5s;
-    }
-    .timer-indicator.visible { opacity: 1; }
-
-    /* === FOCUS RING — TV-optimized for 75" at 3m === */
-
-    :focus-visible {
-      box-shadow: 0 0 0 4px var(--accent), 0 0 18px 3px var(--accent-dim);
-      outline: none;
-    }
-    .dpad-focused {
-      border-color: var(--accent) !important;
-      box-shadow: 0 0 0 4px var(--accent), 0 0 22px 4px var(--accent-dim);
-      outline: none;
-    }
-    .dpad-focused .menu-icon {
-      background: rgba(255,255,255,0.14);
-      border-color: var(--accent);
-    }
-    .dpad-focused .menu-icon svg { stroke: var(--accent); }
-    .dpad-focused.menu-item span { opacity: 1; color: var(--accent); }
-    .dpad-focused.option-chip { border-color: var(--accent); background: rgba(255,255,255,0.05); }
-    .dpad-focused.color-swatch { border-color: var(--accent); transform: scale(1.08); }
-    .dpad-focused.gallery-card { border-color: var(--accent); }
-    .dpad-focused.toggle-switch { box-shadow: 0 0 0 4px var(--accent), 0 0 18px 3px var(--accent-dim); }
-    .dpad-focused.auth-btn { background: var(--accent); color: var(--bg); }
-    .dpad-focused.sidebar-close { border-color: var(--accent); color: var(--accent); background: rgba(255,255,255,0.10); }
-
-    /* === GALLERY === */
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .gallery-card {
-      aspect-ratio: 4/3;
-      border-radius: 10px;
-      overflow: hidden;
-      cursor: pointer;
-      border: 2px solid var(--border);
-      transition: all 0.2s;
-      background: var(--bg);
-      position: relative;
-    }
-    .gallery-card:hover, .gallery-card.focused {
-      border-color: var(--accent);
-    }
-    .gallery-card.selected { border-color: var(--fg); }
-    .gallery-card .gc-img {
-      width: 100%; height: 100%;
-      background-size: cover;
-      background-position: center;
-    }
-    .gallery-card .gc-label {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 16px;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-      font-size: 13px;
-      letter-spacing: 0.02em;
-      font-weight: 450;
-    }
-
-    /* === SCREEN-READER ONLY === */
-    .sr-only {
-      position: absolute;
-      width: 1px; height: 1px;
-      padding: 0; margin: -1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-      border: 0;
-    }
-
-    /* === Responsive scale-to-fit === */
-    @media (max-width: 1920px), (max-height: 1080px) {
-      .tv-frame {
-        transform: scale(calc(min(100vw / 1920, 100vh / 1080)));
-      }
-    }
-
-    /* === LAUNCH ANIMATION === */
-    @keyframes art-appear {
-      0%   { filter: brightness(0.4) saturate(0.3); transform: scale(1.04); }
-      100% { filter: brightness(1) saturate(1); transform: scale(1); }
-    }
-    .artwork.launching {
-      animation: art-appear 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .artwork { transition: none; }
-      .artwork.launching { animation: none; filter: brightness(1) saturate(1); transform: none; }
-      .matte-overlay { transition: none; }
-      .bottom-menu { transition: none; }
-      .sidebar { transition: none; }
-      .sidebar-overlay { transition: none; }
-      .auth-overlay { transition: none; }
-      .canvas-texture { transition: none; }
-      .ambient-filter { transition: none; }
-      .pixel-shift-indicator { transition: none; }
-      .timer-indicator { transition: none; }
-      .menu-item, .sidebar-nav-item, .option-chip, .color-swatch,
-      .toggle-switch, .auth-btn, .gallery-card, .sidebar-close { transition: none; }
-      .toggle-switch::after { transition: none; }
-      .color-swatch:hover, .color-swatch.focused { transform: none; }
+    @media (prefers-reduced-motion:reduce) {
+      .artwork,.frame-overlay,.bottom-menu,.sidebar,.sidebar-overlay,.auth-overlay,.canvas-texture,.ambient-filter,
+      .timer-indicator,.menu-item,.sidebar-nav-item,.option-chip,.color-swatch,.toggle-switch,.auth-btn,
+      .gallery-card,.sidebar-close,.gb-item { transition:none!important; }
+      .toggle-switch::after { transition:none; }
+      .color-swatch:hover,.color-swatch.dpad-focused { transform:none; }
+      .artwork.launching { animation:none; }
     }
   </style>
 </head>
 <body>
+<div class="loading-screen" id="loading">
+  <div class="spinner"></div>
+  <p>Chargement de la galerie...</p>
+</div>
 
 <div class="tv-frame" id="tv-frame">
 
-  <!-- ===== ART MODE ===== -->
-  <section class="art-mode" id="art-mode" data-od-id="art-mode-screen">
+  <!-- ART MODE -->
+  <section class="art-mode" id="art-mode">
     <div class="artwork" id="artwork-current"></div>
-    <div class="vignette-overlay" id="vignette-overlay"></div>
-    <div class="matte-overlay" id="matte-overlay"></div>
+    <div class="vignette-overlay"></div>
+    <div class="frame-overlay" id="frame-overlay"></div>
     <div class="canvas-texture" id="canvas-texture"></div>
     <div class="ambient-filter" id="ambient-filter"></div>
-    <div class="pixel-shift-indicator" id="shift-indicator">PIXEL SHIFT ACTIF</div>
-    <div class="timer-indicator" id="timer-indicator">Prochain changement · 14:52</div>
+    <div class="artwork-info" id="artwork-info">
+      <div class="art-title" id="art-title"></div>
+      <div class="art-artist" id="art-artist"></div>
+    </div>
+    <div class="timer-indicator" id="timer-indicator"></div>
+    <div class="count-badge" id="count-badge"></div>
   </section>
 
-  <!-- ===== BOTTOM MENU ===== -->
-  <nav class="bottom-menu" id="bottom-menu" data-od-id="bottom-menu">
-    <button class="menu-item" data-action="gallery" data-od-id="menu-gallery">
-      <div class="menu-icon">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+  <!-- GALLERY BROWSER -->
+  <div class="gallery-browser" id="gallery-browser">
+    <div class="gb-header">
+      <div>
+        <h1>ArtFrame</h1>
+        <div class="gb-count" id="gb-count">Chargement...</div>
       </div>
+      <div class="gb-header-actions">
+        <button class="btn-secondary" id="btn-all">Tout sélectionner</button>
+        <button class="btn-secondary" id="btn-none">Tout désélectionner</button>
+        <button class="btn-primary" id="btn-launch">🚀 Démarrer le diaporama</button>
+      </div>
+    </div>
+    <div class="gb-filters" id="gb-filters"></div>
+    <div class="gb-grid" id="gb-grid"></div>
+  </div>
+
+  <!-- SETTINGS BAR (slideshow mode) -->
+  <nav class="settings-bar" id="settings-bar">
+    <button class="sb-item" data-action="gallery">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
       <span>Galeries</span>
     </button>
-    <button class="menu-item" data-action="matte" data-od-id="menu-matte">
-      <div class="menu-icon">
-        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="0"/><rect x="4" y="6" width="16" height="12" rx="0" fill="currentColor" fill-opacity="0.15"/></svg>
-      </div>
-      <span>Passe-partout</span>
+    <button class="sb-item" data-action="frame">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="0"/><rect x="4" y="6" width="16" height="12" rx="0"/></svg></div>
+      <span>Cadre</span>
     </button>
-    <button class="menu-item" data-action="timer" data-od-id="menu-timer">
-      <div class="menu-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><polyline points="12,9 12,13 15,15"/></svg>
-      </div>
+    <button class="sb-item" data-action="timer">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><polyline points="12,9 12,13 15,15"/></svg></div>
       <span>Minuterie</span>
     </button>
-    <button class="menu-item" data-action="settings" data-od-id="menu-settings">
-      <div class="menu-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v3m0 16v3m-9.9-11.1h3m13.8 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1m11.4-11.4 2.1-2.1"/></svg>
-      </div>
-      <span>Paramètres</span>
+    <button class="sb-item" data-action="display">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v3m0 16v3m-9.9-11.1h3m13.8 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1m11.4-11.4 2.1-2.1"/></svg></div>
+      <span>Affichage</span>
+    </button>
+    <button class="sb-item" data-action="quit-slideshow">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <span>Quitter</span>
     </button>
   </nav>
 
-  <!-- ===== SIDEBAR ===== -->
+  <!-- SIDEBAR -->
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
-  <aside class="sidebar" id="sidebar" data-od-id="settings-sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>Paramètres</h2>
+      <h2 id="sidebar-title">Paramètres</h2>
       <button class="sidebar-close" id="sidebar-close">&times;</button>
     </div>
     <nav class="sidebar-nav" id="sidebar-nav">
-      <button class="sidebar-nav-item" data-sub="matte" data-od-id="nav-matte">
-        <span class="nav-label">Passe-partout</span>
-        <span class="nav-value" id="nav-matte-val">Moyen · Blanc chaud</span>
-        <span class="nav-arrow">›</span>
-      </button>
-      <button class="sidebar-nav-item" data-sub="timer" data-od-id="nav-timer">
-        <span class="nav-label">Minuterie</span>
-        <span class="nav-value" id="nav-timer-val">15 minutes</span>
-        <span class="nav-arrow">›</span>
-      </button>
-      <button class="sidebar-nav-item" data-sub="ambient" data-od-id="nav-ambient">
-        <span class="nav-label">Tonalité ambiante</span>
-        <span class="nav-value" id="nav-ambient-val">Auto</span>
-        <span class="nav-arrow">›</span>
-      </button>
-      <button class="sidebar-nav-item" data-sub="gallery" data-od-id="nav-gallery">
-        <span class="nav-label">Galeries</span>
-        <span class="nav-value" id="nav-gallery-val">Toutes</span>
-        <span class="nav-arrow">›</span>
-      </button>
-      <button class="sidebar-nav-item" data-sub="google" data-od-id="nav-google">
-        <span class="nav-label">Compte Google</span>
-        <span class="nav-value" id="nav-google-val">Non connecté</span>
-        <span class="nav-arrow">›</span>
-      </button>
+      <button class="sidebar-nav-item" data-sub="frame"><span class="nav-label">Cadre</span><span class="nav-value" id="nav-frame-val">Chêne clair</span><span class="nav-arrow">›</span></button>
+      <button class="sidebar-nav-item" data-sub="timer"><span class="nav-label">Minuterie</span><span class="nav-value" id="nav-timer-val">15 min</span><span class="nav-arrow">›</span></button>
+      <button class="sidebar-nav-item" data-sub="ambient"><span class="nav-label">Tonalité ambiante</span><span class="nav-value" id="nav-ambient-val">Auto</span><span class="nav-arrow">›</span></button>
+      <button class="sidebar-nav-item" data-sub="google"><span class="nav-label">Google Photos</span><span class="nav-value" id="nav-google-val">Non connecté</span><span class="nav-arrow">›</span></button>
     </nav>
     <div class="sidebar-content" id="sidebar-content">
-
-      <!-- Matte sub-screen -->
-      <div class="sub-screen" id="sub-matte" data-od-id="sub-matte">
-        <h3>Passe-partout</h3>
-
-        <button class="sidebar-nav-item" data-back style="margin-left:-24px;width:auto;padding:12px 24px;font-size:14px;">
-          <span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span>
-          <span class="nav-label">Retour</span>
-        </button>
-
-        <div class="option-group">
-          <label>Activer le passe-partout</label>
-          <button class="toggle-switch on" id="matte-toggle" data-od-id="matte-toggle"></button>
+      <div class="sub-screen" id="sub-frame">
+        <h3>Style de cadre</h3>
+        <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
+        <div class="frame-selector" id="frame-selector" style="display:flex;flex-wrap:wrap;gap:6px;">
+          <button class="frame-option selected" data-frame="oak" style="background:linear-gradient(135deg,#d4b47c,#a88440);" title="Chêne Clair"></button>
+          <button class="frame-option" data-frame="walnut" style="background:linear-gradient(180deg,#4a3a2a,#2a1a0a);" title="Noyer Ébène"></button>
+          <button class="frame-option" data-frame="gold" style="background:linear-gradient(160deg,#f0c85d,#a8781d);" title="Dorure Baroque"></button>
+          <button class="frame-option" data-frame="aluminum" style="background:linear-gradient(180deg,#d8d8d8,#909090);" title="Aluminium Brossé"></button>
+          <button class="frame-option" data-frame="white" style="background:#f0f0f0;" title="Blanc Mat"></button>
+          <button class="frame-option" data-frame="black" style="background:#1a1a1a;" title="Noir Satiné"></button>
+          <button class="frame-option" data-frame="matte" style="background:#e8e0d8;" title="Passe-partout"></button>
+          <button class="frame-option" data-frame="bevel" style="background:linear-gradient(135deg,#baaa9a,#7a6a5a);" title="Double Biseau"></button>
+          <button class="frame-option" data-frame="loft" style="background:repeating-linear-gradient(0deg,#6a5a4a 0px,#5a4a3a 3px);" title="Industriel"></button>
+          <button class="frame-option" data-frame="floating" style="background:transparent;border:1.5px solid rgba(255,255,255,0.15);" title="Flottant"></button>
         </div>
-
-        <div class="option-group">
-          <label>Largeur du cadre</label>
-          <div class="option-row">
-            <button class="option-chip" data-matte-size="thin" data-od-id="matte-thin">Fin<small>40 px</small></button>
-            <button class="option-chip selected" data-matte-size="medium" data-od-id="matte-medium">Moyen<small>80 px</small></button>
-            <button class="option-chip" data-matte-size="thick" data-od-id="matte-thick">Large<small>140 px</small></button>
-          </div>
-        </div>
-
-        <div class="option-group">
-          <label>Couleur du passe-partout</label>
-          <div class="color-swatch-row">
-            <button class="color-swatch selected" data-matte-color="warm-white" data-od-id="matte-warm-white"
-              style="background:oklch(95% 0.008 90);" title="Blanc chaud"></button>
-            <button class="color-swatch" data-matte-color="anthracite" data-od-id="matte-anthracite"
-              style="background:oklch(28% 0.006 250);" title="Anthracite"></button>
-            <button class="color-swatch" data-matte-color="sand" data-od-id="matte-sand"
-              style="background:oklch(78% 0.04 85);" title="Sable"></button>
-            <button class="color-swatch" data-matte-color="linen" data-od-id="matte-linen"
-              style="background:oklch(88% 0.02 95);" title="Lin"></button>
-          </div>
-        </div>
-
-        <div class="option-group">
-          <label>Effet d'ombre 3D (profondeur)</label>
-          <div class="slider-row">
-            <div class="slider-label">
-              <label for="shadow-slider">Intensité de l'ombre</label>
-              <span id="shadow-val">50%</span>
-            </div>
-            <input type="range" min="0" max="100" value="50" id="shadow-slider" data-od-id="shadow-slider" />
-          </div>
-        </div>
-
-        <div class="option-group">
-          <label>Texture de toile</label>
-          <button class="toggle-switch" id="canvas-toggle" data-od-id="canvas-toggle"></button>
-        </div>
+        <div class="option-group"><label>Taille</label><div class="option-row">
+          <button class="option-chip" data-frame-size="thin">Fin<small>40px</small></button>
+          <button class="option-chip selected" data-frame-size="medium">Moyen<small>80px</small></button>
+          <button class="option-chip" data-frame-size="thick">Large<small>140px</small></button>
+        </div></div>
+        <div class="option-group"><label>Ombre 3D</label><div class="slider-row"><div class="slider-label"><span>Intensité</span><span id="shadow-val">50%</span></div><input type="range" min="0" max="100" value="50" id="shadow-slider"></div></div>
+        <div class="option-group"><div class="toggle-row"><span>Texture de toile</span><button class="toggle-switch" id="canvas-toggle"></button></div></div>
       </div>
-
-      <!-- Timer sub-screen -->
-      <div class="sub-screen" id="sub-timer" data-od-id="sub-timer">
+      <div class="sub-screen" id="sub-timer">
         <h3>Minuterie</h3>
-        <button class="sidebar-nav-item" data-back style="margin-left:-24px;width:auto;padding:12px 24px;font-size:14px;">
-          <span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span>
-          <span class="nav-label">Retour</span>
-        </button>
-        <div class="option-group">
-          <label>Intervalle de changement</label>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <button class="option-chip selected" data-timer="15" data-od-id="timer-15">15 minutes<small>Rotation régulière</small></button>
-            <button class="option-chip" data-timer="20" data-od-id="timer-20">20 minutes<small>Rotation modérée</small></button>
-            <button class="option-chip" data-timer="120" data-od-id="timer-120">2 heures<small>Contemplation</small></button>
-            <button class="option-chip" data-timer="static" data-od-id="timer-static">Statique<small>Changement manuel uniquement</small></button>
-          </div>
-        </div>
+        <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
+        <div class="option-group"><label>Intervalle</label><div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="option-chip selected" data-timer="15">15 min<small>Rotation régulière</small></button>
+          <button class="option-chip" data-timer="30">30 min<small>Rotation modérée</small></button>
+          <button class="option-chip" data-timer="60">1 heure<small>Contemplation</small></button>
+          <button class="option-chip" data-timer="120">2 heures<small>Longue contemplation</small></button>
+          <button class="option-chip" data-timer="static">Statique<small>Manuel uniquement</small></button>
+        </div></div>
       </div>
-
-      <!-- Ambient tone sub-screen -->
-      <div class="sub-screen" id="sub-ambient" data-od-id="sub-ambient">
+      <div class="sub-screen" id="sub-ambient">
         <h3>Tonalité ambiante</h3>
-        <button class="sidebar-nav-item" data-back style="margin-left:-24px;width:auto;padding:12px 24px;font-size:14px;">
-          <span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span>
-          <span class="nav-label">Retour</span>
-        </button>
-        <div class="slider-group">
-          <div class="slider-row">
-            <div class="slider-label">
-              <label for="brightness-slider">Luminosité de l'œuvre</label>
-              <span id="brightness-val">100%</span>
-            </div>
-            <input type="range" min="30" max="100" value="100" id="brightness-slider" data-od-id="brightness-slider" />
-          </div>
-          <div class="slider-row">
-            <div class="slider-label">
-              <label for="temperature-slider">Température des couleurs</label>
-              <span id="temperature-val">Neutre</span>
-            </div>
-            <input type="range" min="0" max="100" value="50" id="temperature-slider" data-od-id="temperature-slider" />
-          </div>
+        <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
+        <div class="slider-row"><div class="slider-label"><span>Luminosité</span><span id="brightness-val">100%</span></div><input type="range" min="30" max="100" value="100" id="brightness-slider"></div>
+        <div class="slider-row"><div class="slider-label"><span>Température</span><span id="temperature-val">Neutre</span></div><input type="range" min="0" max="100" value="50" id="temperature-slider"></div>
+      </div>
+      <div class="sub-screen" id="sub-google">
+        <h3>Google Photos</h3>
+        <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <button class="auth-btn" id="google-connect-btn">Se connecter avec Google</button>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;">Connectez-vous pour synchroniser vos albums Google Photos.</p>
         </div>
       </div>
-
-      <!-- Gallery sub-screen -->
-      <div class="sub-screen" id="sub-gallery" data-od-id="sub-gallery">
-        <h3>Galeries</h3>
-        <button class="sidebar-nav-item" data-back style="margin-left:-24px;width:auto;padding:12px 24px;font-size:14px;">
-          <span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span>
-          <span class="nav-label">Retour</span>
-        </button>
-        <div class="gallery-grid">
-          <button class="gallery-card selected" data-gallery="classic" data-od-id="gallery-classic">
-            <div class="gc-img" style="background:linear-gradient(135deg,oklch(55% 0.06 30),oklch(45% 0.08 250),oklch(60% 0.05 140));"></div>
-            <div class="gc-label">Art Classique &amp; Musées</div>
-          </button>
-          <button class="gallery-card" data-gallery="landscape" data-od-id="gallery-landscape">
-            <div class="gc-img" style="background:linear-gradient(180deg,oklch(65% 0.08 240),oklch(50% 0.09 160),oklch(40% 0.04 90));"></div>
-            <div class="gc-label">Paysages &amp; Nature</div>
-          </button>
-          <button class="gallery-card" data-gallery="photos" data-od-id="gallery-photos">
-            <div class="gc-img" style="background:linear-gradient(135deg,oklch(60% 0.06 280),oklch(55% 0.05 200),oklch(65% 0.04 100));"></div>
-            <div class="gc-label">Google Photos</div>
-          </button>
-        </div>
-      </div>
-
-      <!-- Google Auth sub-screen -->
-      <div class="sub-screen" id="sub-google" data-od-id="sub-google">
-        <h3>Compte Google</h3>
-        <button class="sidebar-nav-item" data-back style="margin-left:-24px;width:auto;padding:12px 24px;font-size:14px;">
-          <span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span>
-          <span class="nav-label">Retour</span>
-        </button>
-        <div style="display:flex;flex-direction:column;gap:16px;">
-          <button class="auth-btn" id="google-connect-btn" data-od-id="google-connect-btn">Se connecter avec Google</button>
-          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Connectez-vous pour synchroniser vos albums Google Photos et les afficher en plein écran sur votre téléviseur.</p>
-        </div>
-      </div>
-
     </div>
   </aside>
 
-  <!-- ===== GOOGLE AUTH OVERLAY ===== -->
+  <!-- AUTH OVERLAY -->
   <div class="auth-overlay" id="auth-overlay">
     <div class="auth-card">
-      <h2 data-od-id="auth-title">Connexion Google</h2>
-      <p>Scannez le QR code avec votre smartphone ou saisissez le code ci-dessous sur <strong>google.com/device</strong></p>
-
-      <div class="qr-code" id="qr-code">
-        <svg viewBox="0 0 180 180">
-          <rect width="180" height="180" fill="white"/>
-          <g fill="black">
-            <rect x="20" y="20" width="40" height="40" rx="4"/>
-            <rect x="120" y="20" width="40" height="40" rx="4"/>
-            <rect x="20" y="120" width="40" height="40" rx="4"/>
-            <rect x="72" y="32" width="8" height="8" rx="2"/>
-            <rect x="88" y="32" width="8" height="8" rx="2"/>
-            <rect x="104" y="32" width="8" height="8" rx="2"/>
-            <rect x="72" y="48" width="8" height="8" rx="2"/>
-            <rect x="88" y="48" width="8" height="8" rx="2"/>
-            <rect x="104" y="48" width="8" height="8" rx="2"/>
-            <rect x="32" y="72" width="8" height="8" rx="2"/>
-            <rect x="48" y="72" width="8" height="8" rx="2"/>
-            <rect x="64" y="72" width="8" height="8" rx="2"/>
-            <rect x="88" y="72" width="8" height="8" rx="2"/>
-            <rect x="104" y="72" width="8" height="8" rx="2"/>
-            <rect x="120" y="72" width="8" height="8" rx="2"/>
-            <rect x="136" y="72" width="8" height="8" rx="2"/>
-            <rect x="32" y="88" width="8" height="8" rx="2"/>
-            <rect x="48" y="88" width="8" height="8" rx="2"/>
-            <rect x="72" y="88" width="8" height="8" rx="2"/>
-            <rect x="88" y="88" width="8" height="8" rx="2"/>
-            <rect x="104" y="88" width="8" height="8" rx="2"/>
-            <rect x="120" y="88" width="8" height="8" rx="2"/>
-            <rect x="136" y="88" width="8" height="8" rx="2"/>
-            <rect x="32" y="104" width="8" height="8" rx="2"/>
-            <rect x="48" y="104" width="8" height="8" rx="2"/>
-            <rect x="64" y="104" width="8" height="8" rx="2"/>
-            <rect x="88" y="104" width="8" height="8" rx="2"/>
-            <rect x="104" y="104" width="8" height="8" rx="2"/>
-            <rect x="120" y="104" width="8" height="8" rx="2"/>
-            <rect x="32" y="128" width="8" height="8" rx="2"/>
-            <rect x="48" y="128" width="8" height="8" rx="2"/>
-            <rect x="64" y="128" width="8" height="8" rx="2"/>
-            <rect x="88" y="128" width="8" height="8" rx="2"/>
-            <rect x="104" y="128" width="8" height="8" rx="2"/>
-            <rect x="120" y="128" width="8" height="8" rx="2"/>
-            <rect x="136" y="128" width="8" height="8" rx="2"/>
-            <rect x="44" y="144" width="8" height="8" rx="2"/>
-            <rect x="60" y="144" width="8" height="8" rx="2"/>
-            <rect x="76" y="144" width="8" height="8" rx="2"/>
-            <rect x="92" y="144" width="8" height="8" rx="2"/>
-            <rect x="120" y="144" width="8" height="8" rx="2"/>
-            <rect x="140" y="144" width="8" height="8" rx="2"/>
-          </g>
-        </svg>
-      </div>
-
-      <div class="auth-code-display" tabindex="-1" data-od-id="auth-code">G4X7-K2M9-PQ</div>
+      <h2>Connexion Google</h2>
+      <p>Scannez le QR code ou saisissez le code sur <strong>google.com/device</strong></p>
+      <div class="auth-code-display" id="auth-code">---</div>
       <div class="auth-url">google.com/device</div>
-
-      <button class="auth-btn secondary" data-back id="auth-back" data-od-id="auth-back-btn">Annuler</button>
+      <button class="auth-btn secondary" data-back id="auth-back">Annuler</button>
     </div>
   </div>
-
 </div>
 
 <script>
-(function() {
+(function(){
   'use strict';
 
-  // Artwork data — complex CSS-generated paintings
-  // Each artwork uses layered gradients, radial highlights, and texture
-  var artworks = [
-    {
-      name: 'Nuit étoilée',
-      gallery: 'classic',
-      bg: 'radial-gradient(ellipse 140% 80% at 25% 35%, oklch(55% 0.14 260) 0%, oklch(30% 0.08 258) 30%, oklch(15% 0.05 265) 55%, oklch(6% 0.03 270) 100%),' +
-         'radial-gradient(ellipse 60% 50% at 70% 50%, oklch(62% 0.12 80) 0%, transparent 70%),' +
-         'radial-gradient(circle 8% at 28% 32%, oklch(80% 0.13 85) 0%, transparent 100%),' +
-         'radial-gradient(circle 5% at 72% 48%, oklch(75% 0.12 70) 0%, transparent 100%),' +
-         'linear-gradient(180deg, oklch(20% 0.06 260), oklch(10% 0.03 270))'
-    },
-    {
-      name: 'Les nymphéas',
-      gallery: 'classic',
-      bg: 'radial-gradient(ellipse 90% 60% at 50% 55%, oklch(58% 0.10 180) 0%, oklch(48% 0.08 170) 35%, oklch(40% 0.06 160) 100%),' +
-         'radial-gradient(circle 12% at 30% 45%, oklch(80% 0.08 140) 0%, transparent 100%),' +
-         'radial-gradient(circle 10% at 65% 52%, oklch(78% 0.09 155) 0%, transparent 100%),' +
-         'radial-gradient(circle 8% at 45% 40%, oklch(75% 0.10 130) 0%, transparent 100%),' +
-         'repeating-linear-gradient(160deg, transparent, transparent 8px, oklch(50% 0.08 175) 8px, oklch(50% 0.08 175) 9px)'
-    },
-    {
-      name: 'La Joconde',
-      gallery: 'classic',
-      bg: 'radial-gradient(ellipse 60% 80% at 48% 55%, oklch(45% 0.05 80) 0%, oklch(28% 0.04 75) 45%, oklch(12% 0.03 85) 100%),' +
-         'radial-gradient(ellipse 30% 20% at 48% 48%, oklch(60% 0.06 75) 0%, transparent 100%),' +
-         'radial-gradient(ellipse 40% 60% at 35% 60%, oklch(22% 0.03 70) 0%, transparent 100%),' +
-         'linear-gradient(175deg, oklch(35% 0.04 85), oklch(15% 0.03 80))'
-    },
-    {
-      name: 'Champ de coquelicots',
-      gallery: 'classic',
-      bg: 'radial-gradient(ellipse 100% 40% at 50% 65%, oklch(58% 0.14 18) 0%, oklch(52% 0.12 20) 25%, oklch(72% 0.08 100) 50%, transparent 70%),' +
-         'radial-gradient(ellipse 100% 35% at 50% 25%, oklch(80% 0.04 245) 0%, oklch(74% 0.06 240) 40%, transparent 75%),' +
-         'radial-gradient(circle 3% at 18% 62%, oklch(62% 0.16 22) 0%, transparent 100%),' +
-         'radial-gradient(circle 2.5% at 38% 66%, oklch(64% 0.15 20) 0%, transparent 100%),' +
-         'radial-gradient(circle 2% at 55% 63%, oklch(60% 0.14 18) 0%, transparent 100%),' +
-         'radial-gradient(circle 3% at 78% 65%, oklch(63% 0.16 24) 0%, transparent 100%),' +
-         'linear-gradient(180deg, oklch(76% 0.05 250), oklch(82% 0.06 240) 30%, oklch(68% 0.07 130) 55%, oklch(55% 0.10 100) 100%)'
-    },
-    {
-      name: 'La grande vague',
-      gallery: 'classic',
-      bg: 'radial-gradient(ellipse 120% 70% at 40% 55%, oklch(68% 0.06 250) 0%, oklch(50% 0.10 245) 30%, oklch(72% 0.04 85) 55%, transparent 80%),' +
-         'radial-gradient(ellipse 70% 40% at 55% 38%, oklch(85% 0.05 90) 0%, oklch(78% 0.06 80) 40%, transparent 75%),' +
-         'radial-gradient(circle 5% at 42% 42%, oklch(55% 0.12 250) 0%, transparent 100%),' +
-         'linear-gradient(170deg, oklch(70% 0.06 250) 0%, oklch(65% 0.07 240) 25%, oklch(60% 0.05 220) 50%, oklch(48% 0.04 200) 100%)'
-    },
-    {
-      name: 'Mont Fuji au matin',
-      gallery: 'landscape',
-      bg: 'radial-gradient(ellipse 90% 30% at 50% 35%, oklch(82% 0.08 65) 0%, oklch(70% 0.06 55) 30%, transparent 65%),' +
-         'radial-gradient(ellipse 60% 50% at 50% 62%, oklch(45% 0.04 230) 0%, oklch(38% 0.03 220) 100%),' +
-         'linear-gradient(175deg, oklch(72% 0.05 60) 0%, oklch(65% 0.04 55) 15%, oklch(55% 0.03 230) 40%, oklch(40% 0.02 210) 75%, oklch(30% 0.02 200) 100%)'
-    },
-    {
-      name: 'Forêt ancienne',
-      gallery: 'landscape',
-      bg: 'radial-gradient(ellipse 50% 20% at 50% 18%, oklch(72% 0.06 80) 0%, oklch(58% 0.08 120) 35%, transparent 70%),' +
-         'radial-gradient(circle 15% at 42% 30%, oklch(68% 0.07 90) 0%, transparent 100%),' +
-         'radial-gradient(circle 12% at 65% 28%, oklch(65% 0.06 85) 0%, transparent 100%),' +
-         'linear-gradient(170deg, oklch(50% 0.08 140) 0%, oklch(35% 0.06 130) 35%, oklch(22% 0.05 120) 65%, oklch(15% 0.03 110) 100%)'
-    },
-    {
-      name: 'Aurore boréale',
-      gallery: 'landscape',
-      bg: 'radial-gradient(ellipse 120% 40% at 50% 30%, oklch(60% 0.14 170) 0%, oklch(48% 0.12 175) 25%, transparent 60%),' +
-         'radial-gradient(ellipse 100% 35% at 55% 32%, oklch(55% 0.12 280) 0%, oklch(42% 0.10 275) 30%, transparent 65%),' +
-         'radial-gradient(circle 2% at 35% 28%, oklch(80% 0.14 165) 0%, transparent 100%),' +
-         'radial-gradient(circle 3% at 60% 31%, oklch(78% 0.13 170) 0%, transparent 100%),' +
-         'linear-gradient(175deg, oklch(25% 0.06 270) 0%, oklch(18% 0.04 265) 40%, oklch(8% 0.02 260) 100%)'
-    },
-    {
-      name: 'Coucher de soleil tropical',
-      gallery: 'landscape',
-      bg: 'radial-gradient(ellipse 130% 50% at 50% 55%, oklch(72% 0.12 30) 0%, oklch(60% 0.10 35) 20%, oklch(48% 0.07 45) 45%, transparent 75%),' +
-         'radial-gradient(ellipse 60% 30% at 50% 82%, oklch(38% 0.04 200) 0%, oklch(30% 0.03 190) 100%),' +
-         'radial-gradient(circle 6% at 48% 50%, oklch(80% 0.15 40) 0%, transparent 100%),' +
-         'linear-gradient(175deg, oklch(65% 0.10 25) 0%, oklch(55% 0.08 40) 25%, oklch(45% 0.05 60) 55%, oklch(35% 0.03 200) 85%, oklch(25% 0.02 220) 100%)'
-    },
-    {
-      name: 'Lac alpin',
-      gallery: 'landscape',
-      bg: 'radial-gradient(ellipse 120% 35% at 50% 28%, oklch(80% 0.04 230) 0%, oklch(68% 0.06 225) 25%, transparent 55%),' +
-         'radial-gradient(ellipse 60% 50% at 50% 60%, oklch(50% 0.04 210) 0%, oklch(42% 0.03 200) 100%),' +
-         'radial-gradient(ellipse 40% 20% at 35% 35%, oklch(90% 0.03 100) 0%, oklch(82% 0.04 230) 100%),' +
-         'linear-gradient(180deg, oklch(72% 0.05 230) 0%, oklch(58% 0.06 200) 30%, oklch(48% 0.05 190) 55%, oklch(40% 0.04 180) 80%, oklch(30% 0.03 160) 100%)'
-    },
-    {
-      name: 'Abstraction géométrique',
-      gallery: 'classic',
-      bg: 'conic-gradient(from 30deg at 40% 50%, oklch(55% 0.10 260), oklch(75% 0.05 90) 45deg, oklch(50% 0.12 20) 90deg, oklch(60% 0.08 160) 180deg, oklch(45% 0.06 280) 270deg, oklch(55% 0.10 260) 360deg),' +
-         'radial-gradient(circle 20% at 30% 40%, oklch(72% 0.06 80) 0%, transparent 100%),' +
-         'radial-gradient(circle 15% at 65% 55%, oklch(68% 0.08 30) 0%, transparent 100%)'
-    },
-    {
-      name: 'Ciel d\'orage',
-      gallery: 'landscape',
-      bg: 'radial-gradient(ellipse 80% 60% at 50% 45%, oklch(28% 0.04 260) 0%, oklch(18% 0.05 265) 40%, oklch(10% 0.03 270) 100%),' +
-         'radial-gradient(ellipse 50% 20% at 55% 35%, oklch(45% 0.06 260) 0%, transparent 70%),' +
-         'radial-gradient(circle 1% at 60% 38%, oklch(85% 0.02 100) 0%, oklch(75% 0.06 80) 30%, transparent 100%),' +
-         'linear-gradient(180deg, oklch(20% 0.05 265), oklch(12% 0.04 270) 60%, oklch(8% 0.02 250) 100%)'
-    }
-  ];
-
-  // State
-  var state = {
+  var STATE = {
+    page: 'gallery',          // 'gallery' | 'slideshow'
     currentArtIdx: 0,
     menuVisible: false,
     menuFocusIdx: 0,
     sidebarOpen: false,
     currentSub: null,
-    matteEnabled: true,
-    matteSize: 'medium',
-    matteColor: 'warm-white',
+    dpMode: 'gallery',        // gallery | slideshow-art | slideshow-menu | sidebar-nav | sub | auth
+    dpIdx: 0,
+    frameStyle: 'oak',
+    frameWidth: 80,
     shadowIntensity: 50,
     canvasTexture: false,
     timerInterval: 15,
     brightness: 100,
     temperature: 50,
-    selectedGalleries: ['classic', 'landscape'],
     googleConnected: false,
-    pixelShift: { x: 0, y: 0 },
+    slideshowActive: true,
+    activeGalleries: {},
   };
 
-  // Elements
-  var els = {
-    artwork: document.getElementById('artwork-current'),
-    matte: document.getElementById('matte-overlay'),
-    canvasTex: document.getElementById('canvas-texture'),
-    ambientFilter: document.getElementById('ambient-filter'),
-    bottomMenu: document.getElementById('bottom-menu'),
-    sidebar: document.getElementById('sidebar'),
-    sidebarOverlay: document.getElementById('sidebar-overlay'),
-    sidebarContent: document.getElementById('sidebar-content'),
-    authOverlay: document.getElementById('auth-overlay'),
-    shiftIndicator: document.getElementById('shift-indicator'),
-    timerIndicator: document.getElementById('timer-indicator'),
-  };
+  var artworks = [];
+  var filteredArtworks = [];
+  var galleryKeys = [];
+  var els = {};
 
-  // Scale-to-fit
-  function fitFrame() {
-    var frame = document.getElementById('tv-frame');
-    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-    frame.style.transform = 'scale(' + s + ')';
+  function q(s) { return document.querySelector(s); }
+  function qa(s) { return document.querySelectorAll(s); }
+
+  // ==================== LOAD ARTWORKS ====================
+  function loadArtworks() {
+    var loading = document.getElementById('loading');
+    fetch('artworks.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        artworks = data.artworks || [];
+        if (artworks.length === 0) {
+          // Fallback: embedded minimal dataset
+          artworks = [
+            {title:"La Naissance de Vénus",artist:"Sandro Botticelli",year:"1484-1486",image_url:"https://upload.wikimedia.org/wikipedia/commons/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg",gallery:"renaissance"},
+            {title:"La Création d'Adam",artist:"Michel-Ange",year:"1511",image_url:"https://upload.wikimedia.org/wikipedia/commons/f/f0/Sistine_Chapel_ceiling%2C_Creation_of_Adam.jpg",gallery:"renaissance"}
+          ];
+        }
+        loading.classList.add('done');
+        setTimeout(function() { loading.style.display = 'none'; }, 600);
+        initGallery();
+      })
+      .catch(function(err) {
+        console.error('Failed to load artworks:', err);
+        loading.querySelector('p').textContent = 'Erreur de chargement. Utilisation des œuvres par défaut.';
+        setTimeout(function() {
+          artworks = [
+            {title:"La Naissance de Vénus",artist:"Sandro Botticelli",year:"1484-1486",image_url:"https://upload.wikimedia.org/wikipedia/commons/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg",gallery:"renaissance"},
+            {title:"La Création d'Adam",artist:"Michel-Ange",year:"1511",image_url:"https://upload.wikimedia.org/wikipedia/commons/f/f0/Sistine_Chapel_ceiling%2C_Creation_of_Adam.jpg",gallery:"renaissance"}
+          ];
+          loading.classList.add('done');
+          setTimeout(function() { loading.style.display = 'none'; }, 600);
+          initGallery();
+        }, 1000);
+      });
   }
-  window.addEventListener('resize', fitFrame);
-  fitFrame();
 
-  // Update artwork with cross-fade
-  var _artTimer = null;
+  // ==================== GALLERY ====================
+  function initGallery() {
+    // Build gallery keys
+    var galleryMap = {};
+    artworks.forEach(function(a) {
+      if (!galleryMap[a.gallery]) galleryMap[a.gallery] = { count: 0, artists: {} };
+      galleryMap[a.gallery].count++;
+      galleryMap[a.gallery].artists[a.artist] = true;
+    });
+    galleryKeys = Object.keys(galleryMap).sort();
+
+    // Initialize all as active
+    galleryKeys.forEach(function(g) { STATE.activeGalleries[g] = true; });
+
+    updateGallery();
+    renderFilters();
+
+    // Focus first item
+    setTimeout(function() {
+      var items = qa('.gb-item');
+      if (items.length > 0) {
+        items[0].classList.add('dpad-focused');
+        items[0].focus();
+      }
+    }, 100);
+  }
+
+  function updateGallery() {
+    // Count active
+    var activeCount = 0;
+    galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) activeCount++; });
+
+    // Update count
+    document.getElementById('gb-count').textContent =
+      artworks.length + ' œuvres · ' + activeCount + ' galerie(s) active(s)';
+
+    // Filter artworks by active galleries
+    filteredArtworks = artworks.filter(function(a) {
+      return STATE.activeGalleries[a.gallery] === true;
+    });
+
+    // Render grid
+    var grid = document.getElementById('gb-grid');
+    grid.innerHTML = '';
+    filteredArtworks.forEach(function(art, idx) {
+      var item = document.createElement('div');
+      item.className = 'gb-item';
+      item.tabIndex = -1;
+      item.dataset.idx = idx;
+      item.innerHTML =
+        '<div class="gb-thumb" style="background-image:url(' + art.image_url + ')"></div>' +
+        '<div class="gb-label"><span class="gb-title">' + art.title + '</span><span class="gb-artist">' + art.artist + '</span></div>' +
+        '<span class="gallery-badge">' + art.gallery + '</span>' +
+        '<div class="gb-check">✓</div>';
+      item.addEventListener('click', function() {
+        // Toggle active state for this artwork's gallery
+        var gallery = artworks[parseInt(this.dataset.idx)].gallery;
+        STATE.activeGalleries[gallery] = !STATE.activeGalleries[gallery];
+        renderFilters();
+        updateGallery();
+      });
+      grid.appendChild(item);
+    });
+  }
+
+  function renderFilters() {
+    var container = document.getElementById('gb-filters');
+    container.innerHTML = '';
+    galleryKeys.forEach(function(g) {
+      var chip = document.createElement('button');
+      chip.className = 'filter-chip' + (STATE.activeGalleries[g] ? ' active' : '');
+      chip.textContent = g.charAt(0).toUpperCase() + g.slice(1);
+      chip.addEventListener('click', function() {
+        STATE.activeGalleries[g] = !STATE.activeGalleries[g];
+        renderFilters();
+        updateGallery();
+      });
+      container.appendChild(chip);
+    });
+  }
+
+  // ==================== LAUNCH SLIDESHOW ====================
+  function launchSlideshow() {
+    STATE.page = 'slideshow';
+    STATE.currentArtIdx = 0;
+    STATE.dpMode = 'slideshow-art';
+
+    document.getElementById('gallery-browser').classList.add('hidden');
+    document.getElementById('art-mode').style.display = 'flex';
+
+    renderArtwork(false);
+    renderFrame();
+    renderAmbient();
+    renderTimerIndicator();
+    resetTimer();
+    syncSidebarValues();
+
+    // Launch animation
+    els.artwork = document.getElementById('artwork-current');
+    els.artwork.classList.add('launching');
+    setTimeout(function() { els.artwork.classList.remove('launching'); }, 2300);
+
+    updateCountBadge();
+
+    // Enter fullscreen
+    var el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen().catch(function(){});
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+
+    // Focus body for D-Pad
+    document.body.setAttribute('tabindex', '-1');
+    document.body.focus({ preventScroll: true });
+  }
+
+  function quitSlideshow() {
+    STATE.page = 'gallery';
+    STATE.dpMode = 'gallery';
+    STATE.menuVisible = false;
+    STATE.sidebarOpen = false;
+    if (STATE.dpMode === 'auth') closeAuth();
+    if (STATE.sidebarOpen) closeSidebar();
+    if (STATE.menuVisible) hideMenu();
+
+    document.getElementById('settings-bar').classList.remove('visible');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+    document.getElementById('sidebar').classList.remove('open');
+
+    document.getElementById('art-mode').style.display = 'none';
+    document.getElementById('gallery-browser').classList.remove('hidden');
+
+    // Update gallery to reflect any changes
+    updateGallery();
+
+    document.body.focus({ preventScroll: true });
+    // Focus first item
+    setTimeout(function() {
+      var items = qa('.gb-item');
+      if (items.length > 0) { items[0].classList.add('dpad-focused'); items[0].focus(); }
+    }, 100);
+  }
+
+  // ==================== ART RENDERING ====================
+  function getActiveArtworks() {
+    if (!filteredArtworks || filteredArtworks.length === 0) return artworks;
+    return filteredArtworks;
+  }
+
   function renderArtwork(crossfade) {
-    var art = artworks[state.currentArtIdx];
+    var list = getActiveArtworks();
+    if (list.length === 0) list = artworks;
+    var art = list[STATE.currentArtIdx % list.length];
+
+    var artworkEl = document.getElementById('artwork-current');
     if (crossfade) {
-      els.artwork.classList.add('fading');
-      setTimeout(function () {
-        els.artwork.style.background = art.bg;
-        els.artwork.classList.remove('fading');
+      artworkEl.classList.add('fading');
+      setTimeout(function() {
+        applyArt(artworkEl, art);
+        artworkEl.classList.remove('fading');
+        updateArtInfo(art);
       }, 450);
     } else {
-      els.artwork.style.background = art.bg;
+      applyArt(artworkEl, art);
+      updateArtInfo(art);
     }
   }
 
-  // Update matte border — realistic glass + frame 3D effect
-  function renderMatte() {
-    if (!state.matteEnabled) {
-      els.matte.style.boxShadow = 'none';
-      return;
-    }
-    var sizes = { thin: 40, medium: 80, thick: 140 };
-    var px = sizes[state.matteSize];
-    var colors = {
-      'warm-white': 'oklch(95% 0.008 90)',
-      'anthracite': 'oklch(28% 0.006 250)',
-      'sand': 'oklch(78% 0.04 85)',
-      'linen': 'oklch(88% 0.02 95)'
+  function applyArt(el, art) {
+    var img = new Image();
+    img.onload = function() {
+      el.style.backgroundImage = 'url("' + art.image_url + '")';
+      el.style.backgroundSize = 'contain';
     };
-    var color = colors[state.matteColor];
-    var intensity = state.shadowIntensity / 100;
-    var innerSpread = Math.round(8 * intensity);
-    var innerBlur = Math.round(24 * intensity);
-    var glassSpread = Math.round(6 * intensity);
-    var glassBlur = Math.round(16 * intensity);
-    var depthSpread = Math.round(20 * intensity);
-    var depthBlur = Math.round(56 * intensity);
-    // Multi-layer: matte fill → ambient occlusion → glass reflection → depth shadow
-    els.matte.style.boxShadow =
-      'inset 0 0 0 ' + px + 'px ' + color + ', ' +
-      'inset ' + innerSpread + 'px ' + innerSpread + 'px ' + innerBlur + 'px rgba(0,0,0,' + (0.35 * intensity) + '), ' +
-      'inset -' + (innerSpread * 0.6) + 'px -' + (innerSpread * 0.6) + 'px ' + innerBlur + 'px rgba(255,255,255,' + (0.04 * intensity) + '), ' +
-      'inset ' + glassSpread + 'px ' + glassSpread + 'px ' + glassBlur + 'px rgba(255,255,255,' + (0.07 * intensity) + '), ' +
-      'inset -' + depthSpread + 'px -' + depthSpread + 'px ' + depthBlur + 'px rgba(0,0,0,' + (0.25 * intensity) + '), ' +
-      'inset ' + (depthSpread * 0.5) + 'px ' + (depthSpread * 0.5) + 'px ' + depthBlur + 'px rgba(0,0,0,' + (0.15 * intensity) + ')';
+    img.onerror = function() {
+      el.style.background = 'radial-gradient(ellipse at 40% 40%, oklch(55% 0.14 30), oklch(20% 0.05 270))';
+      el.style.backgroundSize = 'cover';
+    };
+    img.src = art.image_url;
   }
 
-  // Update canvas texture
+  function updateArtInfo(art) {
+    document.getElementById('art-title').textContent = art.title;
+    document.getElementById('art-artist').textContent = art.artist + (art.year ? ' · ' + art.year : '');
+    var info = document.getElementById('artwork-info');
+    info.classList.add('visible');
+    clearTimeout(window._infoTimer);
+    window._infoTimer = setTimeout(function() { info.classList.remove('visible'); }, 12000);
+  }
+
+  function updateCountBadge() {
+    var list = getActiveArtworks();
+    var badge = document.getElementById('count-badge');
+    badge.textContent = (STATE.currentArtIdx % list.length + 1) + ' / ' + list.length;
+    badge.classList.add('visible');
+  }
+
+  // ==================== FRAMES ====================
+  function renderFrame() {
+    var fw = STATE.frameWidth + 'px';
+    var i = STATE.shadowIntensity / 100;
+    var el = document.getElementById('frame-overlay');
+    var styles = {
+      oak: { b:fw+' solid #c4a46c', bg:'linear-gradient(135deg,#d4b47c,#b89450,#c4a46c,#a88440)', s:'inset 0 0 0 2px #d4b47c80, inset '+(3*i)+'px '+(3*i)+'px '+(15*i)+'px rgba(0,0,0,'+(0.3*i)+'), inset -'+(2*i)+'px -'+(2*i)+'px '+(10*i)+'px rgba(255,255,255,'+(0.15*i)+'), 0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.4*i)+')' },
+      walnut: { b:fw+' solid #3a2a1a', bg:'linear-gradient(180deg,#4a3a2a,#2a1a0a)', s:'inset 0 0 0 2px #5a4a3a80, inset '+(4*i)+'px '+(4*i)+'px '+(18*i)+'px rgba(0,0,0,'+(0.5*i)+'), inset -'+(2*i)+'px -'+(2*i)+'px '+(8*i)+'px rgba(255,255,255,'+(0.08*i)+'), 0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.5*i)+')' },
+      gold: { b:fw+' solid #c8962d', bg:'linear-gradient(160deg,#f0c85d,#c8962d,#e8b84d,#a8781d)', s:'inset 0 0 0 3px #e8b84d, inset 0 0 0 6px #b8862d, inset '+(4*i)+'px '+(4*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.35*i)+'), inset -'+(3*i)+'px -'+(3*i)+'px '+(12*i)+'px rgba(255,215,0,'+(0.2*i)+'), 0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.45*i)+')' },
+      aluminum: { b:fw+' solid #a0a0a0', bg:'linear-gradient(180deg,#d8d8d8,#a8a8a8,#c8c8c8,#909090)', s:'inset 0 0 0 1px #c0c0c080, inset '+(2*i)+'px '+(2*i)+'px '+(12*i)+'px rgba(0,0,0,'+(0.15*i)+'), inset -'+(1*i)+'px -'+(1*i)+'px '+(6*i)+'px rgba(255,255,255,'+(0.25*i)+'), 0 '+(4*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.25*i)+')' },
+      white: { b:fw+' solid #f0f0f0', bg:'linear-gradient(160deg,#ffffff,#ececec,#f5f5f5,#e0e0e0)', s:'inset 0 0 0 1px #ffffff80, inset '+(3*i)+'px '+(3*i)+'px '+(15*i)+'px rgba(0,0,0,'+(0.1*i)+'), inset -'+(1*i)+'px -'+(1*i)+'px '+(6*i)+'px rgba(255,255,255,'+(0.3*i)+'), 0 '+(6*i)+'px '+(28*i)+'px rgba(0,0,0,'+(0.2*i)+')' },
+      black: { b:fw+' solid #1a1a1a', bg:'linear-gradient(180deg,#2a2a2a,#0a0a0a,#1a1a1a,#050505)', s:'inset 0 0 0 1px #3a3a3a80, inset '+(4*i)+'px '+(4*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.6*i)+'), inset -'+(1*i)+'px -'+(1*i)+'px '+(6*i)+'px rgba(255,255,255,'+(0.05*i)+'), 0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.6*i)+')' },
+      matte: { b:fw+' solid #e8e0d8', bg:'radial-gradient(ellipse at center,#f5f0ea 60%,#e8e0d8 100%)', s:'inset 0 0 0 4px #f5f0ea, inset '+(2*i)+'px '+(2*i)+'px '+(10*i)+'px rgba(0,0,0,'+(0.08*i)+'), inset -'+(1*i)+'px -'+(1*i)+'px '+(5*i)+'px rgba(255,255,255,'+(0.2*i)+'), 0 '+(4*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.15*i)+')' },
+      bevel: { b:fw+' solid #8a7a6a', bg:'linear-gradient(135deg,#baaa9a,#8a7a6a,#a09080,#7a6a5a)', s:'inset 0 0 0 4px #baaa9a, inset '+(4*i)+'px '+(4*i)+'px 0 '+(4*i)+'px #6a5a4a, inset -'+(4*i)+'px -'+(4*i)+'px 0 '+(4*i)+'px #9a8a7a, inset '+(6*i)+'px '+(6*i)+'px '+(24*i)+'px rgba(0,0,0,'+(0.3*i)+'), inset -'+(4*i)+'px -'+(4*i)+'px '+(12*i)+'px rgba(255,255,255,'+(0.12*i)+'), 0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.4*i)+')' },
+      loft: { b:fw+' solid #5a4a3a', bg:'repeating-linear-gradient(0deg,#6a5a4a 0px,#6a5a4a 1px,#5a4a3a 1px,#5a4a3a 3px)', s:'inset 0 0 0 2px #8a7a6a, inset 0 0 0 4px #3a2a1a, inset '+(5*i)+'px '+(5*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.45*i)+'), inset -'+(3*i)+'px -'+(3*i)+'px '+(10*i)+'px rgba(255,255,255,'+(0.06*i)+'), 0 '+(6*i)+'px '+(28*i)+'px rgba(0,0,0,'+(0.5*i)+')' },
+      floating: { b:'none', bg:'transparent', s:'0 0 0 '+(4*i)+'px rgba(255,255,255,'+(0.08*i)+'), 0 0 0 '+(8*i)+'px rgba(255,255,255,'+(0.03*i)+'), 0 0 0 '+(12*i)+'px rgba(0,0,0,'+(0.1*i)+'), 0 '+(20*i)+'px '+(60*i)+'px rgba(0,0,0,'+(0.5*i)+')' }
+    };
+    var s = styles[STATE.frameStyle] || styles.oak;
+    el.style.border = s.b;
+    el.style.background = s.bg;
+    el.style.boxShadow = s.s;
+  }
+
   function renderCanvasTexture() {
-    els.canvasTex.classList.toggle('on', state.canvasTexture);
+    document.getElementById('canvas-texture').classList.toggle('on', STATE.canvasTexture);
   }
 
-  // Update ambient filter
   function renderAmbient() {
-    var b = state.brightness / 100;
-    var t = state.temperature / 100;
-    var warm = 1 + (t - 0.5) * 0.4;
-    var cool = 1 - (t - 0.5) * 0.3;
-    els.ambientFilter.style.background =
-      'linear-gradient(rgba(255,' + Math.round(240 * warm) + ',' + Math.round(210 * cool) + ',0.08), rgba(0,0,0,' + (1 - b) * 0.6 + '))';
+    var b = STATE.brightness / 100;
+    var t = STATE.temperature / 100;
+    var w = 1 + (t-0.5)*0.4, c2 = 1 - (t-0.5)*0.3;
+    document.getElementById('ambient-filter').style.background =
+      'linear-gradient(rgba(255,'+Math.round(240*w)+','+Math.round(210*c2)+',0.08),rgba(0,0,0,'+(1-b)*0.6+'))';
   }
 
-  // Update timer indicator
   function renderTimerIndicator() {
-    if (state.timerInterval === 'static') {
-      els.timerIndicator.classList.remove('visible');
-    } else {
-      els.timerIndicator.classList.add('visible');
-      var mins = parseInt(state.timerInterval);
-      var now = new Date();
-      now.setMinutes(now.getMinutes() + mins);
-      var h = String(now.getHours()).padStart(2, '0');
-      var m = String(now.getMinutes()).padStart(2, '0');
-      els.timerIndicator.textContent = 'Prochain changement \u00b7 ' + h + ':' + m;
-    }
+    var el = document.getElementById('timer-indicator');
+    if (STATE.timerInterval === 'static') { el.classList.remove('visible'); return; }
+    el.classList.add('visible');
+    var mins = parseInt(STATE.timerInterval);
+    var now = new Date();
+    now.setMinutes(now.getMinutes() + mins);
+    el.textContent = 'Prochain changement · ' +
+      String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
   }
 
-  // Pixel shifting
-  function pixelShift() {
-    state.pixelShift.x = (state.pixelShift.x + (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 2)) % 4;
-    state.pixelShift.y = (state.pixelShift.y + (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 2)) % 4;
-    els.artwork.style.transform = 'translate(' + state.pixelShift.x + 'px,' + state.pixelShift.y + 'px)';
-    els.shiftIndicator.style.opacity = '1';
-    setTimeout(function () { els.shiftIndicator.style.opacity = '0'; }, 800);
-  }
-  setInterval(pixelShift, 5 * 60 * 1000); // every 5 minutes
-
-  // Art rotation
   function rotateArt() {
-    if (state.timerInterval === 'static') return;
-    var filtered = artworks.filter(function (a) {
-      return state.selectedGalleries.indexOf(a.gallery) !== -1;
-    });
-    if (filtered.length === 0) filtered = artworks;
-    var next;
-    do {
-      next = Math.floor(Math.random() * filtered.length);
-    } while (filtered.length > 1 && filtered[next].name === artworks[state.currentArtIdx].name);
-    for (var i = 0; i < artworks.length; i++) {
-      if (artworks[i].name === filtered[next].name) {
-        state.currentArtIdx = i;
-        break;
-      }
+    if (STATE.timerInterval === 'static' && !STATE.slideshowActive) return;
+    var list = getActiveArtworks();
+    if (list.length === 0) list = artworks;
+    var next = Math.floor(Math.random() * list.length);
+    for (var i = 0; i < list.length; i++) {
+      if (i === STATE.currentArtIdx % list.length) continue;
+      next = i; break;
     }
+    STATE.currentArtIdx = (STATE.currentArtIdx + 1) % list.length;
     renderArtwork(true);
     renderTimerIndicator();
+    updateCountBadge();
   }
 
   function resetTimer() {
     clearInterval(window._artTimer);
-    if (state.timerInterval !== 'static') {
-      window._artTimer = setInterval(rotateArt, parseInt(state.timerInterval) * 60 * 1000);
+    if (STATE.timerInterval !== 'static') {
+      window._artTimer = setInterval(rotateArt, parseInt(STATE.timerInterval) * 60 * 1000);
     }
   }
 
-  // ============================================================
-  // D-PAD NAVIGATION STATE MACHINE
-  // Modes: 'art' | 'menu' | 'sidebar-nav' | 'sub' | 'auth'
-  // ============================================================
+  // ==================== UI CONTROLS ====================
+  var menuItems, sidebarNavItems;
 
-  state.dpMode = 'art';
-  state.dpIdx = 0;
+  function getMenuItems() { return qa('.sb-item'); }
+  function getSidebarNavItems() { return qa('#sidebar-nav .sidebar-nav-item'); }
 
-  var menuItems = document.querySelectorAll('.menu-item');
-  var sidebarNavItems = document.querySelectorAll('#sidebar-nav .sidebar-nav-item');
-
-  function clearAllFocus() {
-    document.querySelectorAll('.dpad-focused').forEach(function (el) { el.classList.remove('dpad-focused'); });
-  }
+  function clearFocus() { qa('.dpad-focused').forEach(function(e){e.classList.remove('dpad-focused');}); }
 
   function focusEl(idx, list) {
-    clearAllFocus();
-    if (list && list[idx]) list[idx].classList.add('dpad-focused');
-  }
-
-  function getFocusableInSub() {
-    var sub = document.getElementById('sub-' + state.currentSub);
-    if (!sub) return [];
-    var el = sub.querySelector('.dpad-focused');
-    if (el) el.classList.remove('dpad-focused'); // re-query strategy
-    return Array.prototype.slice.call(sub.querySelectorAll('[data-dpad]:not([data-back]), .option-chip:not([data-back]), .color-swatch, .toggle-switch, .gallery-card, .auth-btn, .slider-row input[type="range"]'));
-  }
-
-  function execSubAction(idx) {
-    var items = getFocusableInSub();
-    if (!items[idx]) return;
-    var el = items[idx];
-    if (el.classList.contains('toggle-switch') || el.tagName === 'BUTTON') {
-      el.click();
-      syncSidebarValues();
-    } else if (el.classList.contains('gallery-card')) {
-      el.click();
-    } else if (el.type === 'range') {
-      // Sliders: Enter toggles focus mode; Left/Right adjusts
-      // (handled in keydown below)
+    clearFocus();
+    if (list && list[idx]) {
+      list[idx].classList.add('dpad-focused');
+      list[idx].focus({ preventScroll: false });
+      if (list[idx].scrollIntoViewIfNeeded) list[idx].scrollIntoViewIfNeeded(false);
     }
+  }
+
+  function getSubItems() {
+    var sub = document.getElementById('sub-' + STATE.currentSub);
+    if (!sub) return [];
+    return Array.prototype.slice.call(sub.querySelectorAll('.option-chip:not([data-back]),.color-swatch,.toggle-switch,.auth-btn,.frame-option,.sidebar-nav-item[data-back],input[type="range"]'));
   }
 
   function showMenu() {
-    state.menuVisible = true;
-    state.dpMode = 'menu';
-    state.dpIdx = 0;
-    els.bottomMenu.classList.add('visible');
-    focusEl(state.dpIdx, menuItems);
+    STATE.menuVisible = true;
+    STATE.dpMode = 'slideshow-menu';
+    STATE.dpIdx = 0;
+    document.getElementById('settings-bar').classList.add('visible');
+    menuItems = getMenuItems();
+    focusEl(0, menuItems);
   }
 
   function hideMenu() {
-    state.menuVisible = false;
-    state.dpMode = 'art';
-    els.bottomMenu.classList.remove('visible');
-    clearAllFocus();
+    STATE.menuVisible = false;
+    STATE.dpMode = 'slideshow-art';
+    document.getElementById('settings-bar').classList.remove('visible');
+    clearFocus();
   }
 
-  function openSidebar(sub) {
-    state.sidebarOpen = true;
-    state.dpMode = sub ? 'sub' : 'sidebar-nav';
-    state.dpIdx = 0;
-    els.sidebar.classList.add('open');
-    els.sidebarOverlay.classList.add('open');
-    if (sub) {
-      openSubScreen(sub);
-      var items = getFocusableInSub();
-      focusEl(0, items);
-    } else {
-      focusEl(0, sidebarNavItems);
-      document.querySelectorAll('.sub-screen.active').forEach(function (s) { s.classList.remove('active'); });
-      state.currentSub = null;
-    }
+  function toggleSidebar() {
+    if (STATE.sidebarOpen) { closeSidebar(); return; }
+    STATE.sidebarOpen = true;
+    STATE.dpMode = 'sidebar-nav';
+    STATE.dpIdx = 0;
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebar-overlay').classList.add('open');
+    focusEl(0, getSidebarNavItems());
     syncSidebarValues();
   }
 
   function closeSidebar() {
-    state.sidebarOpen = false;
-    state.currentSub = null;
-    state.dpMode = 'art';
-    els.sidebar.classList.remove('open');
-    els.sidebarOverlay.classList.remove('open');
-    document.querySelectorAll('.sub-screen.active').forEach(function (s) { s.classList.remove('active'); });
-    clearAllFocus();
+    STATE.sidebarOpen = false;
+    STATE.currentSub = null;
+    STATE.dpMode = 'slideshow-art';
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+    qa('.sub-screen.active').forEach(function(s){s.classList.remove('active');});
+    clearFocus();
   }
 
   function openSubScreen(sub) {
-    state.currentSub = sub;
-    state.dpMode = 'sub';
-    state.dpIdx = 0;
-    document.querySelectorAll('.sub-screen.active').forEach(function (s) { s.classList.remove('active'); });
-    var target = document.getElementById('sub-' + sub);
-    if (target) target.classList.add('active');
-    setTimeout(function () {
-      var items = getFocusableInSub();
-      focusEl(0, items);
-    }, 50);
+    STATE.currentSub = sub;
+    STATE.dpMode = 'sub';
+    STATE.dpIdx = 0;
+    qa('.sub-screen.active').forEach(function(s){s.classList.remove('active');});
+    var t = document.getElementById('sub-'+sub);
+    if (t) t.classList.add('active');
+    requestAnimationFrame(function(){ focusEl(0, getSubItems()); });
   }
 
-  function backToSidebarNav() {
-    state.currentSub = null;
-    state.dpMode = 'sidebar-nav';
-    state.dpIdx = 0;
-    document.querySelectorAll('.sub-screen.active').forEach(function (s) { s.classList.remove('active'); });
-    focusEl(0, sidebarNavItems);
+  function backToNav() {
+    STATE.currentSub = null;
+    STATE.dpMode = 'sidebar-nav';
+    STATE.dpIdx = 0;
+    qa('.sub-screen.active').forEach(function(s){s.classList.remove('active');});
+    focusEl(0, getSidebarNavItems());
     syncSidebarValues();
   }
 
   function openAuth() {
-    state.dpMode = 'auth';
-    state.dpIdx = 0;
-    els.authOverlay.classList.add('open');
-    var authItems = Array.prototype.slice.call(document.querySelectorAll('#auth-overlay .auth-btn, #auth-overlay .auth-code-display'));
-    focusEl(0, authItems);
+    STATE.dpMode = 'auth'; STATE.dpIdx = 0;
+    document.getElementById('auth-overlay').classList.add('open');
+    var items = Array.prototype.slice.call(qa('#auth-overlay .auth-btn, #auth-overlay .auth-code-display'));
+    focusEl(0, items);
   }
 
   function closeAuth() {
-    state.dpMode = state.sidebarOpen ? 'sidebar-nav' : 'art';
-    els.authOverlay.classList.remove('open');
-    clearAllFocus();
-    if (state.sidebarOpen) focusEl(0, sidebarNavItems);
+    STATE.dpMode = STATE.sidebarOpen ? 'sidebar-nav' : 'slideshow-art';
+    document.getElementById('auth-overlay').classList.remove('open');
+    clearFocus();
+    if (STATE.sidebarOpen) focusEl(0, getSidebarNavItems());
   }
 
   function syncSidebarValues() {
-    var matteSizeLabels = { thin: 'Fin', medium: 'Moyen', thick: 'Large' };
-    var matteColorLabels = { 'warm-white': 'Blanc chaud', 'anthracite': 'Anthracite', 'sand': 'Sable', 'linen': 'Lin' };
-    document.getElementById('nav-matte-val').textContent = matteSizeLabels[state.matteSize] + ' · ' + matteColorLabels[state.matteColor];
-    var timerLabels = { 15: '15 minutes', 20: '20 minutes', 120: '2 heures', 'static': 'Statique' };
-    document.getElementById('nav-timer-val').textContent = timerLabels[state.timerInterval];
-    document.getElementById('nav-ambient-val').textContent = state.brightness === 100 && state.temperature === 50 ? 'Auto' : state.brightness + '% · ' + (state.temperature > 60 ? 'Chaud' : state.temperature < 40 ? 'Froid' : 'Neutre');
-    document.getElementById('nav-gallery-val').textContent = state.selectedGalleries.length >= 2 ? 'Toutes' : state.selectedGalleries[0] === 'classic' ? 'Classique' : state.selectedGalleries[0] === 'landscape' ? 'Paysages' : 'Photos';
-    document.getElementById('nav-google-val').textContent = state.googleConnected ? 'Connecté' : 'Non connecté';
-    document.getElementById('shadow-val').textContent = state.shadowIntensity + '%';
-    document.getElementById('brightness-val').textContent = state.brightness + '%';
-    var tempVal = document.getElementById('temperature-val');
-    tempVal.textContent = state.temperature > 60 ? 'Chaud' : state.temperature < 40 ? 'Froid' : 'Neutre';
-    document.getElementById('matte-toggle').classList.toggle('on', state.matteEnabled);
-    document.getElementById('canvas-toggle').classList.toggle('on', state.canvasTexture);
-    document.querySelectorAll('[data-matte-size]').forEach(function (b) {
-      b.classList.toggle('selected', b.dataset.matteSize === state.matteSize);
-    });
-    document.querySelectorAll('[data-matte-color]').forEach(function (b) {
-      b.classList.toggle('selected', b.dataset.matteColor === state.matteColor);
-    });
-    document.querySelectorAll('[data-timer]').forEach(function (b) {
-      b.classList.toggle('selected', String(b.dataset.timer) === String(state.timerInterval));
-    });
-    document.getElementById('brightness-slider').value = state.brightness;
-    document.getElementById('temperature-slider').value = state.temperature;
-    document.getElementById('shadow-slider').value = state.shadowIntensity;
+    var fl = {oak:'Chêne clair',walnut:'Noyer/ébène',gold:'Dorure baroque',aluminum:'Aluminium',white:'Blanc mat',black:'Noir satiné',matte:'Passe-partout',bevel:'Double biseau',loft:'Industriel',floating:'Flottant'};
+    document.getElementById('nav-frame-val').textContent = fl[STATE.frameStyle]||'Chêne clair';
+    var tl = {15:'15 min',30:'30 min',60:'1 heure',120:'2 heures','static':'Statique'};
+    document.getElementById('nav-timer-val').textContent = tl[STATE.timerInterval];
+    document.getElementById('nav-ambient-val').textContent = STATE.brightness===100&&STATE.temperature===50?'Auto':STATE.brightness+'% · '+(STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre');
+    document.getElementById('nav-google-val').textContent = STATE.googleConnected?'Connecté':'Non connecté';
+    document.getElementById('shadow-val').textContent = STATE.shadowIntensity+'%';
+    document.getElementById('brightness-val').textContent = STATE.brightness+'%';
+    var tv = document.getElementById('temperature-val');
+    tv.textContent = STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre';
+    document.getElementById('canvas-toggle').classList.toggle('on', STATE.canvasTexture);
+    qa('[data-frame-size]').forEach(function(b){b.classList.toggle('selected',b.dataset.frameSize===(STATE.frameWidth===40?'thin':STATE.frameWidth===80?'medium':'thick'));});
+    qa('[data-timer]').forEach(function(b){b.classList.toggle('selected',String(b.dataset.timer)===String(STATE.timerInterval));});
+    document.getElementById('brightness-slider').value = STATE.brightness;
+    document.getElementById('temperature-slider').value = STATE.temperature;
+    document.getElementById('shadow-slider').value = STATE.shadowIntensity;
   }
 
-  // --- CLICK HANDLER (browser testing fallback, not required for D-pad) ---
-  document.addEventListener('click', function (e) {
-    var target = e.target;
-    if (target.closest('.menu-item')) { var a = target.closest('.menu-item').dataset.action; hideMenu(); openSidebar(a === 'settings' ? null : a); return; }
-    if (target.closest('#art-mode') && !state.menuVisible && !state.sidebarOpen) { showMenu(); return; }
-    if (target.closest('[data-matte-size]')) { state.matteSize = target.closest('[data-matte-size]').dataset.matteSize; renderMatte(); syncSidebarValues(); return; }
-    if (target.closest('[data-matte-color]')) { state.matteColor = target.closest('[data-matte-color]').dataset.matteColor; renderMatte(); syncSidebarValues(); return; }
-    if (target.closest('[data-timer]')) { var v = target.closest('[data-timer]').dataset.timer; state.timerInterval = v === 'static' ? 'static' : parseInt(v); renderTimerIndicator(); resetTimer(); syncSidebarValues(); return; }
-    if (target.closest('[data-gallery]')) { var g = target.closest('[data-gallery]').dataset.gallery; var idx = state.selectedGalleries.indexOf(g); if (idx === -1) { state.selectedGalleries.push(g); target.closest('[data-gallery]').classList.add('selected'); } else { state.selectedGalleries.splice(idx, 1); target.closest('[data-gallery]').classList.remove('selected'); } syncSidebarValues(); return; }
-    if (target.classList.contains('toggle-switch')) { if (target.id === 'matte-toggle') { state.matteEnabled = !state.matteEnabled; renderMatte(); } else if (target.id === 'canvas-toggle') { state.canvasTexture = !state.canvasTexture; renderCanvasTexture(); } syncSidebarValues(); return; }
-    if (target.closest('#sidebar-close')) { closeSidebar(); return; }
-    if (target === els.sidebarOverlay) { closeSidebar(); return; }
-    if (target.closest('#auth-back')) { closeAuth(); return; }
-    if (target.closest('#google-connect-btn')) { openAuth(); return; }
-    if (target.closest('.sidebar-nav-item')) {
-      var ni = target.closest('.sidebar-nav-item');
-      if (ni.dataset.sub === 'google') { openAuth(); return; }
-      if (ni.dataset.sub) { openSubScreen(ni.dataset.sub); return; }
-      if (ni.dataset.back !== undefined) { backToSidebarNav(); return; }
+  // ==================== CLICK HANDLER ====================
+  document.addEventListener('click', function(e) {
+    var t = e.target.closest('[data-action],[data-sub],[data-back],.toggle-switch,#sidebar-close,#google-connect-btn,#auth-back,[data-frame],[data-frame-size],[data-timer],.frame-option,.option-chip:not([data-back]),#btn-launch,#btn-all,#btn-none');
+
+    if (!t) {
+      if (e.target.closest('#art-mode') && STATE.page==='slideshow' && !STATE.menuVisible && !STATE.sidebarOpen) { showMenu(); }
+      if (e.target === document.getElementById('sidebar-overlay')) closeSidebar();
       return;
+    }
+
+    // Gallery buttons
+    if (t.id === 'btn-launch') { launchSlideshow(); return; }
+    if (t.id === 'btn-all') {
+      galleryKeys.forEach(function(g){STATE.activeGalleries[g]=true;});
+      renderFilters(); updateGallery(); return;
+    }
+    if (t.id === 'btn-none') {
+      galleryKeys.forEach(function(g){STATE.activeGalleries[g]=false;});
+      renderFilters(); updateGallery(); return;
+    }
+
+    // Slideshow controls
+    if (t.closest('[data-action]')) {
+      var a = t.closest('[data-action]').dataset.action;
+      if (a === 'gallery') { hideMenu(); quitSlideshow(); return; }
+      if (a === 'quit-slideshow') { hideMenu(); quitSlideshow(); return; }
+      if (a === 'frame' || a === 'timer' || a === 'display') {
+        hideMenu();
+        var sub = {frame:'frame',timer:'timer',display:'ambient'}[a];
+        STATE.sidebarOpen = true;
+        STATE.dpMode = 'sidebar-nav';
+        STATE.dpIdx = 0;
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('open');
+        syncSidebarValues();
+        setTimeout(function(){ openSubScreen(sub); }, 300);
+        return;
+      }
+    }
+
+    if (t.closest('[data-frame]')) {
+      STATE.frameStyle = t.closest('[data-frame]').dataset.frame;
+      qa('.frame-option').forEach(function(f){f.classList.toggle('selected',f.dataset.frame===STATE.frameStyle);});
+      renderFrame(); syncSidebarValues(); return;
+    }
+    if (t.closest('[data-frame-size]')) {
+      STATE.frameWidth = {thin:40,medium:80,thick:140}[t.closest('[data-frame-size]').dataset.frameSize];
+      renderFrame(); syncSidebarValues(); return;
+    }
+    if (t.closest('[data-timer]')) {
+      var v = t.closest('[data-timer]').dataset.timer;
+      STATE.timerInterval = v==='static'?'static':parseInt(v);
+      renderTimerIndicator(); resetTimer(); syncSidebarValues(); return;
+    }
+    if (t.closest('.toggle-switch')) {
+      if (t.id==='canvas-toggle'){STATE.canvasTexture=!STATE.canvasTexture;renderCanvasTexture();}
+      syncSidebarValues(); return;
+    }
+    if (t.id==='sidebar-close'){closeSidebar();return;}
+    if (t.id==='auth-back'){closeAuth();return;}
+    if (t.id==='google-connect-btn'){openAuth();startGoogleAuth();return;}
+    if (t.closest('[data-back]')){backToNav();return;}
+    if (t.closest('.sidebar-nav-item')){
+      var ni=t.closest('.sidebar-nav-item');
+      if(ni.dataset.sub==='google'){openAuth();return;}
+      if(ni.dataset.sub){openSubScreen(ni.dataset.sub);return;}
     }
   });
 
-  // Range inputs
-  document.getElementById('brightness-slider').addEventListener('input', function () {
-    state.brightness = parseInt(this.value);
-    document.getElementById('brightness-val').textContent = state.brightness + '%';
+  // Sliders
+  document.getElementById('brightness-slider').addEventListener('input',function(){
+    STATE.brightness=parseInt(this.value);
+    document.getElementById('brightness-val').textContent=STATE.brightness+'%';
     renderAmbient();
   });
-  document.getElementById('temperature-slider').addEventListener('input', function () {
-    state.temperature = parseInt(this.value);
-    document.getElementById('temperature-val').textContent = state.temperature > 60 ? 'Chaud' : state.temperature < 40 ? 'Froid' : 'Neutre';
+  document.getElementById('temperature-slider').addEventListener('input',function(){
+    STATE.temperature=parseInt(this.value);
+    document.getElementById('temperature-val').textContent=STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre';
     renderAmbient();
   });
-  document.getElementById('shadow-slider').addEventListener('input', function () {
-    state.shadowIntensity = parseInt(this.value);
-    document.getElementById('shadow-val').textContent = state.shadowIntensity + '%';
-    renderMatte();
+  document.getElementById('shadow-slider').addEventListener('input',function(){
+    STATE.shadowIntensity=parseInt(this.value);
+    document.getElementById('shadow-val').textContent=STATE.shadowIntensity+'%';
+    renderFrame();
   });
 
-  // ============================================================
-  // KEYBOARD — Full D-Pad state machine (Xiaomi / Fire TV remote)
-  // ============================================================
-  document.addEventListener('keydown', function (e) {
+  // ==================== D-PAD NAVIGATION ====================
+  document.addEventListener('keydown', function(e) {
     var key = e.key;
-    var mode = state.dpMode;
+    var mode = STATE.dpMode;
 
-    // --- MODE: AUTH OVERLAY ---
+    // GALLERY mode
+    if (STATE.page === 'gallery') {
+      var items = qa('.gb-item');
+      if (key === 'ArrowUp'||key==='ArrowLeft') {
+        e.preventDefault();
+        var cur = q('.gb-item.dpad-focused');
+        var idx = cur ? Array.prototype.indexOf.call(items, cur) : 0;
+        idx = Math.max(0, idx - 1);
+        clearFocus();
+        if (items[idx]){items[idx].classList.add('dpad-focused');items[idx].focus();if(items[idx].scrollIntoViewIfNeeded)items[idx].scrollIntoViewIfNeeded(false);}
+        return;
+      }
+      if (key === 'ArrowDown'||key==='ArrowRight') {
+        e.preventDefault();
+        var cur2 = q('.gb-item.dpad-focused');
+        var idx2 = cur2 ? Array.prototype.indexOf.call(items, cur2) : 0;
+        idx2 = Math.min(items.length - 1, idx2 + 1);
+        clearFocus();
+        if (items[idx2]){items[idx2].classList.add('dpad-focused');items[idx2].focus();if(items[idx2].scrollIntoViewIfNeeded)items[idx2].scrollIntoViewIfNeeded(false);}
+        return;
+      }
+      if (key === 'Enter'||key===' ') {
+        e.preventDefault();
+        var cur3 = q('.gb-item.dpad-focused');
+        if (cur3) { cur3.click(); }
+        return;
+      }
+      return;
+    }
+
+    // AUTH mode
     if (mode === 'auth') {
-      var authItems = Array.prototype.slice.call(document.querySelectorAll('#auth-overlay .auth-btn, #auth-overlay .auth-code-display'));
-      if (key === 'ArrowUp' || key === 'ArrowLeft') { e.preventDefault(); state.dpIdx = Math.max(0, state.dpIdx - 1); focusEl(state.dpIdx, authItems); return; }
-      if (key === 'ArrowDown' || key === 'ArrowRight') { e.preventDefault(); state.dpIdx = Math.min(authItems.length - 1, state.dpIdx + 1); focusEl(state.dpIdx, authItems); return; }
-      if (key === 'Enter' || key === ' ') { e.preventDefault(); if (authItems[state.dpIdx]) authItems[state.dpIdx].click(); closeAuth(); return; }
-      if (key === 'Escape' || key === 'Backspace') { e.preventDefault(); closeAuth(); return; }
+      var authItems = Array.prototype.slice.call(qa('#auth-overlay .auth-btn, #auth-overlay .auth-code-display'));
+      if(key==='ArrowUp'||key==='ArrowLeft'){e.preventDefault();STATE.dpIdx=Math.max(0,STATE.dpIdx-1);focusEl(STATE.dpIdx,authItems);return;}
+      if(key==='ArrowDown'||key==='ArrowRight'){e.preventDefault();STATE.dpIdx=Math.min(authItems.length-1,STATE.dpIdx+1);focusEl(STATE.dpIdx,authItems);return;}
+      if(key==='Enter'||key===' '){e.preventDefault();if(authItems[STATE.dpIdx])authItems[STATE.dpIdx].click();return;}
+      if(key==='Escape'||key==='Backspace'){e.preventDefault();closeAuth();return;}
       return;
     }
 
-    // --- MODE: SUB-SCREEN (matte, timer, ambient, gallery, google) ---
+    // SUB mode
     if (mode === 'sub') {
-      var subItems = getFocusableInSub();
-      if (key === 'ArrowUp') { e.preventDefault(); state.dpIdx = Math.max(0, state.dpIdx - 1); focusEl(state.dpIdx, subItems); return; }
-      if (key === 'ArrowDown') { e.preventDefault(); state.dpIdx = Math.min(subItems.length - 1, state.dpIdx + 1); focusEl(state.dpIdx, subItems); return; }
-      if (key === 'Enter' || key === ' ') {
-        e.preventDefault();
-        var fel = subItems[state.dpIdx];
-        if (!fel) return;
-        if (fel.type === 'range') {
-          fel.focus(); // let :focus-visible handle the ring; Left/Right adjusts the slider
-        } else {
-          fel.click();
-          if (fel.classList.contains('auth-btn') && fel.id === 'google-connect-btn') { openAuth(); }
-          if (fel.dataset.back !== undefined) backToSidebarNav();
-          syncSidebarValues();
-        }
-        return;
-      }
-      if (key === 'ArrowLeft' || key === 'ArrowRight') {
-        e.preventDefault();
-        var fel2 = subItems[state.dpIdx];
-        if (fel2 && fel2.type === 'range') {
-          var step = key === 'ArrowRight' ? 5 : -5;
-          fel2.value = Math.max(fel2.min, Math.min(fel2.max, parseInt(fel2.value) + step));
-          fel2.dispatchEvent(new Event('input', { bubbles: true }));
-          syncSidebarValues();
-        }
-        return;
-      }
-      if (key === 'Escape' || key === 'Backspace') { e.preventDefault(); backToSidebarNav(); return; }
+      var subItems = getSubItems();
+      if(key==='ArrowUp'){e.preventDefault();STATE.dpIdx=Math.max(0,STATE.dpIdx-1);focusEl(STATE.dpIdx,subItems);return;}
+      if(key==='ArrowDown'){e.preventDefault();STATE.dpIdx=Math.min(subItems.length-1,STATE.dpIdx+1);focusEl(STATE.dpIdx,subItems);return;}
+      if(key==='Enter'||key===' '){e.preventDefault();var fel=subItems[STATE.dpIdx];if(!fel)return;if(fel.type==='range')fel.focus();else{fel.click();if(fel.dataset.back!==undefined)backToNav();syncSidebarValues();}return;}
+      if(key==='ArrowLeft'||key==='ArrowRight'){e.preventDefault();var fel2=subItems[STATE.dpIdx];if(fel2&&fel2.type==='range'){var step=key==='ArrowRight'?5:-5;fel2.value=Math.max(parseInt(fel2.min),Math.min(parseInt(fel2.max),parseInt(fel2.value)+step));fel2.dispatchEvent(new Event('input',{bubbles:true}));syncSidebarValues();}return;}
+      if(key==='Escape'||key==='Backspace'){e.preventDefault();backToNav();return;}
       return;
     }
 
-    // --- MODE: SIDEBAR NAV ---
+    // SIDEBAR NAV mode
     if (mode === 'sidebar-nav') {
-      if (key === 'ArrowUp') { e.preventDefault(); state.dpIdx = Math.max(0, state.dpIdx - 1); focusEl(state.dpIdx, sidebarNavItems); return; }
-      if (key === 'ArrowDown') { e.preventDefault(); state.dpIdx = Math.min(sidebarNavItems.length - 1, state.dpIdx + 1); focusEl(state.dpIdx, sidebarNavItems); return; }
-      if (key === 'ArrowRight' || key === 'Enter' || key === ' ') {
-        e.preventDefault();
-        var ni = sidebarNavItems[state.dpIdx];
-        if (!ni) return;
-        if (ni.dataset.sub === 'google') { openAuth(); return; }
-        if (ni.dataset.sub) { openSubScreen(ni.dataset.sub); return; }
-        return;
-      }
-      if (key === 'ArrowLeft' || key === 'Escape' || key === 'Backspace') { e.preventDefault(); closeSidebar(); return; }
+      var sn = getSidebarNavItems();
+      if(key==='ArrowUp'){e.preventDefault();STATE.dpIdx=Math.max(0,STATE.dpIdx-1);focusEl(STATE.dpIdx,sn);return;}
+      if(key==='ArrowDown'){e.preventDefault();STATE.dpIdx=Math.min(sn.length-1,STATE.dpIdx+1);focusEl(STATE.dpIdx,sn);return;}
+      if(key==='ArrowRight'||key==='Enter'||key===' '){e.preventDefault();var ni=sn[STATE.dpIdx];if(!ni)return;if(ni.dataset.sub==='google'){openAuth();return;}if(ni.dataset.sub){openSubScreen(ni.dataset.sub);return;}return;}
+      if(key==='ArrowLeft'||key==='Escape'||key==='Backspace'){e.preventDefault();closeSidebar();return;}
       return;
     }
 
-    // --- MODE: BOTTOM MENU ---
-    if (mode === 'menu') {
-      if (key === 'ArrowLeft' || key === 'ArrowRight') {
-        e.preventDefault();
-        var dir = key === 'ArrowRight' ? 1 : -1;
-        state.dpIdx = (state.dpIdx + dir + menuItems.length) % menuItems.length;
-        focusEl(state.dpIdx, menuItems);
-        return;
-      }
-      if (key === 'ArrowDown' || key === 'Escape' || key === 'Backspace') { e.preventDefault(); hideMenu(); return; }
-      if (key === 'Enter' || key === ' ') {
-        e.preventDefault();
-        var mi = menuItems[state.dpIdx];
-        if (mi) {
-          var action = mi.dataset.action;
-          hideMenu();
-          openSidebar(action === 'settings' ? null : action);
-        }
-        return;
-      }
+    // SLIDESHOW MENU mode
+    if (mode === 'slideshow-menu') {
+      menuItems = getMenuItems();
+      if(key==='ArrowLeft'||key==='ArrowRight'){e.preventDefault();var dir=key==='ArrowRight'?1:-1;STATE.dpIdx=(STATE.dpIdx+dir+menuItems.length)%menuItems.length;focusEl(STATE.dpIdx,menuItems);return;}
+      if(key==='ArrowDown'||key==='Escape'||key==='Backspace'){e.preventDefault();hideMenu();return;}
+      if(key==='Enter'||key===' '){e.preventDefault();var mi=menuItems[STATE.dpIdx];if(mi)mi.click();return;}
       return;
     }
 
-    // --- MODE: ART (default) ---
-    if (mode === 'art') {
-      if (key === 'ArrowUp' || key === 'Enter' || key === ' ') { e.preventDefault(); showMenu(); return; }
-      if (key === 'ArrowLeft' || key === 'ArrowRight') {
+    // SLIDESHOW ART mode (default)
+    if (mode === 'slideshow-art') {
+      if(key==='ArrowUp'||key==='Enter'||key===' '){e.preventDefault();showMenu();return;}
+      if(key==='ArrowLeft'||key==='ArrowRight'){
         e.preventDefault();
-        var filtered = artworks.filter(function (a) { return state.selectedGalleries.indexOf(a.gallery) !== -1; });
-        if (filtered.length === 0) filtered = artworks;
+        var list = getActiveArtworks();
+        if (list.length === 0) list = artworks;
         var dir2 = key === 'ArrowRight' ? 1 : -1;
-        state.currentArtIdx = (state.currentArtIdx + dir2 + artworks.length) % artworks.length;
+        STATE.currentArtIdx = (STATE.currentArtIdx + dir2 + list.length) % list.length;
         renderArtwork(true);
         renderTimerIndicator();
         resetTimer();
+        updateCountBadge();
         return;
       }
+      if (key === 'Escape') { e.preventDefault(); quitSlideshow(); return; }
       return;
     }
   });
 
-  // Init
-  renderArtwork(false);
-  renderMatte();
-  renderAmbient();
-  renderTimerIndicator();
-  resetTimer();
-  syncSidebarValues();
+  // ==================== GOOGLE AUTH ====================
+  var GOOGLE_CLIENT_ID = 'VOTRE_CLIENT_ID.apps.googleusercontent.com';
 
-  // Launch animation
-  els.artwork.classList.add('launching');
-  setTimeout(function () { els.artwork.classList.remove('launching'); }, 2300);
+  function startGoogleAuth() {
+    var btn = document.getElementById('google-connect-btn');
+    btn.textContent = 'Connexion...'; btn.disabled = true;
+    fetch('https://oauth2.googleapis.com/device/code', {
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'client_id='+GOOGLE_CLIENT_ID+'&scope='+encodeURIComponent('https://www.googleapis.com/auth/photoslibrary.readonly')
+    })
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.error){btn.textContent='Erreur';btn.disabled=false;return;}
+      document.getElementById('auth-code').textContent=d.user_code;
+      pollForToken(d.device_code,d.interval||5);
+      btn.textContent='Se connecter avec Google';btn.disabled=false;
+    })
+    .catch(function(err){console.error(err);btn.textContent='Erreur réseau';btn.disabled=false;});
+  }
 
-  // Auto-focus body for keyboard
-  document.body.setAttribute('tabindex', '-1');
-  document.body.focus({ preventScroll: true });
+  function pollForToken(deviceCode,intervalSec) {
+    var poll = setInterval(function(){
+      fetch('https://oauth2.googleapis.com/token',{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:'client_id='+GOOGLE_CLIENT_ID+'&device_code='+encodeURIComponent(deviceCode)+'&grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Adevice_code'
+      })
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d.access_token){
+          clearInterval(poll);
+          STATE.googleConnected=true;
+          closeAuth();
+          document.getElementById('nav-google-val').textContent='Connecté';
+          syncSidebarValues();
+          console.log('✅ Google Photos connecté');
+        }else if(d.error==='authorization_pending'){/* wait */}
+        else{clearInterval(poll);console.error('Auth failed:',d);}
+      });
+    },(intervalSec||5)*1000);
+  }
 
-  console.log('ArtFrame prêt — Appuyez sur ↑ ou Entrée pour le menu');
+  // ==================== PIXEL SHIFT ====================
+  setInterval(function(){
+    var artworkEl = document.getElementById('artwork-current');
+    var x = (Math.random()>0.5?1:-1)*(Math.random()*3+2)%4;
+    var y = (Math.random()>0.5?1:-1)*(Math.random()*3+2)%4;
+    artworkEl.style.transform='translate('+x+'px,'+y+'px)';
+  },5*60*1000);
+
+  // ==================== INIT ====================
+  loadArtworks();
 })();
 </script>
-
 </body>
 </html>
