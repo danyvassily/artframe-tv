@@ -1,0 +1,1543 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ArtFrame — Android TV</title>
+  <style>
+    :root {
+      --bg:       oklch(8% 0.003 95);
+      --surface:  oklch(14% 0.005 95);
+      --fg:       oklch(92% 0.003 95);
+      --muted:    oklch(55% 0.012 95);
+      --border:   oklch(22% 0.008 95);
+      --accent:   oklch(70% 0.13 85);
+      --accent-dim: oklch(55% 0.08 85);
+      --danger:   oklch(58% 0.19 25);
+      --success:  oklch(62% 0.14 160);
+      --font-display: 'Georgia', 'Iowan Old Style', 'Times New Roman', serif;
+      --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      background: var(--bg);
+      font-family: var(--font-body);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tv-frame {
+      width: 1920px; height: 1080px;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+      transform-origin: top left;
+    }
+
+    /* === ART MODE === */
+
+    .art-mode {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      z-index: 1;
+    }
+
+    .artwork {
+      position: absolute;
+      inset: 0;
+      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      background-size: cover;
+      background-position: center;
+    }
+    .artwork.fading { opacity: 0; }
+
+    .vignette-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%);
+    }
+
+    .matte-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      transition: box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .canvas-texture {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 0.6s;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(180,160,130,0.03) 2px, rgba(180,160,130,0.03) 3px),
+        repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(160,140,110,0.02) 3px, rgba(160,140,110,0.02) 4px);
+    }
+    .canvas-texture.on { opacity: 1; }
+
+    .ambient-filter {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 4;
+      transition: opacity 0.5s;
+    }
+
+    .pixel-shift-indicator {
+      position: absolute;
+      top: 16px; right: 20px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: oklch(40% 0.006 95);
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    /* === BOTTOM MENU === */
+
+    .bottom-menu {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 200px;
+      background: linear-gradient(to bottom, transparent, rgba(8,7,5,0.97) 40%);
+      z-index: 10;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 48px;
+      gap: 80px;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .bottom-menu.visible { transform: translateY(0); }
+
+    .menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      padding: 12px 24px;
+      border-radius: 12px;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      background: none;
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: 15px;
+      letter-spacing: 0.02em;
+      min-width: 140px;
+    }
+    .menu-item:hover,
+    .menu-item:focus,
+    .menu-item.focused {
+      border-color: var(--accent);
+      background: rgba(255,255,255,0.04);
+    }
+    .menu-item .menu-icon {
+      width: 44px; height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.08);
+      transition: all 0.2s;
+    }
+    .menu-item.focused .menu-icon {
+      background: rgba(255,255,255,0.10);
+      border-color: var(--accent);
+    }
+    .menu-item .menu-icon svg {
+      width: 22px; height: 22px;
+      stroke: var(--fg);
+      stroke-width: 1.6;
+      fill: none;
+    }
+    .menu-item.focused .menu-icon svg { stroke: var(--accent); }
+    .menu-item span { opacity: 0.7; transition: opacity 0.2s; }
+    .menu-item.focused span { opacity: 1; color: var(--accent); }
+
+    /* === SIDEBAR === */
+
+    .sidebar-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 20;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s;
+    }
+    .sidebar-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .sidebar {
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 560px;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      z-index: 21;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar.open { transform: translateX(0); }
+
+    .sidebar-header {
+      padding: 40px 48px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sidebar-header h2 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      letter-spacing: -0.01em;
+      font-weight: 400;
+    }
+    .sidebar-close {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--muted);
+      font-size: 20px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.2s;
+    }
+    .sidebar-close:hover, .sidebar-close.focused {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .sidebar-nav {
+      padding: 20px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      background: none;
+      border: 1.5px solid transparent;
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: 16px;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+      text-align: left;
+      width: 100%;
+    }
+    .sidebar-nav-item:hover,
+    .sidebar-nav-item.focused {
+      background: rgba(255,255,255,0.04);
+      border-color: var(--border);
+    }
+    .sidebar-nav-item .nav-label {
+      flex: 1;
+      font-weight: 450;
+    }
+    .sidebar-nav-item .nav-value {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .sidebar-nav-item .nav-arrow {
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: 0.1em;
+    }
+
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 48px 48px;
+    }
+
+    /* === SUB-SCREENS inside sidebar === */
+
+    .sub-screen {
+      display: none;
+      flex-direction: column;
+      gap: 32px;
+      padding-top: 24px;
+    }
+    .sub-screen.active { display: flex; }
+
+    .sub-screen h3 {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .option-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option-group label {
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .option-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .option-chip {
+      flex: 1;
+      padding: 16px 20px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: 15px;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+    .option-chip small {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .option-chip:hover, .option-chip.focused {
+      border-color: var(--accent);
+      background: rgba(255,255,255,0.04);
+    }
+    .option-chip.selected {
+      border-color: var(--accent);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .color-swatch-row {
+      display: flex;
+      gap: 16px;
+    }
+    .color-swatch {
+      width: 52px; height: 52px;
+      border-radius: 10px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .color-swatch:hover, .color-swatch.focused {
+      border-color: var(--accent);
+      transform: scale(1.08);
+    }
+    .color-swatch.selected { border-color: var(--fg); }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .slider-row .slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .slider-row .slider-label label,
+    .slider-row .slider-label span:first-child {
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+    .slider-row .slider-label span:last-child {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--surface);
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(0,0,0,0.4);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+    .toggle-row span {
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+    .toggle-switch {
+      width: 52px; height: 30px;
+      border-radius: 15px;
+      background: var(--border);
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s;
+      border: none;
+    }
+    .toggle-switch.on { background: var(--accent-dim); }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 4px; left: 4px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.2s;
+    }
+    .toggle-switch.on::after { transform: translateX(22px); }
+    .toggle-switch:focus { box-shadow: 0 0 0 2px var(--accent); }
+
+    /* === GOOGLE AUTH OVERLAY === */
+
+    .auth-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+    .auth-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .auth-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 64px 80px;
+      text-align: center;
+      max-width: 640px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+    .auth-card h2 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      letter-spacing: -0.01em;
+      font-weight: 400;
+    }
+    .auth-card p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 440px;
+    }
+
+    .qr-code {
+      width: 200px; height: 200px;
+      background: #fff;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .qr-code svg { width: 180px; height: 180px; }
+
+    .auth-code-display {
+      font-family: var(--font-mono);
+      font-size: 42px;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      background: rgba(255,255,255,0.03);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 40px;
+    }
+    .auth-code-display.focused {
+      border-color: var(--accent);
+    }
+
+    .auth-url {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .auth-btn {
+      padding: 16px 48px;
+      border-radius: 10px;
+      border: 1.5px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      font-family: var(--font-body);
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .auth-btn:hover, .auth-btn.focused {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .auth-btn.secondary {
+      border-color: var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* === TIMER indicator === */
+
+    .timer-indicator {
+      position: absolute;
+      bottom: 28px; left: 28px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: oklch(35% 0.006 95);
+      z-index: 6;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .timer-indicator.visible { opacity: 1; }
+
+    /* === FOCUS RING — TV-optimized for 75" at 3m === */
+
+    :focus-visible {
+      box-shadow: 0 0 0 4px var(--accent), 0 0 18px 3px var(--accent-dim);
+      outline: none;
+    }
+    .dpad-focused {
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 0 4px var(--accent), 0 0 22px 4px var(--accent-dim);
+      outline: none;
+    }
+    .dpad-focused .menu-icon {
+      background: rgba(255,255,255,0.14);
+      border-color: var(--accent);
+    }
+    .dpad-focused .menu-icon svg { stroke: var(--accent); }
+    .dpad-focused.menu-item span { opacity: 1; color: var(--accent); }
+    .dpad-focused.option-chip { border-color: var(--accent); background: rgba(255,255,255,0.05); }
+    .dpad-focused.color-swatch { border-color: var(--accent); transform: scale(1.08); }
+    .dpad-focused.gallery-card { border-color: var(--accent); }
+    .dpad-focused.toggle-switch { box-shadow: 0 0 0 4px var(--accent), 0 0 18px 3px var(--accent-dim); }
+    .dpad-focused.auth-btn { background: var(--accent); color: var(--bg); }
+    .dpad-focused.sidebar-close { border-color: var(--accent); color: var(--accent); background: rgba(255,255,255,0.10); }
+
+    /* === GALLERY === */
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .gallery-card {
+      aspect-ratio: 4/3;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      transition: all 0.2s;
+      background: var(--bg);
+      position: relative;
+    }
+    .gallery-card:hover, .gallery-card.focused {
+      border-color: var(--accent);
+    }
+    .gallery-card.selected { border-color: var(--fg); }
+    .gallery-card .gc-img {
+      width: 100%; height: 100%;
+      background-size: cover;
+      background-position: center;
+    }
+    .gallery-card .gc-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      font-weight: 450;
+    }
+
+    /* === SCREEN-READER ONLY === */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+
+    /* === Responsive scale-to-fit === */
+    @media (max-width: 1920px), (max-height: 1080px) {
+      .tv-frame {
+        transform: scale(calc(min(100vw / 1920, 100vh / 1080)));
+      }
+    }
+
+    /* === LAUNCH ANIMATION === */
+    @keyframes art-appear {
+      0%   { filter: brightness(0.4) saturate(0.3); transform: scale(1.04); }
+      100% { filter: brightness(1) saturate(1); transform: scale(1); }
+    }
+    .artwork.launching {
+      animation: art-appear 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .artwork { transition: none; }
+      .artwork.launching { animation: none; filter: brightness(1) saturate(1); transform: none; }
+      .matte-overlay { transition: none; }
+      .bottom-menu { transition: none; }
+      .sidebar { transition: none; }
+      .sidebar-overlay { transition: none; }
+      .auth-overlay { transition: none; }
+      .canvas-texture { transition: none; }
+      .ambient-filter { transition: none; }
+      .pixel-shift-indicator { transition: none; }
+      .timer-indicator { transition: none; }
+      .menu-item, .sidebar-nav-item, .option-chip, .color-swatch,
+      .toggle-switch, .auth-btn, .gallery-card, .sidebar-close { transition: none; }
+      .toggle-switch::after { transition: none; }
+      .color-swatch:hover, .color-swatch.focused { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="tv-frame" id="tv-frame">
+
+  <!-- ===== ART MODE ===== -->
+  <section class="art-mode" id="art-mode" data-od-id="art-mode-screen">
+    <div class="artwork" id="artwork-current"></div>
+    <div class="vignette-overlay" id="vignette-overlay"></div>
+    <div class="matte-overlay" id="matte-overlay"></div>
+    <div class="canvas-texture" id="canvas-texture"></div>
+    <div class="ambient-filter" id="ambient-filter"></div>
+    <div class="pixel-shift-indicator" id="shift-indicator">PIXEL SHIFT ACTIF</div>
+    <div class="timer-indicator" id="timer-indicator">Prochain changement · 14:52</div>
+  </section>
+
+  <!-- ===== BOTTOM MENU ===== -->
+  <nav class="bottom-menu" id="bottom-menu" data-od-id="bottom-menu">
+    <button class="menu-item" data-action="gallery" data-od-id="menu-gallery">
+      <div class="menu-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <span>Galeries</span>
+    </button>
+    <button class="menu-item" data-action="matte" data-od-id="menu-matte">
+      <div class="menu-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="0"/><rect x="4" y="6" width="16" height="12" rx="0" fill="currentColor" fill-opacity="0.15"/></svg>
+      </div>
+      <span>Passe-partout</span>
+    </button>
+    <button class="menu-item" data-action="timer" data-od-id="menu-timer">
+      <div class="menu-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><polyline points="12,9 12,13 15,15"/></svg>
+      </div>
+      <span>Minuterie</span>
+    </button>
+    <button class="menu-item" data-action="settings" data-od-id="menu-settings">
+      <div class="menu-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v3m0 16v3m-9.9-11.1h3m13.8 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1m11.4-11.4 2.1-2.1"/></svg>
+      </div>
+      <span>Paramètres</span>
+    </button>
+  </nav>
+
+  <!-- ===== SIDEBAR ===== -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar" data-od-id="settings-sidebar">
+    <div class="sidebar-header">
+      <h2>Paramètres</h2>
+      <button class="sidebar-close" id="sidebar-close">&times;</button>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <button class="sidebar-nav-item" data-sub="matte" data-od-id="nav-matte">
+        <span class="nav-label">Passe-partout</span>
+        <span class="nav-value" id="nav-matte-val">Moyen · Blanc chaud</span>
+        <span class="nav-arrow">›</span>
+      </button>
+      <button class="sidebar-nav-item" data-sub="timer" data-od-id="nav-timer">
+        <span class="nav-label">Minuterie</span>
+        <span class="nav-value" id="nav-timer-val">15 minutes</span>
+        <span class="nav-arrow">›</span>
+      </button>
+      <button class="sidebar-nav-item" data-sub="ambient" data-od-id="nav-ambient">
+        <span class="nav-label">Tonalité ambiante</span>
+        <span class="nav-value" id="nav-ambient-val">Auto</span>
+        <span class="nav-arrow">›</span>
+      </button>
+      <button class="sidebar-nav-item" data-sub="gallery" data-od-id="nav-gallery">
+        <span class="nav-label">Galeries</span>
+        <span class="nav-value" id="nav-gallery-val">Toutes</span>
+        <span class="nav-arrow">›</span>
+      </button>
+      <button class="sidebar-nav-item" data-sub="google" data-od-id="nav-google">
+        <span class="nav-label">Compte Google</span>
+        <span class="nav-value" id="nav-google-val">Non connecté</span>
+        <span class="nav-arrow">›</span>
+      </button>
+    </nav>
+    <div class="sidebar-content" id="sidebar-content">
+
+      <!-- Matte sub-screen -->
+      <div class="sub-screen" id="sub-matte" data-od-id="sub-matte">
+        <h3>Passe-partout</h3>
+
+        <button class="sidebar-nav-item" data-back style="margin-left:-24px;width:auto;padding:12px 24px;font-size:14px;">
+          <span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span>
+          <span class="nav-label">Retour</span>
+        </button>
+
+        <div class="option-group">
+          <label>Activer le passe-partout</label>
+          <button class="toggle-switch on" id="matte-toggle" data-od-id="matte-toggle"></button>
+        </div>
+
+        <div class="option-group">
+          <label>Largeur du cadre</label>
+          <div class="option-row">
+            <button class="option-chip" data-matte-size="thin" data-od-id="matte-thin">Fin<small>40 px</small></button>
+            <button class="option-chip selected" data-matte-size="medium" data-od-id="matte-medium">Moyen<small>80 px</small></button>
+            <button class="option-chip" data-matte-size="thick" data-od-id="matte-thick">Large<small>140 px</small></button>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <label>Couleur du passe-partout</label>
+          <div class="color-swatch-row">
+            <button class="color-swatch selected" data-matte-color="warm-white" data-od-id="matte-warm-white"
+              style="background:oklch(95% 0.008 90);" title="Blanc chaud"></button>
+            <button class="color-swatch" data-matte-color="anthracite" data-od-id="matte-anthracite"
+              style="background:oklch(28% 0.006 250);" title="Anthracite"></button>
+            <button class="color-swatch" data-matte-color="sand" data-od-id="matte-sand"
+              style="background:oklch(78% 0.04 85);" title="Sable"></button>
+            <button class="color-swatch" data-matte-color="linen" data-od-id="matte-linen"
+              style="background:oklch(88% 0.02 95);" title="Lin"></button>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <label>Effet d'ombre 3D (profondeur)</label>
+          <div class="slider-row">
+            <div class="slider-label">
+              <label for="shadow-slider">Intensité de l'ombre</label>
+              <span id="shadow-val">50%</span>
+            </div>
+            <input type="range" min="0" max="100" value="50" id="shadow-slider" data-od-id="shadow-slider" />
+          </div>
+        </div>
+
+        <div class="option-group">
+          <label>Texture de toile</label>
+          <button class="toggle-switch" id="canvas-toggle" data-od-id="canvas-toggle"></button>
+        </div>
+      </div>
+
+      <!-- Timer sub-screen -->
+      <div class="sub-screen" id="sub-timer" data-od-id="sub-timer">
+        <h3>Minuterie</h3>
+        <button class="sidebar-nav-item" data-back style="margin-left:-24px;width:auto;padding:12px 24px;font-size:14px;">
+          <span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span>
+          <span class="nav-label">Retour</span>
+        </button>
+        <div class="option-group">
+          <label>Intervalle de changement</label>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button class="option-chip selected" data-timer="15" data-od-id="timer-15">15 minutes<small>Rotation régulière</small></button>
+            <button class="option-chip" data-timer="20" data-od-id="timer-20">20 minutes<small>Rotation modérée</small></button>
+            <button class="option-chip" data-timer="120" data-od-id="timer-120">2 heures<small>Contemplation</small></button>
+            <button class="option-chip" data-timer="static" data-od-id="timer-static">Statique<small>Changement manuel uniquement</small></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ambient tone sub-screen -->
+      <div class="sub-screen" id="sub-ambient" data-od-id="sub-ambient">
+        <h3>Tonalité ambiante</h3>
+        <button class="sidebar-nav-item" data-back style="margin-left:-24px;width:auto;padding:12px 24px;font-size:14px;">
+          <span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span>
+          <span class="nav-label">Retour</span>
+        </button>
+        <div class="slider-group">
+          <div class="slider-row">
+            <div class="slider-label">
+              <label for="brightness-slider">Luminosité de l'œuvre</label>
+              <span id="brightness-val">100%</span>
+            </div>
+            <input type="range" min="30" max="100" value="100" id="brightness-slider" data-od-id="brightness-slider" />
+          </div>
+          <div class="slider-row">
+            <div class="slider-label">
+              <label for="temperature-slider">Température des couleurs</label>
+              <span id="temperature-val">Neutre</span>
+            </div>
+            <input type="range" min="0" max="100" value="50" id="temperature-slider" data-od-id="temperature-slider" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery sub-screen -->
+      <div class="sub-screen" id="sub-gallery" data-od-id="sub-gallery">
+        <h3>Galeries</h3>
+        <button class="sidebar-nav-item" data-back style="margin-left:-24px;width:auto;padding:12px 24px;font-size:14px;">
+          <span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span>
+          <span class="nav-label">Retour</span>
+        </button>
+        <div class="gallery-grid">
+          <button class="gallery-card selected" data-gallery="classic" data-od-id="gallery-classic">
+            <div class="gc-img" style="background:linear-gradient(135deg,oklch(55% 0.06 30),oklch(45% 0.08 250),oklch(60% 0.05 140));"></div>
+            <div class="gc-label">Art Classique &amp; Musées</div>
+          </button>
+          <button class="gallery-card" data-gallery="landscape" data-od-id="gallery-landscape">
+            <div class="gc-img" style="background:linear-gradient(180deg,oklch(65% 0.08 240),oklch(50% 0.09 160),oklch(40% 0.04 90));"></div>
+            <div class="gc-label">Paysages &amp; Nature</div>
+          </button>
+          <button class="gallery-card" data-gallery="photos" data-od-id="gallery-photos">
+            <div class="gc-img" style="background:linear-gradient(135deg,oklch(60% 0.06 280),oklch(55% 0.05 200),oklch(65% 0.04 100));"></div>
+            <div class="gc-label">Google Photos</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Google Auth sub-screen -->
+      <div class="sub-screen" id="sub-google" data-od-id="sub-google">
+        <h3>Compte Google</h3>
+        <button class="sidebar-nav-item" data-back style="margin-left:-24px;width:auto;padding:12px 24px;font-size:14px;">
+          <span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span>
+          <span class="nav-label">Retour</span>
+        </button>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <button class="auth-btn" id="google-connect-btn" data-od-id="google-connect-btn">Se connecter avec Google</button>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Connectez-vous pour synchroniser vos albums Google Photos et les afficher en plein écran sur votre téléviseur.</p>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ===== GOOGLE AUTH OVERLAY ===== -->
+  <div class="auth-overlay" id="auth-overlay">
+    <div class="auth-card">
+      <h2 data-od-id="auth-title">Connexion Google</h2>
+      <p>Scannez le QR code avec votre smartphone ou saisissez le code ci-dessous sur <strong>google.com/device</strong></p>
+
+      <div class="qr-code" id="qr-code">
+        <svg viewBox="0 0 180 180">
+          <rect width="180" height="180" fill="white"/>
+          <g fill="black">
+            <rect x="20" y="20" width="40" height="40" rx="4"/>
+            <rect x="120" y="20" width="40" height="40" rx="4"/>
+            <rect x="20" y="120" width="40" height="40" rx="4"/>
+            <rect x="72" y="32" width="8" height="8" rx="2"/>
+            <rect x="88" y="32" width="8" height="8" rx="2"/>
+            <rect x="104" y="32" width="8" height="8" rx="2"/>
+            <rect x="72" y="48" width="8" height="8" rx="2"/>
+            <rect x="88" y="48" width="8" height="8" rx="2"/>
+            <rect x="104" y="48" width="8" height="8" rx="2"/>
+            <rect x="32" y="72" width="8" height="8" rx="2"/>
+            <rect x="48" y="72" width="8" height="8" rx="2"/>
+            <rect x="64" y="72" width="8" height="8" rx="2"/>
+            <rect x="88" y="72" width="8" height="8" rx="2"/>
+            <rect x="104" y="72" width="8" height="8" rx="2"/>
+            <rect x="120" y="72" width="8" height="8" rx="2"/>
+            <rect x="136" y="72" width="8" height="8" rx="2"/>
+            <rect x="32" y="88" width="8" height="8" rx="2"/>
+            <rect x="48" y="88" width="8" height="8" rx="2"/>
+            <rect x="72" y="88" width="8" height="8" rx="2"/>
+            <rect x="88" y="88" width="8" height="8" rx="2"/>
+            <rect x="104" y="88" width="8" height="8" rx="2"/>
+            <rect x="120" y="88" width="8" height="8" rx="2"/>
+            <rect x="136" y="88" width="8" height="8" rx="2"/>
+            <rect x="32" y="104" width="8" height="8" rx="2"/>
+            <rect x="48" y="104" width="8" height="8" rx="2"/>
+            <rect x="64" y="104" width="8" height="8" rx="2"/>
+            <rect x="88" y="104" width="8" height="8" rx="2"/>
+            <rect x="104" y="104" width="8" height="8" rx="2"/>
+            <rect x="120" y="104" width="8" height="8" rx="2"/>
+            <rect x="32" y="128" width="8" height="8" rx="2"/>
+            <rect x="48" y="128" width="8" height="8" rx="2"/>
+            <rect x="64" y="128" width="8" height="8" rx="2"/>
+            <rect x="88" y="128" width="8" height="8" rx="2"/>
+            <rect x="104" y="128" width="8" height="8" rx="2"/>
+            <rect x="120" y="128" width="8" height="8" rx="2"/>
+            <rect x="136" y="128" width="8" height="8" rx="2"/>
+            <rect x="44" y="144" width="8" height="8" rx="2"/>
+            <rect x="60" y="144" width="8" height="8" rx="2"/>
+            <rect x="76" y="144" width="8" height="8" rx="2"/>
+            <rect x="92" y="144" width="8" height="8" rx="2"/>
+            <rect x="120" y="144" width="8" height="8" rx="2"/>
+            <rect x="140" y="144" width="8" height="8" rx="2"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="auth-code-display" tabindex="-1" data-od-id="auth-code">G4X7-K2M9-PQ</div>
+      <div class="auth-url">google.com/device</div>
+
+      <button class="auth-btn secondary" data-back id="auth-back" data-od-id="auth-back-btn">Annuler</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // Artwork data — complex CSS-generated paintings
+  // Each artwork uses layered gradients, radial highlights, and texture
+  var artworks = [
+    {
+      name: 'Nuit étoilée',
+      gallery: 'classic',
+      bg: 'radial-gradient(ellipse 140% 80% at 25% 35%, oklch(55% 0.14 260) 0%, oklch(30% 0.08 258) 30%, oklch(15% 0.05 265) 55%, oklch(6% 0.03 270) 100%),' +
+         'radial-gradient(ellipse 60% 50% at 70% 50%, oklch(62% 0.12 80) 0%, transparent 70%),' +
+         'radial-gradient(circle 8% at 28% 32%, oklch(80% 0.13 85) 0%, transparent 100%),' +
+         'radial-gradient(circle 5% at 72% 48%, oklch(75% 0.12 70) 0%, transparent 100%),' +
+         'linear-gradient(180deg, oklch(20% 0.06 260), oklch(10% 0.03 270))'
+    },
+    {
+      name: 'Les nymphéas',
+      gallery: 'classic',
+      bg: 'radial-gradient(ellipse 90% 60% at 50% 55%, oklch(58% 0.10 180) 0%, oklch(48% 0.08 170) 35%, oklch(40% 0.06 160) 100%),' +
+         'radial-gradient(circle 12% at 30% 45%, oklch(80% 0.08 140) 0%, transparent 100%),' +
+         'radial-gradient(circle 10% at 65% 52%, oklch(78% 0.09 155) 0%, transparent 100%),' +
+         'radial-gradient(circle 8% at 45% 40%, oklch(75% 0.10 130) 0%, transparent 100%),' +
+         'repeating-linear-gradient(160deg, transparent, transparent 8px, oklch(50% 0.08 175) 8px, oklch(50% 0.08 175) 9px)'
+    },
+    {
+      name: 'La Joconde',
+      gallery: 'classic',
+      bg: 'radial-gradient(ellipse 60% 80% at 48% 55%, oklch(45% 0.05 80) 0%, oklch(28% 0.04 75) 45%, oklch(12% 0.03 85) 100%),' +
+         'radial-gradient(ellipse 30% 20% at 48% 48%, oklch(60% 0.06 75) 0%, transparent 100%),' +
+         'radial-gradient(ellipse 40% 60% at 35% 60%, oklch(22% 0.03 70) 0%, transparent 100%),' +
+         'linear-gradient(175deg, oklch(35% 0.04 85), oklch(15% 0.03 80))'
+    },
+    {
+      name: 'Champ de coquelicots',
+      gallery: 'classic',
+      bg: 'radial-gradient(ellipse 100% 40% at 50% 65%, oklch(58% 0.14 18) 0%, oklch(52% 0.12 20) 25%, oklch(72% 0.08 100) 50%, transparent 70%),' +
+         'radial-gradient(ellipse 100% 35% at 50% 25%, oklch(80% 0.04 245) 0%, oklch(74% 0.06 240) 40%, transparent 75%),' +
+         'radial-gradient(circle 3% at 18% 62%, oklch(62% 0.16 22) 0%, transparent 100%),' +
+         'radial-gradient(circle 2.5% at 38% 66%, oklch(64% 0.15 20) 0%, transparent 100%),' +
+         'radial-gradient(circle 2% at 55% 63%, oklch(60% 0.14 18) 0%, transparent 100%),' +
+         'radial-gradient(circle 3% at 78% 65%, oklch(63% 0.16 24) 0%, transparent 100%),' +
+         'linear-gradient(180deg, oklch(76% 0.05 250), oklch(82% 0.06 240) 30%, oklch(68% 0.07 130) 55%, oklch(55% 0.10 100) 100%)'
+    },
+    {
+      name: 'La grande vague',
+      gallery: 'classic',
+      bg: 'radial-gradient(ellipse 120% 70% at 40% 55%, oklch(68% 0.06 250) 0%, oklch(50% 0.10 245) 30%, oklch(72% 0.04 85) 55%, transparent 80%),' +
+         'radial-gradient(ellipse 70% 40% at 55% 38%, oklch(85% 0.05 90) 0%, oklch(78% 0.06 80) 40%, transparent 75%),' +
+         'radial-gradient(circle 5% at 42% 42%, oklch(55% 0.12 250) 0%, transparent 100%),' +
+         'linear-gradient(170deg, oklch(70% 0.06 250) 0%, oklch(65% 0.07 240) 25%, oklch(60% 0.05 220) 50%, oklch(48% 0.04 200) 100%)'
+    },
+    {
+      name: 'Mont Fuji au matin',
+      gallery: 'landscape',
+      bg: 'radial-gradient(ellipse 90% 30% at 50% 35%, oklch(82% 0.08 65) 0%, oklch(70% 0.06 55) 30%, transparent 65%),' +
+         'radial-gradient(ellipse 60% 50% at 50% 62%, oklch(45% 0.04 230) 0%, oklch(38% 0.03 220) 100%),' +
+         'linear-gradient(175deg, oklch(72% 0.05 60) 0%, oklch(65% 0.04 55) 15%, oklch(55% 0.03 230) 40%, oklch(40% 0.02 210) 75%, oklch(30% 0.02 200) 100%)'
+    },
+    {
+      name: 'Forêt ancienne',
+      gallery: 'landscape',
+      bg: 'radial-gradient(ellipse 50% 20% at 50% 18%, oklch(72% 0.06 80) 0%, oklch(58% 0.08 120) 35%, transparent 70%),' +
+         'radial-gradient(circle 15% at 42% 30%, oklch(68% 0.07 90) 0%, transparent 100%),' +
+         'radial-gradient(circle 12% at 65% 28%, oklch(65% 0.06 85) 0%, transparent 100%),' +
+         'linear-gradient(170deg, oklch(50% 0.08 140) 0%, oklch(35% 0.06 130) 35%, oklch(22% 0.05 120) 65%, oklch(15% 0.03 110) 100%)'
+    },
+    {
+      name: 'Aurore boréale',
+      gallery: 'landscape',
+      bg: 'radial-gradient(ellipse 120% 40% at 50% 30%, oklch(60% 0.14 170) 0%, oklch(48% 0.12 175) 25%, transparent 60%),' +
+         'radial-gradient(ellipse 100% 35% at 55% 32%, oklch(55% 0.12 280) 0%, oklch(42% 0.10 275) 30%, transparent 65%),' +
+         'radial-gradient(circle 2% at 35% 28%, oklch(80% 0.14 165) 0%, transparent 100%),' +
+         'radial-gradient(circle 3% at 60% 31%, oklch(78% 0.13 170) 0%, transparent 100%),' +
+         'linear-gradient(175deg, oklch(25% 0.06 270) 0%, oklch(18% 0.04 265) 40%, oklch(8% 0.02 260) 100%)'
+    },
+    {
+      name: 'Coucher de soleil tropical',
+      gallery: 'landscape',
+      bg: 'radial-gradient(ellipse 130% 50% at 50% 55%, oklch(72% 0.12 30) 0%, oklch(60% 0.10 35) 20%, oklch(48% 0.07 45) 45%, transparent 75%),' +
+         'radial-gradient(ellipse 60% 30% at 50% 82%, oklch(38% 0.04 200) 0%, oklch(30% 0.03 190) 100%),' +
+         'radial-gradient(circle 6% at 48% 50%, oklch(80% 0.15 40) 0%, transparent 100%),' +
+         'linear-gradient(175deg, oklch(65% 0.10 25) 0%, oklch(55% 0.08 40) 25%, oklch(45% 0.05 60) 55%, oklch(35% 0.03 200) 85%, oklch(25% 0.02 220) 100%)'
+    },
+    {
+      name: 'Lac alpin',
+      gallery: 'landscape',
+      bg: 'radial-gradient(ellipse 120% 35% at 50% 28%, oklch(80% 0.04 230) 0%, oklch(68% 0.06 225) 25%, transparent 55%),' +
+         'radial-gradient(ellipse 60% 50% at 50% 60%, oklch(50% 0.04 210) 0%, oklch(42% 0.03 200) 100%),' +
+         'radial-gradient(ellipse 40% 20% at 35% 35%, oklch(90% 0.03 100) 0%, oklch(82% 0.04 230) 100%),' +
+         'linear-gradient(180deg, oklch(72% 0.05 230) 0%, oklch(58% 0.06 200) 30%, oklch(48% 0.05 190) 55%, oklch(40% 0.04 180) 80%, oklch(30% 0.03 160) 100%)'
+    },
+    {
+      name: 'Abstraction géométrique',
+      gallery: 'classic',
+      bg: 'conic-gradient(from 30deg at 40% 50%, oklch(55% 0.10 260), oklch(75% 0.05 90) 45deg, oklch(50% 0.12 20) 90deg, oklch(60% 0.08 160) 180deg, oklch(45% 0.06 280) 270deg, oklch(55% 0.10 260) 360deg),' +
+         'radial-gradient(circle 20% at 30% 40%, oklch(72% 0.06 80) 0%, transparent 100%),' +
+         'radial-gradient(circle 15% at 65% 55%, oklch(68% 0.08 30) 0%, transparent 100%)'
+    },
+    {
+      name: 'Ciel d\'orage',
+      gallery: 'landscape',
+      bg: 'radial-gradient(ellipse 80% 60% at 50% 45%, oklch(28% 0.04 260) 0%, oklch(18% 0.05 265) 40%, oklch(10% 0.03 270) 100%),' +
+         'radial-gradient(ellipse 50% 20% at 55% 35%, oklch(45% 0.06 260) 0%, transparent 70%),' +
+         'radial-gradient(circle 1% at 60% 38%, oklch(85% 0.02 100) 0%, oklch(75% 0.06 80) 30%, transparent 100%),' +
+         'linear-gradient(180deg, oklch(20% 0.05 265), oklch(12% 0.04 270) 60%, oklch(8% 0.02 250) 100%)'
+    }
+  ];
+
+  // State
+  var state = {
+    currentArtIdx: 0,
+    menuVisible: false,
+    menuFocusIdx: 0,
+    sidebarOpen: false,
+    currentSub: null,
+    matteEnabled: true,
+    matteSize: 'medium',
+    matteColor: 'warm-white',
+    shadowIntensity: 50,
+    canvasTexture: false,
+    timerInterval: 15,
+    brightness: 100,
+    temperature: 50,
+    selectedGalleries: ['classic', 'landscape'],
+    googleConnected: false,
+    pixelShift: { x: 0, y: 0 },
+  };
+
+  // Elements
+  var els = {
+    artwork: document.getElementById('artwork-current'),
+    matte: document.getElementById('matte-overlay'),
+    canvasTex: document.getElementById('canvas-texture'),
+    ambientFilter: document.getElementById('ambient-filter'),
+    bottomMenu: document.getElementById('bottom-menu'),
+    sidebar: document.getElementById('sidebar'),
+    sidebarOverlay: document.getElementById('sidebar-overlay'),
+    sidebarContent: document.getElementById('sidebar-content'),
+    authOverlay: document.getElementById('auth-overlay'),
+    shiftIndicator: document.getElementById('shift-indicator'),
+    timerIndicator: document.getElementById('timer-indicator'),
+  };
+
+  // Scale-to-fit
+  function fitFrame() {
+    var frame = document.getElementById('tv-frame');
+    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    frame.style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', fitFrame);
+  fitFrame();
+
+  // Update artwork with cross-fade
+  var _artTimer = null;
+  function renderArtwork(crossfade) {
+    var art = artworks[state.currentArtIdx];
+    if (crossfade) {
+      els.artwork.classList.add('fading');
+      setTimeout(function () {
+        els.artwork.style.background = art.bg;
+        els.artwork.classList.remove('fading');
+      }, 450);
+    } else {
+      els.artwork.style.background = art.bg;
+    }
+  }
+
+  // Update matte border — realistic glass + frame 3D effect
+  function renderMatte() {
+    if (!state.matteEnabled) {
+      els.matte.style.boxShadow = 'none';
+      return;
+    }
+    var sizes = { thin: 40, medium: 80, thick: 140 };
+    var px = sizes[state.matteSize];
+    var colors = {
+      'warm-white': 'oklch(95% 0.008 90)',
+      'anthracite': 'oklch(28% 0.006 250)',
+      'sand': 'oklch(78% 0.04 85)',
+      'linen': 'oklch(88% 0.02 95)'
+    };
+    var color = colors[state.matteColor];
+    var intensity = state.shadowIntensity / 100;
+    var innerSpread = Math.round(8 * intensity);
+    var innerBlur = Math.round(24 * intensity);
+    var glassSpread = Math.round(6 * intensity);
+    var glassBlur = Math.round(16 * intensity);
+    var depthSpread = Math.round(20 * intensity);
+    var depthBlur = Math.round(56 * intensity);
+    // Multi-layer: matte fill → ambient occlusion → glass reflection → depth shadow
+    els.matte.style.boxShadow =
+      'inset 0 0 0 ' + px + 'px ' + color + ', ' +
+      'inset ' + innerSpread + 'px ' + innerSpread + 'px ' + innerBlur + 'px rgba(0,0,0,' + (0.35 * intensity) + '), ' +
+      'inset -' + (innerSpread * 0.6) + 'px -' + (innerSpread * 0.6) + 'px ' + innerBlur + 'px rgba(255,255,255,' + (0.04 * intensity) + '), ' +
+      'inset ' + glassSpread + 'px ' + glassSpread + 'px ' + glassBlur + 'px rgba(255,255,255,' + (0.07 * intensity) + '), ' +
+      'inset -' + depthSpread + 'px -' + depthSpread + 'px ' + depthBlur + 'px rgba(0,0,0,' + (0.25 * intensity) + '), ' +
+      'inset ' + (depthSpread * 0.5) + 'px ' + (depthSpread * 0.5) + 'px ' + depthBlur + 'px rgba(0,0,0,' + (0.15 * intensity) + ')';
+  }
+
+  // Update canvas texture
+  function renderCanvasTexture() {
+    els.canvasTex.classList.toggle('on', state.canvasTexture);
+  }
+
+  // Update ambient filter
+  function renderAmbient() {
+    var b = state.brightness / 100;
+    var t = state.temperature / 100;
+    var warm = 1 + (t - 0.5) * 0.4;
+    var cool = 1 - (t - 0.5) * 0.3;
+    els.ambientFilter.style.background =
+      'linear-gradient(rgba(255,' + Math.round(240 * warm) + ',' + Math.round(210 * cool) + ',0.08), rgba(0,0,0,' + (1 - b) * 0.6 + '))';
+  }
+
+  // Update timer indicator
+  function renderTimerIndicator() {
+    if (state.timerInterval === 'static') {
+      els.timerIndicator.classList.remove('visible');
+    } else {
+      els.timerIndicator.classList.add('visible');
+      var mins = parseInt(state.timerInterval);
+      var now = new Date();
+      now.setMinutes(now.getMinutes() + mins);
+      var h = String(now.getHours()).padStart(2, '0');
+      var m = String(now.getMinutes()).padStart(2, '0');
+      els.timerIndicator.textContent = 'Prochain changement \u00b7 ' + h + ':' + m;
+    }
+  }
+
+  // Pixel shifting
+  function pixelShift() {
+    state.pixelShift.x = (state.pixelShift.x + (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 2)) % 4;
+    state.pixelShift.y = (state.pixelShift.y + (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 2)) % 4;
+    els.artwork.style.transform = 'translate(' + state.pixelShift.x + 'px,' + state.pixelShift.y + 'px)';
+    els.shiftIndicator.style.opacity = '1';
+    setTimeout(function () { els.shiftIndicator.style.opacity = '0'; }, 800);
+  }
+  setInterval(pixelShift, 5 * 60 * 1000); // every 5 minutes
+
+  // Art rotation
+  function rotateArt() {
+    if (state.timerInterval === 'static') return;
+    var filtered = artworks.filter(function (a) {
+      return state.selectedGalleries.indexOf(a.gallery) !== -1;
+    });
+    if (filtered.length === 0) filtered = artworks;
+    var next;
+    do {
+      next = Math.floor(Math.random() * filtered.length);
+    } while (filtered.length > 1 && filtered[next].name === artworks[state.currentArtIdx].name);
+    for (var i = 0; i < artworks.length; i++) {
+      if (artworks[i].name === filtered[next].name) {
+        state.currentArtIdx = i;
+        break;
+      }
+    }
+    renderArtwork(true);
+    renderTimerIndicator();
+  }
+
+  function resetTimer() {
+    clearInterval(window._artTimer);
+    if (state.timerInterval !== 'static') {
+      window._artTimer = setInterval(rotateArt, parseInt(state.timerInterval) * 60 * 1000);
+    }
+  }
+
+  // ============================================================
+  // D-PAD NAVIGATION STATE MACHINE
+  // Modes: 'art' | 'menu' | 'sidebar-nav' | 'sub' | 'auth'
+  // ============================================================
+
+  state.dpMode = 'art';
+  state.dpIdx = 0;
+
+  var menuItems = document.querySelectorAll('.menu-item');
+  var sidebarNavItems = document.querySelectorAll('#sidebar-nav .sidebar-nav-item');
+
+  function clearAllFocus() {
+    document.querySelectorAll('.dpad-focused').forEach(function (el) { el.classList.remove('dpad-focused'); });
+  }
+
+  function focusEl(idx, list) {
+    clearAllFocus();
+    if (list && list[idx]) list[idx].classList.add('dpad-focused');
+  }
+
+  function getFocusableInSub() {
+    var sub = document.getElementById('sub-' + state.currentSub);
+    if (!sub) return [];
+    var el = sub.querySelector('.dpad-focused');
+    if (el) el.classList.remove('dpad-focused'); // re-query strategy
+    return Array.prototype.slice.call(sub.querySelectorAll('[data-dpad]:not([data-back]), .option-chip:not([data-back]), .color-swatch, .toggle-switch, .gallery-card, .auth-btn, .slider-row input[type="range"]'));
+  }
+
+  function execSubAction(idx) {
+    var items = getFocusableInSub();
+    if (!items[idx]) return;
+    var el = items[idx];
+    if (el.classList.contains('toggle-switch') || el.tagName === 'BUTTON') {
+      el.click();
+      syncSidebarValues();
+    } else if (el.classList.contains('gallery-card')) {
+      el.click();
+    } else if (el.type === 'range') {
+      // Sliders: Enter toggles focus mode; Left/Right adjusts
+      // (handled in keydown below)
+    }
+  }
+
+  function showMenu() {
+    state.menuVisible = true;
+    state.dpMode = 'menu';
+    state.dpIdx = 0;
+    els.bottomMenu.classList.add('visible');
+    focusEl(state.dpIdx, menuItems);
+  }
+
+  function hideMenu() {
+    state.menuVisible = false;
+    state.dpMode = 'art';
+    els.bottomMenu.classList.remove('visible');
+    clearAllFocus();
+  }
+
+  function openSidebar(sub) {
+    state.sidebarOpen = true;
+    state.dpMode = sub ? 'sub' : 'sidebar-nav';
+    state.dpIdx = 0;
+    els.sidebar.classList.add('open');
+    els.sidebarOverlay.classList.add('open');
+    if (sub) {
+      openSubScreen(sub);
+      var items = getFocusableInSub();
+      focusEl(0, items);
+    } else {
+      focusEl(0, sidebarNavItems);
+      document.querySelectorAll('.sub-screen.active').forEach(function (s) { s.classList.remove('active'); });
+      state.currentSub = null;
+    }
+    syncSidebarValues();
+  }
+
+  function closeSidebar() {
+    state.sidebarOpen = false;
+    state.currentSub = null;
+    state.dpMode = 'art';
+    els.sidebar.classList.remove('open');
+    els.sidebarOverlay.classList.remove('open');
+    document.querySelectorAll('.sub-screen.active').forEach(function (s) { s.classList.remove('active'); });
+    clearAllFocus();
+  }
+
+  function openSubScreen(sub) {
+    state.currentSub = sub;
+    state.dpMode = 'sub';
+    state.dpIdx = 0;
+    document.querySelectorAll('.sub-screen.active').forEach(function (s) { s.classList.remove('active'); });
+    var target = document.getElementById('sub-' + sub);
+    if (target) target.classList.add('active');
+    setTimeout(function () {
+      var items = getFocusableInSub();
+      focusEl(0, items);
+    }, 50);
+  }
+
+  function backToSidebarNav() {
+    state.currentSub = null;
+    state.dpMode = 'sidebar-nav';
+    state.dpIdx = 0;
+    document.querySelectorAll('.sub-screen.active').forEach(function (s) { s.classList.remove('active'); });
+    focusEl(0, sidebarNavItems);
+    syncSidebarValues();
+  }
+
+  function openAuth() {
+    state.dpMode = 'auth';
+    state.dpIdx = 0;
+    els.authOverlay.classList.add('open');
+    var authItems = Array.prototype.slice.call(document.querySelectorAll('#auth-overlay .auth-btn, #auth-overlay .auth-code-display'));
+    focusEl(0, authItems);
+  }
+
+  function closeAuth() {
+    state.dpMode = state.sidebarOpen ? 'sidebar-nav' : 'art';
+    els.authOverlay.classList.remove('open');
+    clearAllFocus();
+    if (state.sidebarOpen) focusEl(0, sidebarNavItems);
+  }
+
+  function syncSidebarValues() {
+    var matteSizeLabels = { thin: 'Fin', medium: 'Moyen', thick: 'Large' };
+    var matteColorLabels = { 'warm-white': 'Blanc chaud', 'anthracite': 'Anthracite', 'sand': 'Sable', 'linen': 'Lin' };
+    document.getElementById('nav-matte-val').textContent = matteSizeLabels[state.matteSize] + ' · ' + matteColorLabels[state.matteColor];
+    var timerLabels = { 15: '15 minutes', 20: '20 minutes', 120: '2 heures', 'static': 'Statique' };
+    document.getElementById('nav-timer-val').textContent = timerLabels[state.timerInterval];
+    document.getElementById('nav-ambient-val').textContent = state.brightness === 100 && state.temperature === 50 ? 'Auto' : state.brightness + '% · ' + (state.temperature > 60 ? 'Chaud' : state.temperature < 40 ? 'Froid' : 'Neutre');
+    document.getElementById('nav-gallery-val').textContent = state.selectedGalleries.length >= 2 ? 'Toutes' : state.selectedGalleries[0] === 'classic' ? 'Classique' : state.selectedGalleries[0] === 'landscape' ? 'Paysages' : 'Photos';
+    document.getElementById('nav-google-val').textContent = state.googleConnected ? 'Connecté' : 'Non connecté';
+    document.getElementById('shadow-val').textContent = state.shadowIntensity + '%';
+    document.getElementById('brightness-val').textContent = state.brightness + '%';
+    var tempVal = document.getElementById('temperature-val');
+    tempVal.textContent = state.temperature > 60 ? 'Chaud' : state.temperature < 40 ? 'Froid' : 'Neutre';
+    document.getElementById('matte-toggle').classList.toggle('on', state.matteEnabled);
+    document.getElementById('canvas-toggle').classList.toggle('on', state.canvasTexture);
+    document.querySelectorAll('[data-matte-size]').forEach(function (b) {
+      b.classList.toggle('selected', b.dataset.matteSize === state.matteSize);
+    });
+    document.querySelectorAll('[data-matte-color]').forEach(function (b) {
+      b.classList.toggle('selected', b.dataset.matteColor === state.matteColor);
+    });
+    document.querySelectorAll('[data-timer]').forEach(function (b) {
+      b.classList.toggle('selected', String(b.dataset.timer) === String(state.timerInterval));
+    });
+    document.getElementById('brightness-slider').value = state.brightness;
+    document.getElementById('temperature-slider').value = state.temperature;
+    document.getElementById('shadow-slider').value = state.shadowIntensity;
+  }
+
+  // --- CLICK HANDLER (browser testing fallback, not required for D-pad) ---
+  document.addEventListener('click', function (e) {
+    var target = e.target;
+    if (target.closest('.menu-item')) { var a = target.closest('.menu-item').dataset.action; hideMenu(); openSidebar(a === 'settings' ? null : a); return; }
+    if (target.closest('#art-mode') && !state.menuVisible && !state.sidebarOpen) { showMenu(); return; }
+    if (target.closest('[data-matte-size]')) { state.matteSize = target.closest('[data-matte-size]').dataset.matteSize; renderMatte(); syncSidebarValues(); return; }
+    if (target.closest('[data-matte-color]')) { state.matteColor = target.closest('[data-matte-color]').dataset.matteColor; renderMatte(); syncSidebarValues(); return; }
+    if (target.closest('[data-timer]')) { var v = target.closest('[data-timer]').dataset.timer; state.timerInterval = v === 'static' ? 'static' : parseInt(v); renderTimerIndicator(); resetTimer(); syncSidebarValues(); return; }
+    if (target.closest('[data-gallery]')) { var g = target.closest('[data-gallery]').dataset.gallery; var idx = state.selectedGalleries.indexOf(g); if (idx === -1) { state.selectedGalleries.push(g); target.closest('[data-gallery]').classList.add('selected'); } else { state.selectedGalleries.splice(idx, 1); target.closest('[data-gallery]').classList.remove('selected'); } syncSidebarValues(); return; }
+    if (target.classList.contains('toggle-switch')) { if (target.id === 'matte-toggle') { state.matteEnabled = !state.matteEnabled; renderMatte(); } else if (target.id === 'canvas-toggle') { state.canvasTexture = !state.canvasTexture; renderCanvasTexture(); } syncSidebarValues(); return; }
+    if (target.closest('#sidebar-close')) { closeSidebar(); return; }
+    if (target === els.sidebarOverlay) { closeSidebar(); return; }
+    if (target.closest('#auth-back')) { closeAuth(); return; }
+    if (target.closest('#google-connect-btn')) { openAuth(); return; }
+    if (target.closest('.sidebar-nav-item')) {
+      var ni = target.closest('.sidebar-nav-item');
+      if (ni.dataset.sub === 'google') { openAuth(); return; }
+      if (ni.dataset.sub) { openSubScreen(ni.dataset.sub); return; }
+      if (ni.dataset.back !== undefined) { backToSidebarNav(); return; }
+      return;
+    }
+  });
+
+  // Range inputs
+  document.getElementById('brightness-slider').addEventListener('input', function () {
+    state.brightness = parseInt(this.value);
+    document.getElementById('brightness-val').textContent = state.brightness + '%';
+    renderAmbient();
+  });
+  document.getElementById('temperature-slider').addEventListener('input', function () {
+    state.temperature = parseInt(this.value);
+    document.getElementById('temperature-val').textContent = state.temperature > 60 ? 'Chaud' : state.temperature < 40 ? 'Froid' : 'Neutre';
+    renderAmbient();
+  });
+  document.getElementById('shadow-slider').addEventListener('input', function () {
+    state.shadowIntensity = parseInt(this.value);
+    document.getElementById('shadow-val').textContent = state.shadowIntensity + '%';
+    renderMatte();
+  });
+
+  // ============================================================
+  // KEYBOARD — Full D-Pad state machine (Xiaomi / Fire TV remote)
+  // ============================================================
+  document.addEventListener('keydown', function (e) {
+    var key = e.key;
+    var mode = state.dpMode;
+
+    // --- MODE: AUTH OVERLAY ---
+    if (mode === 'auth') {
+      var authItems = Array.prototype.slice.call(document.querySelectorAll('#auth-overlay .auth-btn, #auth-overlay .auth-code-display'));
+      if (key === 'ArrowUp' || key === 'ArrowLeft') { e.preventDefault(); state.dpIdx = Math.max(0, state.dpIdx - 1); focusEl(state.dpIdx, authItems); return; }
+      if (key === 'ArrowDown' || key === 'ArrowRight') { e.preventDefault(); state.dpIdx = Math.min(authItems.length - 1, state.dpIdx + 1); focusEl(state.dpIdx, authItems); return; }
+      if (key === 'Enter' || key === ' ') { e.preventDefault(); if (authItems[state.dpIdx]) authItems[state.dpIdx].click(); closeAuth(); return; }
+      if (key === 'Escape' || key === 'Backspace') { e.preventDefault(); closeAuth(); return; }
+      return;
+    }
+
+    // --- MODE: SUB-SCREEN (matte, timer, ambient, gallery, google) ---
+    if (mode === 'sub') {
+      var subItems = getFocusableInSub();
+      if (key === 'ArrowUp') { e.preventDefault(); state.dpIdx = Math.max(0, state.dpIdx - 1); focusEl(state.dpIdx, subItems); return; }
+      if (key === 'ArrowDown') { e.preventDefault(); state.dpIdx = Math.min(subItems.length - 1, state.dpIdx + 1); focusEl(state.dpIdx, subItems); return; }
+      if (key === 'Enter' || key === ' ') {
+        e.preventDefault();
+        var fel = subItems[state.dpIdx];
+        if (!fel) return;
+        if (fel.type === 'range') {
+          fel.focus(); // let :focus-visible handle the ring; Left/Right adjusts the slider
+        } else {
+          fel.click();
+          if (fel.classList.contains('auth-btn') && fel.id === 'google-connect-btn') { openAuth(); }
+          if (fel.dataset.back !== undefined) backToSidebarNav();
+          syncSidebarValues();
+        }
+        return;
+      }
+      if (key === 'ArrowLeft' || key === 'ArrowRight') {
+        e.preventDefault();
+        var fel2 = subItems[state.dpIdx];
+        if (fel2 && fel2.type === 'range') {
+          var step = key === 'ArrowRight' ? 5 : -5;
+          fel2.value = Math.max(fel2.min, Math.min(fel2.max, parseInt(fel2.value) + step));
+          fel2.dispatchEvent(new Event('input', { bubbles: true }));
+          syncSidebarValues();
+        }
+        return;
+      }
+      if (key === 'Escape' || key === 'Backspace') { e.preventDefault(); backToSidebarNav(); return; }
+      return;
+    }
+
+    // --- MODE: SIDEBAR NAV ---
+    if (mode === 'sidebar-nav') {
+      if (key === 'ArrowUp') { e.preventDefault(); state.dpIdx = Math.max(0, state.dpIdx - 1); focusEl(state.dpIdx, sidebarNavItems); return; }
+      if (key === 'ArrowDown') { e.preventDefault(); state.dpIdx = Math.min(sidebarNavItems.length - 1, state.dpIdx + 1); focusEl(state.dpIdx, sidebarNavItems); return; }
+      if (key === 'ArrowRight' || key === 'Enter' || key === ' ') {
+        e.preventDefault();
+        var ni = sidebarNavItems[state.dpIdx];
+        if (!ni) return;
+        if (ni.dataset.sub === 'google') { openAuth(); return; }
+        if (ni.dataset.sub) { openSubScreen(ni.dataset.sub); return; }
+        return;
+      }
+      if (key === 'ArrowLeft' || key === 'Escape' || key === 'Backspace') { e.preventDefault(); closeSidebar(); return; }
+      return;
+    }
+
+    // --- MODE: BOTTOM MENU ---
+    if (mode === 'menu') {
+      if (key === 'ArrowLeft' || key === 'ArrowRight') {
+        e.preventDefault();
+        var dir = key === 'ArrowRight' ? 1 : -1;
+        state.dpIdx = (state.dpIdx + dir + menuItems.length) % menuItems.length;
+        focusEl(state.dpIdx, menuItems);
+        return;
+      }
+      if (key === 'ArrowDown' || key === 'Escape' || key === 'Backspace') { e.preventDefault(); hideMenu(); return; }
+      if (key === 'Enter' || key === ' ') {
+        e.preventDefault();
+        var mi = menuItems[state.dpIdx];
+        if (mi) {
+          var action = mi.dataset.action;
+          hideMenu();
+          openSidebar(action === 'settings' ? null : action);
+        }
+        return;
+      }
+      return;
+    }
+
+    // --- MODE: ART (default) ---
+    if (mode === 'art') {
+      if (key === 'ArrowUp' || key === 'Enter' || key === ' ') { e.preventDefault(); showMenu(); return; }
+      if (key === 'ArrowLeft' || key === 'ArrowRight') {
+        e.preventDefault();
+        var filtered = artworks.filter(function (a) { return state.selectedGalleries.indexOf(a.gallery) !== -1; });
+        if (filtered.length === 0) filtered = artworks;
+        var dir2 = key === 'ArrowRight' ? 1 : -1;
+        state.currentArtIdx = (state.currentArtIdx + dir2 + artworks.length) % artworks.length;
+        renderArtwork(true);
+        renderTimerIndicator();
+        resetTimer();
+        return;
+      }
+      return;
+    }
+  });
+
+  // Init
+  renderArtwork(false);
+  renderMatte();
+  renderAmbient();
+  renderTimerIndicator();
+  resetTimer();
+  syncSidebarValues();
+
+  // Launch animation
+  els.artwork.classList.add('launching');
+  setTimeout(function () { els.artwork.classList.remove('launching'); }, 2300);
+
+  // Auto-focus body for keyboard
+  document.body.setAttribute('tabindex', '-1');
+  document.body.focus({ preventScroll: true });
+
+  console.log('ArtFrame prêt — Appuyez sur ↑ ou Entrée pour le menu');
+})();
+</script>
+
+</body>
+</html>

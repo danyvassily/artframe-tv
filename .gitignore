@@ -1,0 +1,44 @@
+# ArtFrame — Android TV Art Mode App
+# .gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.sublime-*
+
+# Build artifacts
+*.apk
+*.aab
+*.dex
+*.class
+*.log
+*.ap_
+build/
+app/build/
+.gradle/
+local.properties
+*.keystore
+
+# Node
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Temp
+/tmp/
+*.tmp
+
+# Environment
+.env
+.env.local

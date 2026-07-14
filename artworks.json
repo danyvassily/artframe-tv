@@ -1,0 +1,1940 @@
+{
+  "artworks": [
+    {
+      "title": "The Birth of Venus",
+      "artist": "Sandro Botticelli",
+      "year": "1484–1486",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg",
+      "gallery": "renaissance",
+      "source": "wikimedia"
+    },
+    {
+      "title": "The Creation of Adam",
+      "artist": "Michelangelo Buonarroti",
+      "year": "1511",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Sistine_Chapel_ceiling%2C_Creation_of_Adam.jpg",
+      "gallery": "renaissance",
+      "source": "wikimedia"
+    },
+    {
+      "title": "Archers Shooting at a Herm, Triumph of Bacchus, and Other Studies",
+      "artist": "Michelangelo Buonarroti",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/f92d9ff9-324d-abcc-186d-0bb4bccc696c/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Legs and Feet of Male Nude",
+      "artist": "Michelangelo Buonarroti",
+      "year": "1812/50",
+      "image_url": "https://www.artic.edu/iiif/2/edeb0db8-32ce-0e24-abfd-735c2292b4a6/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Moses",
+      "artist": "Michelangelo Buonarroti",
+      "year": "1700s",
+      "image_url": "https://www.artic.edu/iiif/2/b47f6d05-5116-d24a-bf81-f92a5ec7c329/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Left Hand of Moses",
+      "artist": "Michelangelo Buonarroti",
+      "year": "1725/30",
+      "image_url": "https://www.artic.edu/iiif/2/f838d528-6eb6-a158-9692-7fae1dfc2a2c/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Drunkenness of Noah",
+      "artist": "Michelangelo Buonarroti",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/0b31dfb0-34e8-4985-a91f-cf5abfa2fbbd/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Ascending Male Nude",
+      "artist": "Michelangelo Buonarroti",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/c36910f9-a869-ca22-d298-1266cf604730/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Seated Male Nude",
+      "artist": "Michelangelo Buonarroti",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/e5d8f201-1842-debb-4ed1-deba4bc14d3c/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Two Devils",
+      "artist": "Michelangelo Buonarroti",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/dcc888ff-f71f-106b-c1ef-99457ebd8ab4/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Upraised Right Hand, with Palm Facing Outward: Study for Saint Peter",
+      "artist": "Raphael",
+      "year": "1518/20",
+      "image_url": "https://www.artic.edu/iiif/2/f00f93d0-ed84-aaea-d93a-b3417e97dd62/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Guard Drawing His Sword",
+      "artist": "Raphael",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/d7d77ed2-ded1-50b9-aeb8-07a80e82249e/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Head of Comity",
+      "artist": "Raphael",
+      "year": "c. 1750",
+      "image_url": "https://www.artic.edu/iiif/2/0e2fa0d4-c7d3-b181-630f-722e95dbf0ec/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Psyche Presenting the Phial of Water to Venus",
+      "artist": "Raphael",
+      "year": "18th century",
+      "image_url": "https://www.artic.edu/iiif/2/749f1093-7713-4649-9eae-8fd35cef6c9e/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Joanna of Aragon",
+      "artist": "Raphael",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/9295f959-8a26-6c91-efb8-22d944685e21/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Conversion of Saint Paul",
+      "artist": "Raphael",
+      "year": "18th century",
+      "image_url": "https://www.artic.edu/iiif/2/dc346a0d-a4b2-33c9-7264-6d57bda97dc7/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Last Supper",
+      "artist": "Raphael",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/5fe77541-a679-d338-c323-c7449d202d84/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Woman Carrying Water Jar",
+      "artist": "Raphael",
+      "year": "17th century",
+      "image_url": "https://www.artic.edu/iiif/2/ebe8a2da-0661-c8d9-7729-2179fdd3fbc1/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Alcibiades and Two Philosophers",
+      "artist": "Raphael",
+      "year": "18th century",
+      "image_url": "https://www.artic.edu/iiif/2/448fbeea-8e85-cfb4-208b-e869d99cc927/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Virgin and Child with an Angel",
+      "artist": "Sandro Botticelli",
+      "year": "1475–85",
+      "image_url": "https://www.artic.edu/iiif/2/b59cc3e9-a7c0-5aa1-1a22-bb472bb2e6d4/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Virgin and Child with Two Angels",
+      "artist": "Sandro Botticelli",
+      "year": "1485–95",
+      "image_url": "https://www.artic.edu/iiif/2/eb49ab17-f2d9-275a-ee71-e8f0016b34aa/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Tobias and the Angel",
+      "artist": "Titian",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/ae6af039-310b-7581-b4c8-628982ebe97c/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Submersion of Pharaoh's Army in the Red Sea",
+      "artist": "Titian",
+      "year": "c. 1515, printed 1549",
+      "image_url": "https://www.artic.edu/iiif/2/f08c7b99-9439-582e-ceb1-cfa9d1c1df04/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Self-Portrait",
+      "artist": "Titian",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/5ea967f4-eb96-afbe-63cb-924e8d305a24/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Penitent Magdalene",
+      "artist": "Titian",
+      "year": "18th century",
+      "image_url": "https://www.artic.edu/iiif/2/acb156f6-56b5-21e2-2eac-50bc7920188a/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Old Man with a Gold Chain",
+      "artist": "Rembrandt van Rijn",
+      "year": "1631",
+      "image_url": "https://www.artic.edu/iiif/2/3eaab3a3-2b47-9fdd-121c-050f6b8d9ccb/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "Kitchen Scene",
+      "artist": "Diego Velázquez",
+      "year": "1618–20",
+      "image_url": "https://www.artic.edu/iiif/2/68452725-eba5-06e3-46d2-50c678a5d672/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "Saint John the Baptist in the Wilderness",
+      "artist": "Diego Velázquez",
+      "year": "c. 1622",
+      "image_url": "https://www.artic.edu/iiif/2/da3e9da7-09ed-412c-16b0-8ceedd38571f/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "The Holy Family with Saints Elizabeth and John the Baptist",
+      "artist": "Peter Paul Rubens",
+      "year": "c. 1615",
+      "image_url": "https://www.artic.edu/iiif/2/caac7478-b78f-a94d-a36c-fc5dde17e7c9/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "The Capture of Samson",
+      "artist": "Peter Paul Rubens",
+      "year": "1609–10",
+      "image_url": "https://www.artic.edu/iiif/2/a8fd8a92-d5fd-bb98-5d70-f970ab1788b8/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "The Wedding of Peleus and Thetis",
+      "artist": "Peter Paul Rubens",
+      "year": "1636",
+      "image_url": "https://www.artic.edu/iiif/2/5ee19981-a8f5-1306-3ec5-eb79c14ac1a6/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "Saint Francis",
+      "artist": "Peter Paul Rubens",
+      "year": "c. 1615",
+      "image_url": "https://www.artic.edu/iiif/2/fa4dd0f2-382c-076c-ff20-c59a2774400c/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "The Adoration of the Eucharist",
+      "artist": "Peter Paul Rubens",
+      "year": "c. 1626",
+      "image_url": "https://www.artic.edu/iiif/2/15a87438-df7b-8fe1-203f-e0b4d36236a0/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "St. Albert of Louvain",
+      "artist": "Peter Paul Rubens",
+      "year": "1620",
+      "image_url": "https://www.artic.edu/iiif/2/58f58363-f567-0e49-7956-d49400721b1c/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "Nicolas Rubens, the Artist's Son",
+      "artist": "Peter Paul Rubens",
+      "year": "c. 1635",
+      "image_url": "https://www.artic.edu/iiif/2/0a991ed0-5816-1fbe-33d2-a12c384334ab/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "Adam and Eve",
+      "artist": "Albrecht Dürer",
+      "year": "1504",
+      "image_url": "https://www.artic.edu/iiif/2/910855f0-a558-4e31-8e88-c0f2694ddbea/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Four Horsemen of the Apocalypse, from The Apocalypse",
+      "artist": "Albrecht Dürer",
+      "year": "c. 1496–98",
+      "image_url": "https://www.artic.edu/iiif/2/5d017b13-70a8-7b6a-1c2c-ef69d0f7dbb2/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Lamentation, from The Large Passion",
+      "artist": "Albrecht Dürer",
+      "year": "c. 1498–99",
+      "image_url": "https://www.artic.edu/iiif/2/ce36d103-0a28-b409-d441-6ee7806e835f/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Calvary",
+      "artist": "Albrecht Dürer",
+      "year": "c. 1503–04",
+      "image_url": "https://www.artic.edu/iiif/2/93259665-fa1d-c166-6dec-ad51fe805848/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Young Bull",
+      "artist": "Albrecht Dürer",
+      "year": "c. 1496, erroneously inscribed in another hand 1508",
+      "image_url": "https://www.artic.edu/iiif/2/d2529576-bbf0-c631-6f8c-659e825c552d/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Fifth Knot",
+      "artist": "Albrecht Dürer",
+      "year": "c. 1507",
+      "image_url": "https://www.artic.edu/iiif/2/f8e9efbf-e143-8bd9-45b6-9f2065704859/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Sixth Knot",
+      "artist": "Albrecht Dürer",
+      "year": "c. 1507",
+      "image_url": "https://www.artic.edu/iiif/2/47dff228-15bc-fe81-f9b1-e6099b89728f/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Second Knot",
+      "artist": "Albrecht Dürer",
+      "year": "c. 1507",
+      "image_url": "https://www.artic.edu/iiif/2/9c5b9fb9-df2c-0174-f999-03a69cf58ed4/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Erasmus of Rotterdam",
+      "artist": "Albrecht Dürer",
+      "year": "1526",
+      "image_url": "https://www.artic.edu/iiif/2/4d06856a-ba89-07fa-68eb-2305246394c2/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The First Knot",
+      "artist": "Albrecht Dürer",
+      "year": "c. 1507",
+      "image_url": "https://www.artic.edu/iiif/2/eed05c65-f9ea-eccf-afb2-59d4b36ba2a4/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Assumption of the Virgin",
+      "artist": "Domenico Theotokópoulos, called El Greco",
+      "year": "1577–79",
+      "image_url": "https://www.artic.edu/iiif/2/47fd1564-93f5-f30b-7786-013421133b4a/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Saint Francis Kneeling in Meditation",
+      "artist": "Domenico Theotokópoulos, called El Greco",
+      "year": "c. 1595–c. 1600",
+      "image_url": "https://www.artic.edu/iiif/2/b703b636-976c-b35b-8a8e-f8df3f5ba003/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Saint Martin and the Beggar",
+      "artist": "Domenico Theotokópoulos, called El Greco",
+      "year": "c. 1597–c. 1600",
+      "image_url": "https://www.artic.edu/iiif/2/52098776-6e2e-9683-e258-7b1cec8660dd/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Boy on a Ram",
+      "artist": "Francisco José de Goya y Lucientes",
+      "year": "1786–87",
+      "image_url": "https://www.artic.edu/iiif/2/e54a695c-16df-cf45-9dd4-b517e8c32cc3/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Friar Pedro Shoots El Maragato as His Horse Runs Off",
+      "artist": "Francisco José de Goya y Lucientes",
+      "year": "c. 1806",
+      "image_url": "https://www.artic.edu/iiif/2/622998f1-73f9-4c96-08cf-60bda7c9ce4b/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Portrait of General José Manuel Romero",
+      "artist": "Francisco José de Goya y Lucientes",
+      "year": "c. 1810",
+      "image_url": "https://www.artic.edu/iiif/2/5553b728-cc59-1d08-7505-f9b3826334b8/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Winter Scene",
+      "artist": "Francisco José de Goya y Lucientes",
+      "year": "c. 1786",
+      "image_url": "https://www.artic.edu/iiif/2/61c3e72f-b453-1ada-62a5-9539afbe0641/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "El Maragato Threatens Friar Pedro de Zaldivia with His Gun",
+      "artist": "Francisco José de Goya y Lucientes",
+      "year": "c. 1806",
+      "image_url": "https://www.artic.edu/iiif/2/0de694b1-0faf-f35f-440a-4de463e068b5/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Fête champêtre (Pastoral Gathering)",
+      "artist": "Jean Antoine Watteau",
+      "year": "1718–21",
+      "image_url": "https://www.artic.edu/iiif/2/f6eddea6-5789-b6f9-315c-50a08a7c4adc/full/1686,/0/default.jpg",
+      "gallery": "rococo",
+      "source": "artic"
+    },
+    {
+      "title": "The Dreamer (La Rêveuse)",
+      "artist": "Jean Antoine Watteau",
+      "year": "1712–14",
+      "image_url": "https://www.artic.edu/iiif/2/40bf35ab-2898-650e-9e27-d38c4cf39a30/full/1686,/0/default.jpg",
+      "gallery": "rococo",
+      "source": "artic"
+    },
+    {
+      "title": "Are They Thinking about the Grape? (Pensent-ils au raisin?)",
+      "artist": "François Boucher",
+      "year": "1747",
+      "image_url": "https://www.artic.edu/iiif/2/12662645-5164-4bb1-cfec-3517a4c9779c/full/1686,/0/default.jpg",
+      "gallery": "rococo",
+      "source": "artic"
+    },
+    {
+      "title": "Bathing Nymph",
+      "artist": "François Boucher",
+      "year": "c. 1745–50",
+      "image_url": "https://www.artic.edu/iiif/2/08b2ede5-bf33-602a-f1eb-2e7510c1b3cd/full/1686,/0/default.jpg",
+      "gallery": "rococo",
+      "source": "artic"
+    },
+    {
+      "title": "Portrait of a Man in Costume",
+      "artist": "Jean Honoré Fragonard",
+      "year": "c. 1767–68",
+      "image_url": "https://www.artic.edu/iiif/2/9b1c3d61-5f9b-c7a2-a5ea-f48248836160/full/1686,/0/default.jpg",
+      "gallery": "rococo",
+      "source": "artic"
+    },
+    {
+      "title": "Amédée-David, the Comte de Pastoret",
+      "artist": "Jean Auguste Dominique Ingres",
+      "year": "1823–26",
+      "image_url": "https://www.artic.edu/iiif/2/8d119fd0-2f57-f20e-a3f5-a573904001e9/full/1686,/0/default.jpg",
+      "gallery": "neoclassicism",
+      "source": "artic"
+    },
+    {
+      "title": "Lion Hunt",
+      "artist": "Eugène Delacroix",
+      "year": "1860–61",
+      "image_url": "https://www.artic.edu/iiif/2/1299b0e5-6a3d-8039-087b-35bf03caea1a/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Arab Horseman Attacked by a Lion",
+      "artist": "Eugène Delacroix",
+      "year": "1849–50",
+      "image_url": "https://www.artic.edu/iiif/2/c4b0d9da-e89a-df7f-904a-9550697c11f5/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "The Combat of the Giaour and Hassan",
+      "artist": "Eugène Delacroix",
+      "year": "1826",
+      "image_url": "https://www.artic.edu/iiif/2/ae0793ac-8ace-6c4a-84d4-a33162ae6832/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Head of a Guillotined Man",
+      "artist": "Jean Louis André Théodore Géricault",
+      "year": "1818–19",
+      "image_url": "https://www.artic.edu/iiif/2/2b1cba5a-f194-266b-5357-b437fada0b3b/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Fishing Boats with Hucksters Bargaining for Fish",
+      "artist": "Joseph Mallord William Turner",
+      "year": "1837–38",
+      "image_url": "https://www.artic.edu/iiif/2/8641479e-c93e-f1a8-9925-19be061706da/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Valley of Aosta: Snowstorm, Avalanche, and Thunderstorm",
+      "artist": "Joseph Mallord William Turner",
+      "year": "1836–37",
+      "image_url": "https://www.artic.edu/iiif/2/564e2e3f-eb93-88a7-d265-8fea006facff/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Stoke-by-Nayland",
+      "artist": "John Constable",
+      "year": "1836",
+      "image_url": "https://www.artic.edu/iiif/2/400ce9e8-2f67-44e2-dd68-e6c98880d27f/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape (The Lock)",
+      "artist": "John Constable",
+      "year": "c. 1820–25",
+      "image_url": "https://www.artic.edu/iiif/2/ff3b5c8a-5b14-5c35-8775-3d021e92a381/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape with Cottages",
+      "artist": "John Constable",
+      "year": "1809–10",
+      "image_url": "https://www.artic.edu/iiif/2/a414da01-a3bf-85e0-53a6-9dd1918bf4c2/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "The Cardinal",
+      "artist": "Hans Holbein, the younger",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/1430cb7c-0884-c3d9-6c3f-1c0ede7cdc15/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Adam and Eve Driven out of Paradise",
+      "artist": "Hans Holbein, the younger",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/97731a59-beff-6abe-e828-607dd09e663c/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Dance of Death, plate 39 from Woodcuts from Books of the XVI Century",
+      "artist": "Hans Holbein, the younger",
+      "year": "1567, assembled into portfolio 1937",
+      "image_url": "https://www.artic.edu/iiif/2/b4efc279-b81d-fd01-1cb3-a9d1eef8d4e2/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Illustration from a German Bible, plate 38 from Woodcuts from Books of the XVI Century",
+      "artist": "Hans Holbein, the younger",
+      "year": "1534, assembled into portfolio 1937",
+      "image_url": "https://www.artic.edu/iiif/2/9c63d96d-62ea-df90-df79-ee12a606a073/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Monk",
+      "artist": "Hans Holbein, the younger",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/b9832a86-8529-c55d-091d-3a521bb8a0df/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Physician",
+      "artist": "Hans Holbein, the younger",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/8df0ed7c-e3a6-ad0b-a828-6f432f1d267b/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Jonah Outside Ninevah (recto); Habakkuk Carrying Bread to Reapers (verso)",
+      "artist": "Hans Holbein, the younger",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/69f2285c-4a1f-83b8-4871-20350c62addf/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Typus Cosmographicus Universalis, Sim. Grynaeus, Novus Orbis, Basileae 1532",
+      "artist": "Hans Holbein, the younger",
+      "year": "1532, reprinted 1889",
+      "image_url": "https://www.artic.edu/iiif/2/ef9a5c4f-0424-8db6-cb12-0536022e003f/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Water Lilies",
+      "artist": "Claude Monet",
+      "year": "1906",
+      "image_url": "https://www.artic.edu/iiif/2/3c27b499-af56-f0d5-93b5-a7f2f1ad5813/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Arrival of the Normandy Train, Gare Saint-Lazare",
+      "artist": "Claude Monet",
+      "year": "1877",
+      "image_url": "https://www.artic.edu/iiif/2/0f1cc0e0-e42e-be16-3f71-2022da38cb93/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Stacks of Wheat (End of Summer)",
+      "artist": "Claude Monet",
+      "year": "1890–91",
+      "image_url": "https://www.artic.edu/iiif/2/a38e2828-ec6f-ece1-a30f-70243449197b/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Cliff Walk at Pourville",
+      "artist": "Claude Monet",
+      "year": "1882",
+      "image_url": "https://www.artic.edu/iiif/2/b0effb1c-ff23-bbaa-f809-9fd94e31c1a0/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Water Lily Pond",
+      "artist": "Claude Monet",
+      "year": "1900",
+      "image_url": "https://www.artic.edu/iiif/2/8534685d-1102-e1e3-e194-94f6e925e8b0/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Beach at Sainte-Adresse",
+      "artist": "Claude Monet",
+      "year": "1867",
+      "image_url": "https://www.artic.edu/iiif/2/95be2572-b53d-8e7b-abc9-10eb48d4fa5d/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Bordighera",
+      "artist": "Claude Monet",
+      "year": "1884",
+      "image_url": "https://www.artic.edu/iiif/2/4d1b3ad0-14db-0d21-ad9f-17abb8bdfbb5/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Stacks of Wheat (End of Day, Autumn)",
+      "artist": "Claude Monet",
+      "year": "1890–91",
+      "image_url": "https://www.artic.edu/iiif/2/4c364c64-2108-4e19-5fc5-1ab26ba924a7/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Branch of the Seine near Giverny (Mist)",
+      "artist": "Claude Monet",
+      "year": "1897",
+      "image_url": "https://www.artic.edu/iiif/2/838d8c33-a3b4-68ea-587b-87ceec2011af/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "On the Bank of the Seine, Bennecourt",
+      "artist": "Claude Monet",
+      "year": "1868",
+      "image_url": "https://www.artic.edu/iiif/2/66f95ea3-a11a-1cf4-6599-d0a49bb25744/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Races at Longchamp",
+      "artist": "Édouard Manet",
+      "year": "1866",
+      "image_url": "https://www.artic.edu/iiif/2/e9ce5aca-4c34-c8dd-b8a1-91b3e3197211/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Jesus Mocked by the Soldiers",
+      "artist": "Édouard Manet",
+      "year": "1865",
+      "image_url": "https://www.artic.edu/iiif/2/4d03ba14-a01a-d003-404a-cf3f9fb40ede/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Fish (Still Life)",
+      "artist": "Édouard Manet",
+      "year": "1864",
+      "image_url": "https://www.artic.edu/iiif/2/0cbe27e8-2fec-3445-bc48-ce40a8f2dc25/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman Reading",
+      "artist": "Édouard Manet",
+      "year": "1880–82",
+      "image_url": "https://www.artic.edu/iiif/2/fd991fea-0c13-8444-7879-aba467f1d9db/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Beggar with a Duffle Coat (Philosopher)",
+      "artist": "Édouard Manet",
+      "year": "1865–67",
+      "image_url": "https://www.artic.edu/iiif/2/1a087ef7-8455-e5d0-0b2b-9738cd33058c/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Beggar with Oysters (Philosopher)",
+      "artist": "Édouard Manet",
+      "year": "1865–67",
+      "image_url": "https://www.artic.edu/iiif/2/4e074d70-4424-331b-ec89-0776a45d6825/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Bullfight",
+      "artist": "Édouard Manet",
+      "year": "1865–66",
+      "image_url": "https://www.artic.edu/iiif/2/38636be8-f1bc-c451-ae65-c441919bd0c3/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Two Sisters (On the Terrace)",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1881",
+      "image_url": "https://www.artic.edu/iiif/2/3a608f55-d76e-fa96-d0b1-0789fbc48f1e/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Acrobats at the Cirque Fernando (Francisca and Angelina Wartenberg)",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1879",
+      "image_url": "https://www.artic.edu/iiif/2/321c45f5-22a3-84a2-44cc-cf66642d4cf2/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman at the Piano",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1875–76",
+      "image_url": "https://www.artic.edu/iiif/2/8f06717c-9ede-f22b-d13b-327a50c22f9c/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Lunch at the Restaurant Fournaise (The Rowers' Lunch)",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1875",
+      "image_url": "https://www.artic.edu/iiif/2/1a1b74fe-ff2a-8991-0581-5d420f0b840e/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Chrysanthemums",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1881–82",
+      "image_url": "https://www.artic.edu/iiif/2/479aff61-784e-e833-fd82-50ba8c819514/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Seascape",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1879",
+      "image_url": "https://www.artic.edu/iiif/2/caf4fa39-e2e8-344a-542c-2d9a03ec9d4b/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Near the Lake",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1879–80",
+      "image_url": "https://www.artic.edu/iiif/2/26e1c560-acca-3148-46dc-c144ac22bd3e/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Alfred Sisley",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1876",
+      "image_url": "https://www.artic.edu/iiif/2/64693216-bc82-0d21-9e57-86f8fc2e632b/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Young Woman Sewing",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1879",
+      "image_url": "https://www.artic.edu/iiif/2/147e3ce7-1c08-fa84-57f7-f59d4ec90d3c/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Lucie Berard (Child in White)",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1883",
+      "image_url": "https://www.artic.edu/iiif/2/0e94a829-b3b7-8317-b609-d1826f0369f0/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Millinery Shop",
+      "artist": "Hilaire Germain Edgar Degas",
+      "year": "1879-86",
+      "image_url": "https://www.artic.edu/iiif/2/6f513908-03cc-b974-633b-adfce56b7936/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Young Spartan Girls Challenging Boys",
+      "artist": "Hilaire Germain Edgar Degas",
+      "year": "c. 1860",
+      "image_url": "https://www.artic.edu/iiif/2/ca2932b4-6c0c-5482-2ae5-8b74926d7b73/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Yellow Dancers (In the Wings)",
+      "artist": "Hilaire Germain Edgar Degas",
+      "year": "1874–76",
+      "image_url": "https://www.artic.edu/iiif/2/8fe022ba-e358-5cda-aa70-d96edd0b4f20/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Henri Degas and His Niece Lucie Degas (The Artist's Uncle and Cousin)",
+      "artist": "Hilaire Germain Edgar Degas",
+      "year": "1875–76",
+      "image_url": "https://www.artic.edu/iiif/2/ba4d7ead-bd10-e02d-6f5f-613050d7062e/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Café Singer",
+      "artist": "Hilaire Germain Edgar Degas",
+      "year": "1879",
+      "image_url": "https://www.artic.edu/iiif/2/a867af78-9a29-c75b-33ab-2f21a2d92b3f/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Basket of Apples",
+      "artist": "Paul Cezanne",
+      "year": "c. 1893",
+      "image_url": "https://www.artic.edu/iiif/2/52ac8996-3460-cf71-cb42-5c4d0aa29b74/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Bay of Marseille, Seen from L'Estaque",
+      "artist": "Paul Cezanne",
+      "year": "c. 1885",
+      "image_url": "https://www.artic.edu/iiif/2/d4ca6321-8656-3d3f-a362-2ee297b2b813/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Auvers, Panoramic View",
+      "artist": "Paul Cezanne",
+      "year": "1873–75",
+      "image_url": "https://www.artic.edu/iiif/2/90bc0cec-0d4e-9af5-3912-52a082a428e5/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Madame Cezanne in a Yellow Chair",
+      "artist": "Paul Cezanne",
+      "year": "1888–90",
+      "image_url": "https://www.artic.edu/iiif/2/4822cd01-44ac-041a-36b8-c0542377b750/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Vase of Tulips",
+      "artist": "Paul Cezanne",
+      "year": "c. 1890",
+      "image_url": "https://www.artic.edu/iiif/2/96f23681-9701-a668-5c3f-6ffa951f7ecc/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Bathers",
+      "artist": "Paul Cezanne",
+      "year": "1899-1904",
+      "image_url": "https://www.artic.edu/iiif/2/2e166f7c-a959-d686-eeb0-a63a52a4d368/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Plate of Apples",
+      "artist": "Paul Cezanne",
+      "year": "c. 1877",
+      "image_url": "https://www.artic.edu/iiif/2/2e6d6a89-61bd-5098-59d3-b41d14bf7973/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Bathers",
+      "artist": "Paul Cezanne",
+      "year": "1890–94",
+      "image_url": "https://www.artic.edu/iiif/2/5ec2faea-0636-15d9-9c95-2fd89f85196c/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Mahana no atua (Day of the God)",
+      "artist": "Paul Gauguin",
+      "year": "1894",
+      "image_url": "https://www.artic.edu/iiif/2/a4bef587-48a4-d186-813d-f297441b1ab3/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Arlésiennes (Mistral)",
+      "artist": "Paul Gauguin",
+      "year": "1888",
+      "image_url": "https://www.artic.edu/iiif/2/ae6ac285-6887-dd76-4570-d379c786dfae/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Merahi metua no Tehamana (Tehamana Has Many Parents or The Ancestors of Tehamana)",
+      "artist": "Paul Gauguin",
+      "year": "1893",
+      "image_url": "https://www.artic.edu/iiif/2/48268fc7-2eb4-ded6-1293-e91f27b66478/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "No te aha oe riri (Why Are You Angry?)",
+      "artist": "Paul Gauguin",
+      "year": "1896",
+      "image_url": "https://www.artic.edu/iiif/2/2adb35ce-8e94-cda5-210e-b04d488bbdc8/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Polynesian Woman with Children",
+      "artist": "Paul Gauguin",
+      "year": "1901",
+      "image_url": "https://www.artic.edu/iiif/2/cc5cdb81-14cf-27e9-eda8-94c08244ebaa/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Te raau rahi (The Big Tree)",
+      "artist": "Paul Gauguin",
+      "year": "1891",
+      "image_url": "https://www.artic.edu/iiif/2/916405d1-1407-d90e-1be8-f8c77f26f546/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman in Front of a Still Life by Cezanne",
+      "artist": "Paul Gauguin",
+      "year": "1890",
+      "image_url": "https://www.artic.edu/iiif/2/38f866cb-9000-de5a-e655-d3fb4d8dc056/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Te burao (The Hibiscus Tree)",
+      "artist": "Paul Gauguin",
+      "year": "1892",
+      "image_url": "https://www.artic.edu/iiif/2/604fe021-6008-f666-bce8-456b2fdc9bd4/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Still Life: Wood Tankard and Metal Pitcher",
+      "artist": "Paul Gauguin",
+      "year": "1880",
+      "image_url": "https://www.artic.edu/iiif/2/9964135a-b3df-8af6-5af9-9e6eac7a041d/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Bedroom",
+      "artist": "Vincent van Gogh",
+      "year": "1889",
+      "image_url": "https://www.artic.edu/iiif/2/6644829f-f292-c5c4-a73c-0356a6fdbf0d/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Self-Portrait",
+      "artist": "Vincent van Gogh",
+      "year": "1887",
+      "image_url": "https://www.artic.edu/iiif/2/47c5bcb8-62ef-e5d7-55e7-f5121f409a30/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Poet's Garden",
+      "artist": "Vincent van Gogh",
+      "year": "1888",
+      "image_url": "https://www.artic.edu/iiif/2/d4bc1723-7cbc-d36d-a9cb-f84553f2a6f6/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "A Peasant Woman Digging in Front of Her Cottage",
+      "artist": "Vincent van Gogh",
+      "year": "c. 1885",
+      "image_url": "https://www.artic.edu/iiif/2/1d3a275d-45dd-6026-b6ed-d7d8df417a3d/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Drinkers",
+      "artist": "Vincent van Gogh",
+      "year": "1890",
+      "image_url": "https://www.artic.edu/iiif/2/d0ff5b36-bb38-b156-6042-5c8545352c2f/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Fishing in Spring, the Pont de Clichy (Asnières)",
+      "artist": "Vincent van Gogh",
+      "year": "1887",
+      "image_url": "https://www.artic.edu/iiif/2/5512cee9-6d00-d01b-b0be-ac7843cc8f76/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Madame Roulin Rocking the Cradle (La berceuse)",
+      "artist": "Vincent van Gogh",
+      "year": "1889",
+      "image_url": "https://www.artic.edu/iiif/2/6f3ca8b9-fef6-edfc-a71c-3e7b471d5f6c/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Terrace and Observation Deck at the Moulin de Blute-Fin, Montmartre",
+      "artist": "Vincent van Gogh",
+      "year": "Early 1887",
+      "image_url": "https://www.artic.edu/iiif/2/a971fad5-a24d-9985-03fb-1f17db9a9d74/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Grapes, Lemons, Pears, and Apples",
+      "artist": "Vincent van Gogh",
+      "year": "1887",
+      "image_url": "https://www.artic.edu/iiif/2/f11bd233-6cc3-4221-59eb-f7363be4119e/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "A Sunday on La Grande Jatte — 1884",
+      "artist": "Georges Seurat",
+      "year": "1884–86, border added 1888–89",
+      "image_url": "https://www.artic.edu/iiif/2/2d484387-2509-5e8e-2c43-22f9981972eb/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Oil Sketch for \"A Sunday on La Grande Jatte — 1884\"",
+      "artist": "Georges Seurat",
+      "year": "1884",
+      "image_url": "https://www.artic.edu/iiif/2/081be15c-8812-c174-eeb2-cf318a2e67cf/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Final Study for \"Bathers at Asnières\"",
+      "artist": "Georges Seurat",
+      "year": "1883",
+      "image_url": "https://www.artic.edu/iiif/2/1db67905-d421-95bf-1e91-4b60dd776886/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman Bathing Her Feet in a Brook",
+      "artist": "Camille Pissarro",
+      "year": "1895",
+      "image_url": "https://www.artic.edu/iiif/2/5ccaee46-a1a0-5035-821c-0547aa35c070/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Place du Havre, Paris",
+      "artist": "Camille Pissarro",
+      "year": "1893",
+      "image_url": "https://www.artic.edu/iiif/2/0ff20364-c795-c2ca-c1e8-e5a848f09554/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Crystal Palace",
+      "artist": "Camille Pissarro",
+      "year": "1871",
+      "image_url": "https://www.artic.edu/iiif/2/4eb368b5-3b66-ae2c-bd4a-2643015e05fc/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman and Child at the Well",
+      "artist": "Camille Pissarro",
+      "year": "1882",
+      "image_url": "https://www.artic.edu/iiif/2/a2ddbd89-d864-8877-37bc-cd3dce12c37c/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Young Peasant Having Her Coffee",
+      "artist": "Camille Pissarro",
+      "year": "1881",
+      "image_url": "https://www.artic.edu/iiif/2/335a59a4-3f5b-b9db-b8e8-861467d211ef/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Rabbit Warren at Pontoise, Snow",
+      "artist": "Camille Pissarro",
+      "year": "1879",
+      "image_url": "https://www.artic.edu/iiif/2/053f9be8-3617-c4ef-36cd-1deb5e13b288/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Banks of the Marne in Winter",
+      "artist": "Camille Pissarro",
+      "year": "1866",
+      "image_url": "https://www.artic.edu/iiif/2/3d950ecc-73f4-c28a-f216-0940b23fa5e8/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Haymaking at Éragny",
+      "artist": "Camille Pissarro",
+      "year": "1892",
+      "image_url": "https://www.artic.edu/iiif/2/b84a9755-ca8d-8bd5-5a59-e910b20e3ba5/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Snow at Louveciennes",
+      "artist": "Camille Pissarro",
+      "year": "c. 1870",
+      "image_url": "https://www.artic.edu/iiif/2/d4e43d76-594b-ce65-c1a3-45c865624f70/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman Mending",
+      "artist": "Camille Pissarro",
+      "year": "1895",
+      "image_url": "https://www.artic.edu/iiif/2/132b782d-54e6-70e1-18f9-211468c09099/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "A Turn in the Road",
+      "artist": "Alfred Sisley",
+      "year": "1873",
+      "image_url": "https://www.artic.edu/iiif/2/0f076222-52b2-9bb4-4409-72fdf485d895/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Seine at Port-Marly, Piles of Sand",
+      "artist": "Alfred Sisley",
+      "year": "1875",
+      "image_url": "https://www.artic.edu/iiif/2/c4425cb6-d8b5-6390-603d-7f802406d05d/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Street in Moret",
+      "artist": "Alfred Sisley",
+      "year": "c. 1890",
+      "image_url": "https://www.artic.edu/iiif/2/c233d88b-fe56-6b9e-d5c2-47b9a7386756/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Loire",
+      "artist": "Alfred Sisley",
+      "year": "1896",
+      "image_url": "https://www.artic.edu/iiif/2/bcc9c3a7-f5b0-41af-210a-bd17797d77d9/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Watering Place at Marly",
+      "artist": "Alfred Sisley",
+      "year": "1875",
+      "image_url": "https://www.artic.edu/iiif/2/ed7aa098-e5c9-04dd-b09c-3416d1c56854/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape along the Seine with the Institut de France and the Pont des Arts",
+      "artist": "Alfred Sisley",
+      "year": "c. 1875",
+      "image_url": "https://www.artic.edu/iiif/2/2bcffdac-951e-569f-8f05-f4c8e4228302/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman at Her Toilette",
+      "artist": "Berthe Morisot",
+      "year": "1875–80",
+      "image_url": "https://www.artic.edu/iiif/2/78c80988-6524-cec7-c661-a4c0a706d06f/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman in a Garden",
+      "artist": "Berthe Morisot",
+      "year": "1882–83",
+      "image_url": "https://www.artic.edu/iiif/2/5edb357d-2e8f-8673-d9e8-4b1150af3895/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Young Girl with Hat",
+      "artist": "Berthe Morisot",
+      "year": "1892",
+      "image_url": "https://www.artic.edu/iiif/2/12731595-67a3-dc3c-efa8-29d75b9cd315/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Forêt de Compiègne",
+      "artist": "Berthe Morisot",
+      "year": "1885",
+      "image_url": "https://www.artic.edu/iiif/2/bfc9b17a-cc18-7bd3-4d78-e925bb1a8b27/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Child's Bath",
+      "artist": "Mary Cassatt",
+      "year": "1893",
+      "image_url": "https://www.artic.edu/iiif/2/3b885ae0-4d46-5fe4-d70a-00474827f02c/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "On a Balcony",
+      "artist": "Mary Cassatt",
+      "year": "1878–79",
+      "image_url": "https://www.artic.edu/iiif/2/f0150d21-33ab-f6ea-0d4d-32d459f091fe/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "After the Bullfight",
+      "artist": "Mary Cassatt",
+      "year": "1873",
+      "image_url": "https://www.artic.edu/iiif/2/7a314af6-336f-b6a4-809c-15659313a757/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Male Nude with Left Foot on a Pedestal",
+      "artist": "Gustav Klimt",
+      "year": "1879",
+      "image_url": "https://www.artic.edu/iiif/2/35a41ca7-f92c-b686-c89f-978321214c5c/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Portrait of a Lady in a High Hat",
+      "artist": "Gustav Klimt",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/caedec59-9160-d4ca-8449-5576e2b103a4/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Reclining Girl",
+      "artist": "Gustav Klimt",
+      "year": "1912/1914",
+      "image_url": "https://www.artic.edu/iiif/2/86d41a4e-fc40-c597-3ac9-79053cca0b87/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Male Nude",
+      "artist": "Gustav Klimt",
+      "year": "January 29, 1880",
+      "image_url": "https://www.artic.edu/iiif/2/ee8a9167-1535-b432-3dc7-6e80eeed91fc/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Seated Woman from the Front with Hat, Face Hooded",
+      "artist": "Gustav Klimt",
+      "year": "1910",
+      "image_url": "https://www.artic.edu/iiif/2/7936867b-74ab-7347-51f0-9ab14d050e9d/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "The Girl by the Window",
+      "artist": "Edvard Munch",
+      "year": "1893",
+      "image_url": "https://www.artic.edu/iiif/2/d7df2633-3b40-f570-c906-211503a37cde/full/1686,/0/default.jpg",
+      "gallery": "expressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Bathers by a River",
+      "artist": "Henri Matisse",
+      "year": "1909–10, 1913, and 1916–17",
+      "image_url": "https://www.artic.edu/iiif/2/419ddce3-c90b-3d0c-43b3-73683a87bf98/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman before an Aquarium",
+      "artist": "Henri Matisse",
+      "year": "1921–23",
+      "image_url": "https://www.artic.edu/iiif/2/d0e36029-27fc-bf4e-357a-55cfbaf7bdfd/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Interior at Nice",
+      "artist": "Henri Matisse",
+      "year": "1919 or 1920",
+      "image_url": "https://www.artic.edu/iiif/2/2193cdda-2691-2802-0776-145dee77f7ea/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Apples",
+      "artist": "Henri Matisse",
+      "year": "1916",
+      "image_url": "https://www.artic.edu/iiif/2/b2bc0fc2-8d17-1fcd-8cae-8626421c11ef/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Daisies",
+      "artist": "Henri Matisse",
+      "year": "1939",
+      "image_url": "https://www.artic.edu/iiif/2/1693f1ff-40a4-e0e2-16cd-3d8d055dc266/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Still Life with Geranium",
+      "artist": "Henri Matisse",
+      "year": "1906",
+      "image_url": "https://www.artic.edu/iiif/2/d0049e0b-bd55-020e-aa8c-b137d06ae7df/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Lemons on a Pewter Plate",
+      "artist": "Henri Matisse",
+      "year": "1926",
+      "image_url": "https://www.artic.edu/iiif/2/79f1c666-1e19-af39-f7e0-f22989835eb2/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Laurette with a Cup of Coffee",
+      "artist": "Henri Matisse",
+      "year": "1916–17",
+      "image_url": "https://www.artic.edu/iiif/2/72d28816-c42f-af88-63fc-d12426db240e/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Girl in Yellow and Blue with Guitar",
+      "artist": "Henri Matisse",
+      "year": "1939",
+      "image_url": "https://www.artic.edu/iiif/2/0fc277a0-003c-393f-556b-f8dbc8c81427/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "The Old Guitarist",
+      "artist": "Pablo Picasso",
+      "year": "late 1903–early 1904",
+      "image_url": "https://www.artic.edu/iiif/2/4e7f3081-179a-af18-8abd-7908a7ae8c4e/full/1686,/0/default.jpg",
+      "gallery": "cubism",
+      "source": "artic"
+    },
+    {
+      "title": "Daniel-Henry Kahnweiler",
+      "artist": "Pablo Picasso",
+      "year": "autumn 1910",
+      "image_url": "https://www.artic.edu/iiif/2/aebda29e-16b8-4393-6edc-805cdb6ba459/full/1686,/0/default.jpg",
+      "gallery": "cubism",
+      "source": "artic"
+    },
+    {
+      "title": "The Red Armchair",
+      "artist": "Pablo Picasso",
+      "year": "December 16, 1931",
+      "image_url": "https://www.artic.edu/iiif/2/c617e2f0-d5fe-0772-390e-6d8c83895815/full/1686,/0/default.jpg",
+      "gallery": "cubism",
+      "source": "artic"
+    },
+    {
+      "title": "Mother and Child",
+      "artist": "Pablo Picasso",
+      "year": "1921",
+      "image_url": "https://www.artic.edu/iiif/2/64734461-887d-80b9-8489-e38cb05ac01d/full/1686,/0/default.jpg",
+      "gallery": "cubism",
+      "source": "artic"
+    },
+    {
+      "title": "Man with a Pipe",
+      "artist": "Pablo Picasso",
+      "year": "1915",
+      "image_url": "https://www.artic.edu/iiif/2/43bc66e2-95b2-fb3c-b9b1-232835bfd027/full/1686,/0/default.jpg",
+      "gallery": "cubism",
+      "source": "artic"
+    },
+    {
+      "title": "Nude under a Pine Tree",
+      "artist": "Pablo Picasso",
+      "year": "January 20, 1959",
+      "image_url": "https://www.artic.edu/iiif/2/b7b7ecd0-5a50-b89a-c72a-d435a1957c73/full/1686,/0/default.jpg",
+      "gallery": "cubism",
+      "source": "artic"
+    },
+    {
+      "title": "Jacques and Berthe Lipchitz",
+      "artist": "Amedeo Modigliani",
+      "year": "1916",
+      "image_url": "https://www.artic.edu/iiif/2/7e649536-b186-c3f5-3e6d-0d22d5d798ef/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Madam Pompadour",
+      "artist": "Amedeo Modigliani",
+      "year": "1915",
+      "image_url": "https://www.artic.edu/iiif/2/fdc1a755-ff86-487d-f16b-f03c40a30bee/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Portrait of a Woman",
+      "artist": "Amedeo Modigliani",
+      "year": "c. 1917/19",
+      "image_url": "https://www.artic.edu/iiif/2/e458fc80-cb2e-f5c0-3c81-8c24b0bdc15b/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Nighthawks",
+      "artist": "Edward Hopper",
+      "year": "1942",
+      "image_url": "https://www.artic.edu/iiif/2/831a05de-d3f6-f4fa-a460-23008dd58dda/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Saint Anthony Abbot",
+      "artist": "Fra Angelico",
+      "year": "1440–41",
+      "image_url": "https://www.artic.edu/iiif/2/3db93232-7c80-7663-f683-fe3bb672cf24/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Virgin and Child",
+      "artist": "Giovanni Bellini",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/72167006-ca16-8df5-8856-0412ceac4c79/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Resurrection",
+      "artist": "Pieter Bruegel, the elder",
+      "year": "c. 1580",
+      "image_url": "https://www.artic.edu/iiif/2/7a0f6878-699d-446a-8754-7b01241cbb7b/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Hare Hunters",
+      "artist": "Pieter Bruegel, the elder",
+      "year": "1566",
+      "image_url": "https://www.artic.edu/iiif/2/329b85e4-2865-1281-feeb-5c0ab47e500e/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Forest Landscape with Wild Animals",
+      "artist": "Pieter Bruegel, the elder",
+      "year": "late 16th century",
+      "image_url": "https://www.artic.edu/iiif/2/402f995e-6de7-a925-3023-8ba31f359fc2/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "At the Moulin Rouge",
+      "artist": "Henri de Toulouse-Lautrec",
+      "year": "1892–95",
+      "image_url": "https://www.artic.edu/iiif/2/defb4004-b500-218d-3d9b-9a02423f097d/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Equestrienne (At the Cirque Fernando)",
+      "artist": "Henri de Toulouse-Lautrec",
+      "year": "1887–88",
+      "image_url": "https://www.artic.edu/iiif/2/65db9e21-83c3-1cc6-7240-1e1996d87f52/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Moulin de la Galette",
+      "artist": "Henri de Toulouse-Lautrec",
+      "year": "1889",
+      "image_url": "https://www.artic.edu/iiif/2/156aaed6-fe3c-a13c-f39e-55f381205929/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Ballet Dancers",
+      "artist": "Henri de Toulouse-Lautrec",
+      "year": "1885–86",
+      "image_url": "https://www.artic.edu/iiif/2/43249182-2ef0-8d18-3d32-0b9af3606ed3/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Portrait of Jeanne Wenz",
+      "artist": "Henri de Toulouse-Lautrec",
+      "year": "1886",
+      "image_url": "https://www.artic.edu/iiif/2/c2a4b60c-bf43-6a37-e001-a91cba741168/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Andromeda",
+      "artist": "Odilon Redon",
+      "year": "c. 1905",
+      "image_url": "https://www.artic.edu/iiif/2/2acf7c4c-d3a9-e4f6-0343-4dcb75ec8b34/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Still Life with Flowers",
+      "artist": "Odilon Redon",
+      "year": "1905",
+      "image_url": "https://www.artic.edu/iiif/2/bdb9f780-83be-dd12-191d-54a77c5444ab/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Flowers: Poppies and Daisies",
+      "artist": "Odilon Redon",
+      "year": "c. 1867",
+      "image_url": "https://www.artic.edu/iiif/2/d424c734-f5c1-5f89-3bb8-d83e4e0287e3/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Earthly Paradise",
+      "artist": "Pierre Bonnard",
+      "year": "1916–20",
+      "image_url": "https://www.artic.edu/iiif/2/8b4abeed-c22b-1477-1e76-b303ac1415d1/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Seine at Vernonnet",
+      "artist": "Pierre Bonnard",
+      "year": "c. 1930",
+      "image_url": "https://www.artic.edu/iiif/2/6f84b595-943b-b698-6c4d-79a27e4f7ee7/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Checkered Tablecloth",
+      "artist": "Pierre Bonnard",
+      "year": "1939",
+      "image_url": "https://www.artic.edu/iiif/2/072c043b-f96b-06bd-fefd-1f60dabbd626/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape: Window Overlooking the Woods",
+      "artist": "Édouard Jean Vuillard",
+      "year": "1899",
+      "image_url": "https://www.artic.edu/iiif/2/a1dc6109-6e0c-7801-ebe8-8c95fec2c4e4/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Child Playing: Annette Roussel in Front of a Wooden Chair",
+      "artist": "Édouard Jean Vuillard",
+      "year": "c. 1900",
+      "image_url": "https://www.artic.edu/iiif/2/ba63170f-ebfb-d39c-82b5-64c9b2b2643b/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Foliage—Oak Tree and Fruit Seller",
+      "artist": "Édouard Jean Vuillard",
+      "year": "1918",
+      "image_url": "https://www.artic.edu/iiif/2/e170725f-cc12-cb0f-841e-8b1ea918933e/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Guelder Roses and the Venus of Milo",
+      "artist": "Édouard Jean Vuillard",
+      "year": "1905",
+      "image_url": "https://www.artic.edu/iiif/2/b0a463e2-4c5f-4055-26ba-08d7d42f8827/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Madame Arthur Fontaine (Marie Escudier Fontaine) in a Pink Shawl",
+      "artist": "Édouard Jean Vuillard",
+      "year": "c. 1904-05",
+      "image_url": "https://www.artic.edu/iiif/2/55b7b6c6-6999-b856-e7fb-d49dec971ec3/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Vuillard's Room at the Château des Clayes",
+      "artist": "Édouard Jean Vuillard",
+      "year": "c. 1932",
+      "image_url": "https://www.artic.edu/iiif/2/d6d442e8-4c4c-75d1-4e1a-06e536fabd4d/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Dressing Room, Madame Hessel Reading at Amfreville",
+      "artist": "Édouard Jean Vuillard",
+      "year": "1906",
+      "image_url": "https://www.artic.edu/iiif/2/c0230fcf-364c-a11e-85e7-f9ed106bd4cc/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Fountain, Villa Torlonia, Frascati, Italy",
+      "artist": "John Singer Sargent",
+      "year": "1907",
+      "image_url": "https://www.artic.edu/iiif/2/3f9aa9db-61e1-7060-fdb0-bfd7e41ddd08/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Mrs. George Swinton (Elizabeth Ebsworth)",
+      "artist": "John Singer Sargent",
+      "year": "1897",
+      "image_url": "https://www.artic.edu/iiif/2/074c1b1b-fe92-01ce-9e62-cc99369142dd/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Madame Paul Escudier (Louise Lefevre)",
+      "artist": "John Singer Sargent",
+      "year": "1882",
+      "image_url": "https://www.artic.edu/iiif/2/c6da9f8c-643b-f331-0f8f-a9b6a844caf6/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Life Study (Study of an Egyptian Girl)",
+      "artist": "John Singer Sargent",
+      "year": "1891",
+      "image_url": "https://www.artic.edu/iiif/2/e6dd6199-c245-d1b4-a997-ce89eafb48ca/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Venetian Glass Workers",
+      "artist": "John Singer Sargent",
+      "year": "1880–82",
+      "image_url": "https://www.artic.edu/iiif/2/8cdc812d-5db0-63a1-8579-eb64fc6884ca/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Thistles",
+      "artist": "John Singer Sargent",
+      "year": "1883–89",
+      "image_url": "https://www.artic.edu/iiif/2/79b94ddd-e208-1993-01ab-98f75174fe88/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Portrait of Charles Deering",
+      "artist": "John Singer Sargent",
+      "year": "1917",
+      "image_url": "https://www.artic.edu/iiif/2/e810d27d-57d8-89d0-49a6-87b1bbc68174/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Mrs. Charles Gifford Dyer (Mary Anthony)",
+      "artist": "John Singer Sargent",
+      "year": "1880",
+      "image_url": "https://www.artic.edu/iiif/2/59221fa2-45f9-5674-4fbd-9da3eb648d68/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Nocturne: Blue and Gold—Southampton Water",
+      "artist": "James McNeill Whistler",
+      "year": "1872",
+      "image_url": "https://www.artic.edu/iiif/2/50034c7f-ce51-00f1-430e-a6f7efc233fc/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Coast Scene, Bathers",
+      "artist": "James McNeill Whistler",
+      "year": "1884–85",
+      "image_url": "https://www.artic.edu/iiif/2/5888c23a-635f-396a-117b-2223032c0201/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Grey and Silver: Old Battersea Reach",
+      "artist": "James McNeill Whistler",
+      "year": "1863",
+      "image_url": "https://www.artic.edu/iiif/2/f0b3ff64-d68e-3fd2-ffc9-5470eb9fea6e/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "The Artist in His Studio",
+      "artist": "James McNeill Whistler",
+      "year": "1865–66",
+      "image_url": "https://www.artic.edu/iiif/2/e01a4f76-d089-8e22-8431-3488db37a293/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Mère Grégoire",
+      "artist": "Gustave Courbet",
+      "year": "1855, reworked 1857–59",
+      "image_url": "https://www.artic.edu/iiif/2/2e6d08c8-dac0-4f1c-3e56-de3539ceb905/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Rock of Hautepierre",
+      "artist": "Gustave Courbet",
+      "year": "c. 1869",
+      "image_url": "https://www.artic.edu/iiif/2/e0f47937-a1ee-76b4-6505-35a33119a634/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "An Alpine Scene",
+      "artist": "Gustave Courbet",
+      "year": "1874",
+      "image_url": "https://www.artic.edu/iiif/2/54b7fd5e-3467-f777-45e7-0719400ecfc0/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Valley of Les Puits-Noir",
+      "artist": "Gustave Courbet",
+      "year": "1868",
+      "image_url": "https://www.artic.edu/iiif/2/2a2163db-9351-018a-0d65-47be9c84dce8/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Rêverie (Portrait of Gabrielle Borreau)",
+      "artist": "Gustave Courbet",
+      "year": "1862",
+      "image_url": "https://www.artic.edu/iiif/2/40d69445-feb4-d6d5-bcad-bb142856f0a6/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Cliffs on the Sea Coast: Small Beach, Sunrise (Falaise au bord de la mer, vu Petite Plage, soleil levant)",
+      "artist": "Gustave Courbet",
+      "year": "1865",
+      "image_url": "https://www.artic.edu/iiif/2/29d3c6bc-7b53-d13f-a625-0490141c6f10/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Brook of Les Puits-Noir",
+      "artist": "Gustave Courbet",
+      "year": "c. 1855",
+      "image_url": "https://www.artic.edu/iiif/2/6575c354-8a4f-60d3-ad6f-06fa8d7f9ded/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Peasants Bringing Home a Calf Born in the Fields",
+      "artist": "Jean François Millet",
+      "year": "1864",
+      "image_url": "https://www.artic.edu/iiif/2/7b0ea6ca-9424-050e-7e0e-3b67d2289480/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Keeper of the Flock",
+      "artist": "Jean François Millet",
+      "year": "1871–74",
+      "image_url": "https://www.artic.edu/iiif/2/0ace29f2-7bc1-714a-c364-12b57bcf8a93/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "In the Auvergne",
+      "artist": "Jean François Millet",
+      "year": "c. 1866–69",
+      "image_url": "https://www.artic.edu/iiif/2/7a313db7-2369-1c7b-b4f7-a1d29218f778/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Woodchopper",
+      "artist": "Jean François Millet",
+      "year": "c. 1858–66",
+      "image_url": "https://www.artic.edu/iiif/2/e7928f74-f52e-e7d5-77ab-8b3d93b8b727/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Little Shepherdess",
+      "artist": "Jean François Millet",
+      "year": "1868–72",
+      "image_url": "https://www.artic.edu/iiif/2/f2bc893e-3b1a-62c9-0862-035f19cf405a/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Sheepshearers",
+      "artist": "Jean François Millet",
+      "year": "c. 1857–61",
+      "image_url": "https://www.artic.edu/iiif/2/bd921daa-25ba-3a48-5b30-ad03d8a8bacb/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Interrupted Reading",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "c. 1870",
+      "image_url": "https://www.artic.edu/iiif/2/1c2d32a7-790c-501a-e124-00f28cf5052d/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1865/70",
+      "image_url": "https://www.artic.edu/iiif/2/1501b057-0441-f1fa-e949-298b06ec6270/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Wounded Eurydice",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1868–70",
+      "image_url": "https://www.artic.edu/iiif/2/f024968c-3cb1-f1cc-b1af-2a1d40b7e193/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Arleux-Palluel, The Bridge of Trysts",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1871–72",
+      "image_url": "https://www.artic.edu/iiif/2/2661329a-3c67-6216-82eb-90c755bb42b8/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Bathing Nymphs and Child",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1855–60",
+      "image_url": "https://www.artic.edu/iiif/2/4f5ea323-3f98-2487-26d3-f55ee1274de5/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Souvenir of the Environs of Lake Nemi",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1865",
+      "image_url": "https://www.artic.edu/iiif/2/25cae01d-82c7-7060-0070-643727437126/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "View of Genoa",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1834",
+      "image_url": "https://www.artic.edu/iiif/2/bd8432e6-65f7-a32a-4e1a-85593633fa8f/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Monte Pincio, Rome",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1840–50",
+      "image_url": "https://www.artic.edu/iiif/2/0aff6ae5-99ae-d92c-1239-0bc9bb0ad9ae/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The White Tablecloth",
+      "artist": "Jean Siméon Chardin",
+      "year": "c. 1731–32",
+      "image_url": "https://www.artic.edu/iiif/2/7085f5ee-b5da-bd9f-e8f9-b692be466ea0/full/1686,/0/default.jpg",
+      "gallery": "rococo",
+      "source": "artic"
+    }
+  ]
+}

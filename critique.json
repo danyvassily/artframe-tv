@@ -1,0 +1,11 @@
+{
+  "kind": "critique-panel",
+  "score": 5,
+  "axes": {
+    "clarity":      { "score": 5, "notes": "D-pad state machine 5 modes (art / menu / sidebar-nav / sub / auth). Back stack propre : Back = remonte d'un niveau, gauche = ferme sidebar. Focus 4px + glow 22px pour TV 75\"." },
+    "hierarchy":    { "score": 5, "notes": "Un point de focus actif à la fois via dpad-focused. Navigation complète dans les sub-screens : up/down entre contrôles, left/right ajuste les sliders de ±5, Enter sélectionne." },
+    "typography":   { "score": 5, "notes": "Pas de changement sur cette passe." },
+    "motion":       { "score": 5, "notes": "prefers-reduced-motion existant. Transitions de focus instantanées (pas d'animation sur dpad-focused)." },
+    "brand":        { "score": 5, "notes": "Pas de changement sur cette passe." }
+  }
+}
