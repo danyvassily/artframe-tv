@@ -417,14 +417,8 @@
     updateGallery();
     renderFilters();
 
-    // Focus first item
-    setTimeout(function() {
-      var items = qa('.gb-item');
-      if (items.length > 0) {
-        items[0].classList.add('dpad-focused');
-        items[0].focus();
-      }
-    }, 100);
+    // Auto-launch slideshow on start
+    launchSlideshow();
   }
 
   function updateGallery() {
@@ -889,32 +883,191 @@
 
     // GALLERY mode
     if (STATE.page === 'gallery') {
-      var items = qa('.gb-item');
-      if (key === 'ArrowUp'||key==='ArrowLeft') {
-        e.preventDefault();
-        var cur = q('.gb-item.dpad-focused');
-        var idx = cur ? Array.prototype.indexOf.call(items, cur) : 0;
-        idx = Math.max(0, idx - 1);
+      var headerButtons = [q('#btn-all'), q('#btn-none'), q('#btn-launch')].filter(Boolean);
+      var chips = Array.prototype.slice.call(qa('.filter-chip'));
+      var items = Array.prototype.slice.call(qa('.gb-item'));
+      var cur = q('.dpad-focused');
+
+      // If nothing is focused, focus the launch button or first item
+      if (!cur) {
         clearFocus();
-        if (items[idx]){items[idx].classList.add('dpad-focused');items[idx].focus();if(items[idx].scrollIntoViewIfNeeded)items[idx].scrollIntoViewIfNeeded(false);}
+        var target = q('#btn-launch') || items[0];
+        if (target) {
+          target.classList.add('dpad-focused');
+          target.focus();
+        }
         return;
       }
-      if (key === 'ArrowDown'||key==='ArrowRight') {
-        e.preventDefault();
-        var cur2 = q('.gb-item.dpad-focused');
-        var idx2 = cur2 ? Array.prototype.indexOf.call(items, cur2) : 0;
-        idx2 = Math.min(items.length - 1, idx2 + 1);
-        clearFocus();
-        if (items[idx2]){items[idx2].classList.add('dpad-focused');items[idx2].focus();if(items[idx2].scrollIntoViewIfNeeded)items[idx2].scrollIntoViewIfNeeded(false);}
-        return;
+
+      if (cur.classList.contains('gb-item')) {
+        var idx = items.indexOf(cur);
+        // Calculate columns dynamically
+        var cols = 1;
+        if (items.length > 1) {
+          var firstTop = items[0].offsetTop;
+          for (var i = 1; i < items.length; i++) {
+            if (items[i].offsetTop === firstTop) {
+              cols++;
+            } else {
+              break;
+            }
+          }
+        }
+
+        if (key === 'ArrowLeft') {
+          e.preventDefault();
+          if (idx > 0) {
+            clearFocus();
+            items[idx - 1].classList.add('dpad-focused');
+            items[idx - 1].focus();
+            if (items[idx - 1].scrollIntoViewIfNeeded) items[idx - 1].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (key === 'ArrowRight') {
+          e.preventDefault();
+          if (idx < items.length - 1) {
+            clearFocus();
+            items[idx + 1].classList.add('dpad-focused');
+            items[idx + 1].focus();
+            if (items[idx + 1].scrollIntoViewIfNeeded) items[idx + 1].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (key === 'ArrowUp') {
+          e.preventDefault();
+          if (idx - cols >= 0) {
+            clearFocus();
+            items[idx - cols].classList.add('dpad-focused');
+            items[idx - cols].focus();
+            if (items[idx - cols].scrollIntoViewIfNeeded) items[idx - cols].scrollIntoViewIfNeeded(false);
+          } else {
+            // Move up to filter chips
+            if (chips.length > 0) {
+              clearFocus();
+              var chipTarget = chips[Math.min(chips.length - 1, Math.floor((idx / cols) * chips.length))];
+              chipTarget.classList.add('dpad-focused');
+              chipTarget.focus();
+              if (chipTarget.scrollIntoViewIfNeeded) chipTarget.scrollIntoViewIfNeeded(false);
+            } else {
+              // No chips, go to header
+              clearFocus();
+              var btnTarget = q('#btn-launch') || headerButtons[0];
+              if (btnTarget) {
+                btnTarget.classList.add('dpad-focused');
+                btnTarget.focus();
+              }
+            }
+          }
+          return;
+        }
+        if (key === 'ArrowDown') {
+          e.preventDefault();
+          if (idx + cols < items.length) {
+            clearFocus();
+            items[idx + cols].classList.add('dpad-focused');
+            items[idx + cols].focus();
+            if (items[idx + cols].scrollIntoViewIfNeeded) items[idx + cols].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (key === 'Enter' || key === ' ') {
+          e.preventDefault();
+          cur.click();
+          return;
+        }
       }
-      if (key === 'Enter'||key===' ') {
-        e.preventDefault();
-        var cur3 = q('.gb-item.dpad-focused');
-        if (cur3) { cur3.click(); }
-        return;
+
+      if (cur.classList.contains('filter-chip')) {
+        var idx = chips.indexOf(cur);
+        if (key === 'ArrowLeft') {
+          e.preventDefault();
+          if (idx > 0) {
+            clearFocus();
+            chips[idx - 1].classList.add('dpad-focused');
+            chips[idx - 1].focus();
+            if (chips[idx - 1].scrollIntoViewIfNeeded) chips[idx - 1].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (key === 'ArrowRight') {
+          e.preventDefault();
+          if (idx < chips.length - 1) {
+            clearFocus();
+            chips[idx + 1].classList.add('dpad-focused');
+            chips[idx + 1].focus();
+            if (chips[idx + 1].scrollIntoViewIfNeeded) chips[idx + 1].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (key === 'ArrowUp') {
+          e.preventDefault();
+          clearFocus();
+          var btnTarget = q('#btn-launch') || headerButtons[0];
+          if (btnTarget) {
+            btnTarget.classList.add('dpad-focused');
+            btnTarget.focus();
+          }
+          return;
+        }
+        if (key === 'ArrowDown') {
+          e.preventDefault();
+          if (items.length > 0) {
+            clearFocus();
+            items[0].classList.add('dpad-focused');
+            items[0].focus();
+            if (items[0].scrollIntoViewIfNeeded) items[0].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (key === 'Enter' || key === ' ') {
+          e.preventDefault();
+          cur.click();
+          return;
+        }
       }
-      return;
+
+      if (headerButtons.indexOf(cur) !== -1) {
+        var idx = headerButtons.indexOf(cur);
+        if (key === 'ArrowLeft') {
+          e.preventDefault();
+          if (idx > 0) {
+            clearFocus();
+            headerButtons[idx - 1].classList.add('dpad-focused');
+            headerButtons[idx - 1].focus();
+          }
+          return;
+        }
+        if (key === 'ArrowRight') {
+          e.preventDefault();
+          if (idx < headerButtons.length - 1) {
+            clearFocus();
+            headerButtons[idx + 1].classList.add('dpad-focused');
+            headerButtons[idx + 1].focus();
+          }
+          return;
+        }
+        if (key === 'ArrowDown') {
+          e.preventDefault();
+          if (chips.length > 0) {
+            clearFocus();
+            chips[0].classList.add('dpad-focused');
+            chips[0].focus();
+            if (chips[0].scrollIntoViewIfNeeded) chips[0].scrollIntoViewIfNeeded(false);
+          } else if (items.length > 0) {
+            clearFocus();
+            items[0].classList.add('dpad-focused');
+            items[0].focus();
+            if (items[0].scrollIntoViewIfNeeded) items[0].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (key === 'Enter' || key === ' ') {
+          e.preventDefault();
+          cur.click();
+          return;
+        }
+      }
     }
 
     // AUTH mode
