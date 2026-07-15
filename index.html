@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="mobile-web-app-capable" content="yes" />
+  <!-- Prevents ArtFrame from stealing audio focus from Spotify/music apps -->
+  <meta name="media-playback-requires-user-gesture" content="true" />
   <title>ArtFrame — Galerie d'Art</title>
   <style>
     :root {
@@ -153,9 +155,37 @@
     .toggle-switch.on { background:var(--accent-dim); }
     .toggle-switch::after { content:''; position:absolute; top:3px; left:3px; width:20px;height:20px; border-radius:50%; background:#fff; transition:transform 0.2s; }
     .toggle-switch.on::after { transform:translateX(18px); }
-    .frame-option { width:64px;height:48px;border-radius:6px;border:2px solid var(--border);cursor:pointer;transition:all 0.2s;overflow:hidden; }
-    .frame-option.dpad-focused { border-color:var(--accent);transform:scale(1.05); }
-    .frame-option.selected { border-color:var(--fg); }
+
+    /* ============ FRAME OPTIONS ============ */
+    .frame-option { width:72px; height:54px; border-radius:6px; border:2.5px solid var(--border); cursor:pointer; transition:all 0.25s; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:0; padding-bottom:4px; font-size:9px; color:rgba(255,255,255,0.6); font-family:var(--font-body); }
+    .frame-option .fo-preview { flex:1; width:100%; position:relative; }
+    .frame-option.dpad-focused { border-color:var(--accent); transform:scale(1.06); box-shadow:0 0 0 2px var(--accent-dim); }
+    .frame-option.selected { border-color:var(--fg); box-shadow:0 0 0 3px rgba(255,255,255,0.25); }
+    .frame-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+
+    /* ============ AUTO-LAUNCH COUNTDOWN ============ */
+    .auto-launch-overlay {
+      position:absolute; inset:0; z-index:50;
+      display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+      padding-bottom:60px; pointer-events:none;
+      opacity:0; transition:opacity 0.5s;
+    }
+    .auto-launch-overlay.visible { opacity:1; }
+    .auto-launch-pill {
+      display:flex; align-items:center; gap:16px;
+      background:rgba(0,0,0,0.72); backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,0.12); border-radius:40px;
+      padding:12px 28px; font-size:14px; color:rgba(255,255,255,0.7);
+    }
+    .auto-launch-countdown {
+      font-family:var(--font-mono); font-size:18px; color:var(--accent); min-width:28px; text-align:center;
+    }
+    .auto-launch-bar {
+      position:absolute; bottom:0; left:0; height:3px;
+      background:var(--accent); border-radius:0 0 0 0;
+      transition:width 1s linear;
+    }
+
     .toggle-row { display:flex;align-items:center;justify-content:space-between;padding:12px 0; }
     .toggle-row span { font-size:14px; }
     .gb-item .gallery-badge { position:absolute;top:6px;left:6px;padding:2px 8px;border-radius:4px;font-size:9px;background:rgba(0,0,0,0.6);color:var(--muted); }
@@ -219,6 +249,14 @@
     </div>
     <div class="timer-indicator" id="timer-indicator"></div>
     <div class="count-badge" id="count-badge"></div>
+    <!-- Auto-launch countdown (gallery page only) -->
+    <div class="auto-launch-overlay" id="auto-launch-overlay">
+      <div class="auto-launch-pill">
+        <span>🖼️ Lancement automatique dans</span>
+        <span class="auto-launch-countdown" id="auto-launch-count">10</span>
+        <span>sec — appuyez sur une touche pour annuler</span>
+      </div>
+    </div>
   </section>
 
   <!-- GALLERY BROWSER -->
@@ -279,17 +317,68 @@
       <div class="sub-screen" id="sub-frame">
         <h3>Style de cadre</h3>
         <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
-        <div class="frame-selector" id="frame-selector" style="display:flex;flex-wrap:wrap;gap:6px;">
-          <button class="frame-option selected" data-frame="oak" style="background:linear-gradient(135deg,#d4b47c,#a88440);" title="Chêne Clair"></button>
-          <button class="frame-option" data-frame="walnut" style="background:linear-gradient(180deg,#4a3a2a,#2a1a0a);" title="Noyer Ébène"></button>
-          <button class="frame-option" data-frame="gold" style="background:linear-gradient(160deg,#f0c85d,#a8781d);" title="Dorure Baroque"></button>
-          <button class="frame-option" data-frame="aluminum" style="background:linear-gradient(180deg,#d8d8d8,#909090);" title="Aluminium Brossé"></button>
-          <button class="frame-option" data-frame="white" style="background:#f0f0f0;" title="Blanc Mat"></button>
-          <button class="frame-option" data-frame="black" style="background:#1a1a1a;" title="Noir Satiné"></button>
-          <button class="frame-option" data-frame="matte" style="background:#e8e0d8;" title="Passe-partout"></button>
-          <button class="frame-option" data-frame="bevel" style="background:linear-gradient(135deg,#baaa9a,#7a6a5a);" title="Double Biseau"></button>
-          <button class="frame-option" data-frame="loft" style="background:repeating-linear-gradient(0deg,#6a5a4a 0px,#5a4a3a 3px);" title="Industriel"></button>
-          <button class="frame-option" data-frame="floating" style="background:transparent;border:1.5px solid rgba(255,255,255,0.15);" title="Flottant"></button>
+        <div class="frame-grid" id="frame-selector">
+
+          <!-- 1. Chêne Clair -->
+          <button class="frame-option selected" data-frame="oak" title="Chêne Clair">
+            <div class="fo-preview" style="background:repeating-linear-gradient(10deg,#c8a05a 0px,#b8903a 2px,#d4b470 4px,#c0963e 7px,#dac080 10px,#c8a05a 13px);"></div>
+            <span>Chêne</span>
+          </button>
+
+          <!-- 2. Noyer Foncé -->
+          <button class="frame-option" data-frame="walnut" title="Noyer Foncé">
+            <div class="fo-preview" style="background:repeating-linear-gradient(8deg,#3a2415 0px,#2a1608 2px,#4a2e1a 4px,#201005 6px,#3e2818 10px,#2c1a0c 13px);"></div>
+            <span>Noyer</span>
+          </button>
+
+          <!-- 3. Ébène Noir Chic -->
+          <button class="frame-option" data-frame="ebony" title="Ébène Noir Chic">
+            <div class="fo-preview" style="background:linear-gradient(160deg,#2a2a2a 0%,#0a0a0a 40%,#1a1a1a 60%,#050505 100%);box-shadow:inset 0 1px 0 rgba(200,170,80,0.4),inset 0 -1px 0 rgba(200,170,80,0.2);"></div>
+            <span>Ébène</span>
+          </button>
+
+          <!-- 4. Dorure Baroque -->
+          <button class="frame-option" data-frame="gold" title="Dorure Baroque">
+            <div class="fo-preview" style="background:repeating-linear-gradient(45deg,#d4a017 0px,#f0c040 3px,#b8860b 6px,#e8b020 9px,#c89010 12px,#f5d060 15px,#d4a017 18px);"></div>
+            <span>Baroque</span>
+          </button>
+
+          <!-- 5. Filet Doré -->
+          <button class="frame-option" data-frame="gold_slim" title="Filet Doré Mat">
+            <div class="fo-preview" style="background:linear-gradient(180deg,#c8a830 0%,#a07820 30%,#d4b840 50%,#906010 70%,#b89028 100%);"></div>
+            <span>Filet Or</span>
+          </button>
+
+          <!-- 6. Argent Brossé -->
+          <button class="frame-option" data-frame="silver" title="Argent Brossé">
+            <div class="fo-preview" style="background:repeating-linear-gradient(90deg,#b8b8b8 0px,#e0e0e0 1px,#c8c8c8 2px,#d8d8d8 3px,#a0a0a0 4px,#d0d0d0 5px,#b8b8b8 7px);"></div>
+            <span>Argent</span>
+          </button>
+
+          <!-- 7. Cerisier Rouge -->
+          <button class="frame-option" data-frame="cherry" title="Cerisier Rouge">
+            <div class="fo-preview" style="background:repeating-linear-gradient(12deg,#8b2018 0px,#6a1510 2px,#a02820 4px,#701810 6px,#952215 9px,#5a1008 12px,#8b2018 15px);"></div>
+            <span>Cerisier</span>
+          </button>
+
+          <!-- 8. Rustique Vieilli -->
+          <button class="frame-option" data-frame="rustic" title="Rustique Vieilli">
+            <div class="fo-preview" style="background:repeating-linear-gradient(5deg,#c8bca0 0px,#b0a480 3px,#d8ccb0 6px,#a09070 8px,#bbb090 11px,#c8bca0 14px);filter:saturate(0.6);"></div>
+            <span>Rustique</span>
+          </button>
+
+          <!-- 9. Baroque Sculpté -->
+          <button class="frame-option" data-frame="ornate" title="Baroque Sculpté">
+            <div class="fo-preview" style="background:repeating-linear-gradient(30deg,#c8900a 0px,#f0c040 2px,#a07010 4px,#e0b030 6px,#c8900a 8px);box-shadow:inset 0 2px 3px rgba(0,0,0,0.5),inset 0 -2px 3px rgba(255,220,80,0.3);"></div>
+            <span>Sculpté</span>
+          </button>
+
+          <!-- 10. Flottant Moderne -->
+          <button class="frame-option" data-frame="floating" title="Flottant Moderne">
+            <div class="fo-preview" style="background:transparent;border:1px dashed rgba(255,255,255,0.2);"></div>
+            <span>Flottant</span>
+          </button>
+
         </div>
         <div class="option-group"><label>Taille</label><div class="option-row">
           <button class="option-chip" data-frame-size="thin">Fin<small>40px</small></button>
@@ -629,26 +718,150 @@
   }
 
   // ==================== FRAMES ====================
+  // 10 cadres réalistes avec veinage bois, dorures et reflets multicouches
   function renderFrame() {
-    var fw = STATE.frameWidth + 'px';
+    var fw = STATE.frameWidth;
     var i = STATE.shadowIntensity / 100;
     var el = document.getElementById('frame-overlay');
-    var styles = {
-      oak: { b:fw+' solid #c4a46c', bg:'linear-gradient(135deg,#d4b47c,#b89450,#c4a46c,#a88440)', s:'inset 0 0 0 2px #d4b47c80, inset '+(3*i)+'px '+(3*i)+'px '+(15*i)+'px rgba(0,0,0,'+(0.3*i)+'), inset -'+(2*i)+'px -'+(2*i)+'px '+(10*i)+'px rgba(255,255,255,'+(0.15*i)+'), 0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.4*i)+')' },
-      walnut: { b:fw+' solid #3a2a1a', bg:'linear-gradient(180deg,#4a3a2a,#2a1a0a)', s:'inset 0 0 0 2px #5a4a3a80, inset '+(4*i)+'px '+(4*i)+'px '+(18*i)+'px rgba(0,0,0,'+(0.5*i)+'), inset -'+(2*i)+'px -'+(2*i)+'px '+(8*i)+'px rgba(255,255,255,'+(0.08*i)+'), 0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.5*i)+')' },
-      gold: { b:fw+' solid #c8962d', bg:'linear-gradient(160deg,#f0c85d,#c8962d,#e8b84d,#a8781d)', s:'inset 0 0 0 3px #e8b84d, inset 0 0 0 6px #b8862d, inset '+(4*i)+'px '+(4*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.35*i)+'), inset -'+(3*i)+'px -'+(3*i)+'px '+(12*i)+'px rgba(255,215,0,'+(0.2*i)+'), 0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.45*i)+')' },
-      aluminum: { b:fw+' solid #a0a0a0', bg:'linear-gradient(180deg,#d8d8d8,#a8a8a8,#c8c8c8,#909090)', s:'inset 0 0 0 1px #c0c0c080, inset '+(2*i)+'px '+(2*i)+'px '+(12*i)+'px rgba(0,0,0,'+(0.15*i)+'), inset -'+(1*i)+'px -'+(1*i)+'px '+(6*i)+'px rgba(255,255,255,'+(0.25*i)+'), 0 '+(4*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.25*i)+')' },
-      white: { b:fw+' solid #f0f0f0', bg:'linear-gradient(160deg,#ffffff,#ececec,#f5f5f5,#e0e0e0)', s:'inset 0 0 0 1px #ffffff80, inset '+(3*i)+'px '+(3*i)+'px '+(15*i)+'px rgba(0,0,0,'+(0.1*i)+'), inset -'+(1*i)+'px -'+(1*i)+'px '+(6*i)+'px rgba(255,255,255,'+(0.3*i)+'), 0 '+(6*i)+'px '+(28*i)+'px rgba(0,0,0,'+(0.2*i)+')' },
-      black: { b:fw+' solid #1a1a1a', bg:'linear-gradient(180deg,#2a2a2a,#0a0a0a,#1a1a1a,#050505)', s:'inset 0 0 0 1px #3a3a3a80, inset '+(4*i)+'px '+(4*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.6*i)+'), inset -'+(1*i)+'px -'+(1*i)+'px '+(6*i)+'px rgba(255,255,255,'+(0.05*i)+'), 0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.6*i)+')' },
-      matte: { b:fw+' solid #e8e0d8', bg:'radial-gradient(ellipse at center,#f5f0ea 60%,#e8e0d8 100%)', s:'inset 0 0 0 4px #f5f0ea, inset '+(2*i)+'px '+(2*i)+'px '+(10*i)+'px rgba(0,0,0,'+(0.08*i)+'), inset -'+(1*i)+'px -'+(1*i)+'px '+(5*i)+'px rgba(255,255,255,'+(0.2*i)+'), 0 '+(4*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.15*i)+')' },
-      bevel: { b:fw+' solid #8a7a6a', bg:'linear-gradient(135deg,#baaa9a,#8a7a6a,#a09080,#7a6a5a)', s:'inset 0 0 0 4px #baaa9a, inset '+(4*i)+'px '+(4*i)+'px 0 '+(4*i)+'px #6a5a4a, inset -'+(4*i)+'px -'+(4*i)+'px 0 '+(4*i)+'px #9a8a7a, inset '+(6*i)+'px '+(6*i)+'px '+(24*i)+'px rgba(0,0,0,'+(0.3*i)+'), inset -'+(4*i)+'px -'+(4*i)+'px '+(12*i)+'px rgba(255,255,255,'+(0.12*i)+'), 0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.4*i)+')' },
-      loft: { b:fw+' solid #5a4a3a', bg:'repeating-linear-gradient(0deg,#6a5a4a 0px,#6a5a4a 1px,#5a4a3a 1px,#5a4a3a 3px)', s:'inset 0 0 0 2px #8a7a6a, inset 0 0 0 4px #3a2a1a, inset '+(5*i)+'px '+(5*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.45*i)+'), inset -'+(3*i)+'px -'+(3*i)+'px '+(10*i)+'px rgba(255,255,255,'+(0.06*i)+'), 0 '+(6*i)+'px '+(28*i)+'px rgba(0,0,0,'+(0.5*i)+')' },
-      floating: { b:'none', bg:'transparent', s:'0 0 0 '+(4*i)+'px rgba(255,255,255,'+(0.08*i)+'), 0 0 0 '+(8*i)+'px rgba(255,255,255,'+(0.03*i)+'), 0 0 0 '+(12*i)+'px rgba(0,0,0,'+(0.1*i)+'), 0 '+(20*i)+'px '+(60*i)+'px rgba(0,0,0,'+(0.5*i)+')' }
+
+    // Réinitialise les styles inline
+    el.style.cssText = '';
+    el.style.position = 'absolute';
+    el.style.inset = '0';
+    el.style.pointerEvents = 'none';
+    el.style.zIndex = '2';
+    el.style.transition = 'all 0.6s cubic-bezier(0.4,0,0.2,1)';
+
+    if (STATE.frameStyle === 'floating') {
+      el.style.border = 'none';
+      el.style.background = 'transparent';
+      el.style.boxShadow = [
+        '0 0 0 '+(4*i)+'px rgba(255,255,255,'+(0.07*i)+')',
+        '0 '+(30*i)+'px '+(80*i)+'px rgba(0,0,0,'+(0.7*i)+')'
+      ].join(',');
+      return;
+    }
+
+    var fwPx = fw + 'px';
+    var halfPx = (fw/2) + 'px';
+    var thirdPx = Math.round(fw*0.15) + 'px';
+    var edgePx = Math.max(2, Math.round(fw*0.04)) + 'px';
+
+    var frames = {
+      // 1. Chêne clair — veinage bois chaud miel
+      oak: {
+        border: fwPx + ' solid #b8903a',
+        bg: 'repeating-linear-gradient(9deg,#c8a050 0px,#b08030 2px,#d4b060 5px,#b89040 8px,#caa848 12px,#a87828 15px,#d0b060 19px)',
+        shadow: [
+          'inset 0 0 0 '+edgePx+' #e0c07080',
+          'inset 0 0 0 '+thirdPx+' #90601840',
+          'inset '+(5*i)+'px '+(5*i)+'px '+(18*i)+'px rgba(0,0,0,'+(0.45*i)+')',
+          'inset -'+(3*i)+'px -'+(3*i)+'px '+(12*i)+'px rgba(255,220,140,'+(0.2*i)+')',
+          '0 '+(10*i)+'px '+(40*i)+'px rgba(0,0,0,'+(0.55*i)+')'
+        ].join(',')
+      },
+      // 2. Noyer foncé — bois brun profond, stries sombres
+      walnut: {
+        border: fwPx + ' solid #2e1a08',
+        bg: 'repeating-linear-gradient(8deg,#3e2414 0px,#28100a 2px,#4a2c18 5px,#1e0c06 7px,#3a2010 11px,#261208 14px,#442a16 17px)',
+        shadow: [
+          'inset 0 0 0 '+edgePx+' #5a3a2050',
+          'inset 0 0 0 '+thirdPx+' #0a060230',
+          'inset '+(6*i)+'px '+(6*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.6*i)+')',
+          'inset -'+(2*i)+'px -'+(2*i)+'px '+(8*i)+'px rgba(120,70,20,'+(0.15*i)+')',
+          '0 '+(10*i)+'px '+(45*i)+'px rgba(0,0,0,'+(0.65*i)+')'
+        ].join(',')
+      },
+      // 3. Ébène noir chic — bois laqué noir, arêtes dorées
+      ebony: {
+        border: fwPx + ' solid #080808',
+        bg: 'linear-gradient(160deg,#1e1e1e 0%,#080808 35%,#141414 55%,#040404 75%,#0e0e0e 100%)',
+        shadow: [
+          'inset 0 0 0 '+edgePx+' rgba(200,160,50,0.45)',
+          'inset 0 0 0 '+thirdPx+' rgba(0,0,0,0.9)',
+          'inset '+(4*i)+'px '+(4*i)+'px '+(16*i)+'px rgba(0,0,0,'+(0.8*i)+')',
+          'inset -'+(1*i)+'px -'+(1*i)+'px '+(6*i)+'px rgba(210,175,60,'+(0.18*i)+')',
+          '0 '+(12*i)+'px '+(50*i)+'px rgba(0,0,0,'+(0.75*i)+')'
+        ].join(',')
+      },
+      // 4. Dorure baroque — or chaud multicouches
+      gold: {
+        border: fwPx + ' solid #a87018',
+        bg: 'repeating-linear-gradient(42deg,#c8900a 0px,#f0c040 3px,#a07010 6px,#e8b030 9px,#b88010 12px,#f4cc50 15px,#c0900e 18px)',
+        shadow: [
+          'inset 0 0 0 '+edgePx+' #f5d06090',
+          'inset 0 0 0 '+thirdPx+' #80500880',
+          'inset '+(3*i)+'px '+(3*i)+'px '+(16*i)+'px rgba(0,0,0,'+(0.4*i)+')',
+          'inset -'+(4*i)+'px -'+(4*i)+'px '+(14*i)+'px rgba(255,220,50,'+(0.25*i)+')',
+          '0 '+(8*i)+'px '+(35*i)+'px rgba(150,100,0,'+(0.4*i)+')'
+        ].join(',')
+      },
+      // 5. Filet doré mat — cadre fin galerie
+      gold_slim: {
+        border: fwPx + ' solid #906010',
+        bg: 'linear-gradient(180deg,#c8a830 0%,#a07820 25%,#d4b840 50%,#906010 75%,#b89028 100%)',
+        shadow: [
+          'inset 0 0 0 '+edgePx+' #e0c04070',
+          'inset '+(3*i)+'px '+(3*i)+'px '+(10*i)+'px rgba(0,0,0,'+(0.35*i)+')',
+          'inset -'+(2*i)+'px -'+(2*i)+'px '+(8*i)+'px rgba(230,190,60,'+(0.2*i)+')',
+          '0 '+(6*i)+'px '+(28*i)+'px rgba(0,0,0,'+(0.4*i)+')'
+        ].join(',')
+      },
+      // 6. Argent brossé — métal poli avec stries de brossage
+      silver: {
+        border: fwPx + ' solid #909090',
+        bg: 'repeating-linear-gradient(90deg,#b0b0b0 0px,#e0e0e0 1px,#c0c0c0 2px,#d8d8d8 3px,#a0a0a0 5px,#d0d0d0 6px,#b8b8b8 8px)',
+        shadow: [
+          'inset 0 0 0 '+edgePx+' #f0f0f060',
+          'inset 0 0 0 '+thirdPx+' #60606040',
+          'inset '+(3*i)+'px '+(3*i)+'px '+(12*i)+'px rgba(0,0,0,'+(0.2*i)+')',
+          'inset -'+(2*i)+'px -'+(2*i)+'px '+(8*i)+'px rgba(255,255,255,'+(0.35*i)+')',
+          '0 '+(6*i)+'px '+(24*i)+'px rgba(0,0,0,'+(0.3*i)+')'
+        ].join(',')
+      },
+      // 7. Cerisier rouge — bois rouge-brun satiné
+      cherry: {
+        border: fwPx + ' solid #701010',
+        bg: 'repeating-linear-gradient(11deg,#8e2018 0px,#6a1510 3px,#a02a20 6px,#701510 9px,#962218 12px,#5a1008 15px,#8e2018 18px)',
+        shadow: [
+          'inset 0 0 0 '+edgePx+' #c04030 50',
+          'inset 0 0 0 '+thirdPx+' #30080430',
+          'inset '+(5*i)+'px '+(5*i)+'px '+(18*i)+'px rgba(0,0,0,'+(0.5*i)+')',
+          'inset -'+(2*i)+'px -'+(2*i)+'px '+(10*i)+'px rgba(200,80,50,'+(0.18*i)+')',
+          '0 '+(10*i)+'px '+(40*i)+'px rgba(0,0,0,'+(0.55*i)+')'
+        ].join(',')
+      },
+      // 8. Rustique vieilli — bois blanchi, nœuds apparents
+      rustic: {
+        border: fwPx + ' solid #a09070',
+        bg: 'repeating-linear-gradient(5deg,#c8bca0 0px,#b0a480 3px,#d8ccb0 7px,#a09070 10px,#bcb090 14px,#c8bca0 17px)',
+        shadow: [
+          'inset 0 0 0 '+edgePx+' #e0d8c060',
+          'inset 0 0 0 '+thirdPx+' #70604030',
+          'inset '+(4*i)+'px '+(4*i)+'px '+(14*i)+'px rgba(0,0,0,'+(0.3*i)+')',
+          'inset -'+(2*i)+'px -'+(2*i)+'px '+(8*i)+'px rgba(240,220,170,'+(0.2*i)+')',
+          '0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.35*i)+')'
+        ].join(',')
+      },
+      // 9. Baroque sculpté — or avec moulures en relief
+      ornate: {
+        border: fwPx + ' solid #9a6808',
+        bg: 'repeating-linear-gradient(30deg,#b87808 0px,#e8a820 2px,#906008 4px,#d49018 6px,#a87010 8px,#f0b830 10px,#b07010 13px)',
+        shadow: [
+          'inset 0 0 0 '+edgePx+' #f8e06080',
+          'inset 0 0 0 '+Math.round(fw*0.08)+'px #50340448',
+          'inset 0 0 0 '+thirdPx+' #c08010 50',
+          'inset '+(5*i)+'px '+(5*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.45*i)+')',
+          'inset -'+(4*i)+'px -'+(4*i)+'px '+(16*i)+'px rgba(255,210,50,'+(0.3*i)+')',
+          '0 '+(10*i)+'px '+(45*i)+'px rgba(80,50,0,'+(0.5*i)+')'
+        ].join(',')
+      }
     };
-    var s = styles[STATE.frameStyle] || styles.oak;
-    el.style.border = s.b;
-    el.style.background = s.bg;
-    el.style.boxShadow = s.s;
+
+    var s = frames[STATE.frameStyle] || frames.oak;
+    el.style.border = s.border;
+    el.style.backgroundImage = s.bg;
+    el.style.boxShadow = s.shadow;
   }
 
   function renderCanvasTexture() {
@@ -791,7 +1004,8 @@
 
   function syncSidebarValues() {
     var fl = {oak:'Chêne clair',walnut:'Noyer/ébène',gold:'Dorure baroque',aluminum:'Aluminium',white:'Blanc mat',black:'Noir satiné',matte:'Passe-partout',bevel:'Double biseau',loft:'Industriel',floating:'Flottant'};
-    document.getElementById('nav-frame-val').textContent = fl[STATE.frameStyle]||'Chêne clair';
+    var fl2 = {oak:'Chêne Clair',walnut:'Noyer Foncé',ebony:'Ébène Noir',gold:'Dorure Baroque',gold_slim:'Filet Doré',silver:'Argent Brossé',cherry:'Cerisier',rustic:'Rustique',ornate:'Sculpté',floating:'Flottant'};
+    document.getElementById('nav-frame-val').textContent = fl2[STATE.frameStyle]||'Chêne Clair';
     var tl = {15:'15 min',30:'30 min',60:'1 heure',120:'2 heures','static':'Statique'};
     document.getElementById('nav-timer-val').textContent = tl[STATE.timerInterval];
     document.getElementById('nav-ambient-val').textContent = STATE.brightness===100&&STATE.temperature===50?'Auto':STATE.brightness+'% · '+(STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre');
@@ -1199,8 +1413,78 @@
     artworkEl.style.transform='translate('+x+'px,'+y+'px)';
   },5*60*1000);
 
+  // ==================== AUTO-LAUNCH (5 min d'inactivité) ====================
+  // Lance automatiquement le diaporama si l'utilisateur n'appuie sur aucune
+  // touche pendant AUTO_LAUNCH_DELAY secondes (depuis la galerie uniquement).
+  // Ne coupe PAS l'audio en cours (Spotify, etc.) — l'app est purement visuelle.
+  var AUTO_LAUNCH_DELAY = 5 * 60; // 5 minutes en secondes
+  var AUTO_LAUNCH_COUNTDOWN = 10;  // Secondes de compte à rebours visible
+  var _autoLaunchTimer = null;
+  var _countdownTimer = null;
+  var _countdownVal = AUTO_LAUNCH_COUNTDOWN;
+
+  function resetAutoLaunch() {
+    clearTimeout(_autoLaunchTimer);
+    clearInterval(_countdownTimer);
+    hideAutoLaunchCountdown();
+    if (STATE.page === 'gallery') {
+      _autoLaunchTimer = setTimeout(startAutoLaunchCountdown, (AUTO_LAUNCH_DELAY - AUTO_LAUNCH_COUNTDOWN) * 1000);
+    }
+  }
+
+  function startAutoLaunchCountdown() {
+    if (STATE.page !== 'gallery') return;
+    _countdownVal = AUTO_LAUNCH_COUNTDOWN;
+    showAutoLaunchCountdown();
+    _countdownTimer = setInterval(function() {
+      _countdownVal--;
+      var el = document.getElementById('auto-launch-count');
+      if (el) el.textContent = _countdownVal;
+      if (_countdownVal <= 0) {
+        clearInterval(_countdownTimer);
+        hideAutoLaunchCountdown();
+        launchSlideshow();
+      }
+    }, 1000);
+  }
+
+  function showAutoLaunchCountdown() {
+    var overlay = document.getElementById('auto-launch-overlay');
+    var countEl = document.getElementById('auto-launch-count');
+    if (overlay) { overlay.classList.add('visible'); }
+    if (countEl) countEl.textContent = _countdownVal;
+  }
+
+  function hideAutoLaunchCountdown() {
+    var overlay = document.getElementById('auto-launch-overlay');
+    if (overlay) overlay.classList.remove('visible');
+    clearInterval(_countdownTimer);
+  }
+
+  // Écoute toutes les interactions utilisateur pour réinitialiser le timer
+  var _activityEvents = ['keydown', 'mousemove', 'click', 'touchstart', 'pointerdown'];
+  _activityEvents.forEach(function(ev) {
+    document.addEventListener(ev, function() {
+      // Réinitialise seulement si on est sur la page galerie
+      if (STATE.page === 'gallery') resetAutoLaunch();
+    }, { passive: true });
+  });
+
+  // Démarre le timer d'auto-lancement après le chargement
+  function initAutoLaunch() {
+    resetAutoLaunch();
+  }
+
+  // Patch quitSlideshow pour redémarrer le timer quand on revient à la galerie
+  var _origQuitSlideshow = quitSlideshow;
+  quitSlideshow = function() {
+    _origQuitSlideshow();
+    resetAutoLaunch();
+  };
+
   // ==================== INIT ====================
   loadArtworks();
+  initAutoLaunch();
 })();
 </script>
 </body>
