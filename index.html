@@ -72,22 +72,27 @@
     .filter-chip:hover,.filter-chip.dpad-focused { border-color:var(--accent); color:var(--fg); }
     .filter-chip.active { border-color:var(--accent); color:var(--accent); background:rgba(255,255,255,0.04); }
 
-    .gb-grid { flex:1; overflow-y:auto; padding:20px 40px 40px; display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; }
+    .gb-grid { flex:1; overflow-y:auto; padding:20px 40px 40px; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
     .gb-item {
-      border-radius:8px; overflow:hidden; cursor:pointer; border:2px solid var(--border); transition:all 0.2s;
-      background:var(--surface); position:relative; aspect-ratio:4/3; display:flex; flex-direction:column;
+      border-radius:10px; overflow:hidden; cursor:pointer; border:2px solid var(--border); transition:all 0.25s;
+      background:var(--surface); position:relative; aspect-ratio:16/10; display:flex; flex-direction:column;
     }
-    .gb-item:hover,.gb-item.dpad-focused { border-color:var(--accent); transform:translateY(-2px); }
-    .gb-item.active { border-color:var(--accent); }
-    .gb-item .gb-thumb { flex:1; background-size:cover; background-position:center; min-height:0; }
-    .gb-item .gb-label { padding:6px 8px; font-size:11px; line-height:1.3; background:var(--surface2); }
-    .gb-item .gb-label .gb-title { font-weight:500; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .gb-item .gb-label .gb-artist { color:var(--muted); font-size:10px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .gb-item:hover,.gb-item.dpad-focused { border-color:var(--accent); transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.4); }
+    .gb-item.active { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+    .gb-item .gb-thumb { flex:1; background-size:cover; background-position:center; min-height:0; transition:transform 0.4s; }
+    .gb-item:hover .gb-thumb { transform:scale(1.03); }
+    .gb-item .gb-label { padding:10px 12px; font-size:13px; line-height:1.3; background:var(--surface2); }
+    .gb-item .gb-label .gb-title { font-weight:600; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; }
+    .gb-item .gb-label .gb-artist { color:var(--muted); font-size:11px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:2px; }
     .gb-item .gb-check {
-      position:absolute; top:6px; right:6px; width:22px; height:22px; border-radius:50%; border:2px solid rgba(255,255,255,0.4);
-      background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; font-size:12px; color:transparent;
+      position:absolute; top:8px; right:8px; width:26px; height:26px; border-radius:50%; border:2px solid rgba(255,255,255,0.5);
+      background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; font-size:14px; color:transparent;
+      transition:all 0.2s; backdrop-filter:blur(4px);
     }
     .gb-item.active .gb-check { border-color:var(--accent); background:var(--accent); color:var(--bg); }
+    /* Art image element in slideshow */
+    .art-img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0; transition:opacity 1s ease; display:block; }
+    .art-img.loaded { opacity:1; }
 
     /* ============ SETTINGS BAR ============ */
     .settings-bar {
@@ -422,39 +427,57 @@
   }
 
   function updateGallery() {
-    // Count active
-    var activeCount = 0;
-    galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) activeCount++; });
-
-    // Update count
-    document.getElementById('gb-count').textContent =
-      artworks.length + ' œuvres · ' + activeCount + ' galerie(s) active(s)';
-
-    // Filter artworks by active galleries
+    // Mettre à jour filteredArtworks pour le diaporama
     filteredArtworks = artworks.filter(function(a) {
       return STATE.activeGalleries[a.gallery] === true;
     });
 
-    // Render grid
+    var activeCount = 0;
+    galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) activeCount++; });
+
+    document.getElementById('gb-count').textContent =
+      artworks.length + ' œuvres · ' + activeCount + '/' + galleryKeys.length + ' galeries sélectionnées';
+
+    // UNE CARTE PAR GALERIE (plus rapide, plus clair)
     var grid = document.getElementById('gb-grid');
     grid.innerHTML = '';
-    filteredArtworks.forEach(function(art, idx) {
+
+    galleryKeys.forEach(function(g) {
+      var isActive = STATE.activeGalleries[g] === true;
+      var galleryArts = artworks.filter(function(a) { return a.gallery === g; });
+      var rep = galleryArts[0]; // Œuvre représentative
+      if (!rep) return;
+
       var item = document.createElement('div');
-      item.className = 'gb-item';
+      item.className = 'gb-item' + (isActive ? ' active' : '');
       item.tabIndex = -1;
-      item.dataset.idx = idx;
+      item.dataset.gallery = g;
+
+      var galleryLabel = g.charAt(0).toUpperCase() + g.slice(1).replace(/_/g, ' ');
       item.innerHTML =
-        '<div class="gb-thumb" style="background-image:url(' + art.image_url + ')"></div>' +
-        '<div class="gb-label"><span class="gb-title">' + art.title + '</span><span class="gb-artist">' + art.artist + '</span></div>' +
-        '<span class="gallery-badge">' + art.gallery + '</span>' +
+        '<div class="gb-thumb" style="background-image:url(' + rep.image_url + ')"></div>' +
+        '<div class="gb-label">' +
+          '<span class="gb-title">' + galleryLabel + '</span>' +
+          '<span class="gb-artist">' + galleryArts.length + ' tableau(x)</span>' +
+        '</div>' +
         '<div class="gb-check">✓</div>';
+
       item.addEventListener('click', function() {
-        // Toggle active state for this artwork's gallery
-        var gallery = artworks[parseInt(this.dataset.idx)].gallery;
+        var gallery = this.dataset.gallery;
         STATE.activeGalleries[gallery] = !STATE.activeGalleries[gallery];
-        renderFilters();
-        updateGallery();
+        var nowActive = STATE.activeGalleries[gallery];
+        this.classList.toggle('active', nowActive);
+
+        // Mettre à jour filteredArtworks et le compteur sans re-renderer toute la grille
+        filteredArtworks = artworks.filter(function(a) { return STATE.activeGalleries[a.gallery]; });
+        var ac = 0;
+        galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) ac++; });
+        document.getElementById('gb-count').textContent =
+          artworks.length + ' œuvres · ' + ac + '/' + galleryKeys.length + ' galeries sélectionnées';
+
+        renderFilters(); // Synchroniser les chips de filtres
       });
+
       grid.appendChild(item);
     });
   }
@@ -561,37 +584,32 @@
   }
 
   function applyArt(el, art) {
-    // PLACEHOLDER IMMÉDIAT — affiché avant que l'image IIIF ne se charge
-    var hue = 30 + Math.abs(art.title.length * 7 + art.artist.length * 13) % 260;
-    el.style.background = 'radial-gradient(ellipse at 40% 40%, oklch(55% 0.14 ' + hue + '), oklch(20% 0.05 ' + ((hue + 80) % 360) + '))';
-    el.style.backgroundSize = 'cover';
+    // Supprimer l'image précédente
+    var prev = el.querySelector('.art-img');
+    if (prev) prev.remove();
 
-    var img = new Image();
-    var loaded = false;
-    img.onload = function() {
-      if (loaded) return;
-      loaded = true;
+    // Placeholder gradient immédiat (couleur unique par tableau)
+    var hue = 30 + Math.abs(art.title.length * 7 + art.artist.length * 13) % 260;
+    el.style.background = 'radial-gradient(ellipse at 40% 40%, oklch(45% 0.10 ' + hue + '), oklch(12% 0.04 ' + ((hue + 100) % 360) + '))';
+
+    // Élément <img> réel — bien plus fiable que CSS background-image dans les WebViews
+    var imgEl = document.createElement('img');
+    imgEl.className = 'art-img';
+    imgEl.alt = art.title;
+    imgEl.decoding = 'async';
+
+    imgEl.onload = function() {
       el.style.background = 'none';
-      el.style.backgroundImage = 'url("' + art.image_url + '")';
-      el.style.backgroundSize = 'contain';
-      el.style.backgroundRepeat = 'no-repeat';
-      el.style.backgroundPosition = 'center';
+      imgEl.classList.add('loaded');
     };
-    img.onerror = function() {
-      if (loaded) return;
-      loaded = true;
-      // garder le placeholder gradient déjà affiché
+
+    imgEl.onerror = function() {
+      // Garder le gradient placeholder si l'image échoue
       console.log('⚠ Image indisponible : ' + art.title);
     };
-    img.src = art.image_url;
 
-    // Timeout de sécurité : si l'image ne charge pas en 10s, on garde le placeholder
-    setTimeout(function() {
-      if (!loaded) {
-        loaded = true;
-        console.log('⏰ Timeout image : ' + art.title);
-      }
-    }, 10000);
+    imgEl.src = art.image_url;
+    el.appendChild(imgEl);
   }
 
   function updateArtInfo(art) {
