@@ -567,16 +567,37 @@
   }
 
   function applyArt(el, art) {
+    // PLACEHOLDER IMMÉDIAT — affiché avant que l'image IIIF ne se charge
+    var hue = 30 + Math.abs(art.title.length * 7 + art.artist.length * 13) % 260;
+    el.style.background = 'radial-gradient(ellipse at 40% 40%, oklch(55% 0.14 ' + hue + '), oklch(20% 0.05 ' + ((hue + 80) % 360) + '))';
+    el.style.backgroundSize = 'cover';
+
     var img = new Image();
+    var loaded = false;
     img.onload = function() {
+      if (loaded) return;
+      loaded = true;
+      el.style.background = 'none';
       el.style.backgroundImage = 'url("' + art.image_url + '")';
       el.style.backgroundSize = 'contain';
+      el.style.backgroundRepeat = 'no-repeat';
+      el.style.backgroundPosition = 'center';
     };
     img.onerror = function() {
-      el.style.background = 'radial-gradient(ellipse at 40% 40%, oklch(55% 0.14 30), oklch(20% 0.05 270))';
-      el.style.backgroundSize = 'cover';
+      if (loaded) return;
+      loaded = true;
+      // garder le placeholder gradient déjà affiché
+      console.log('⚠ Image indisponible : ' + art.title);
     };
     img.src = art.image_url;
+
+    // Timeout de sécurité : si l'image ne charge pas en 10s, on garde le placeholder
+    setTimeout(function() {
+      if (!loaded) {
+        loaded = true;
+        console.log('⏰ Timeout image : ' + art.title);
+      }
+    }, 10000);
   }
 
   function updateArtInfo(art) {
