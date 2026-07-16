@@ -400,10 +400,17 @@
         </div></div>
       </div>
       <div class="sub-screen" id="sub-ambient">
-        <h3>Tonalité ambiante</h3>
+        <h3>Tonalité & Cadrage</h3>
         <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
         <div class="slider-row"><div class="slider-label"><span>Luminosité</span><span id="brightness-val">100%</span></div><input type="range" min="30" max="100" value="100" id="brightness-slider"></div>
         <div class="slider-row"><div class="slider-label"><span>Température</span><span id="temperature-val">Neutre</span></div><input type="range" min="0" max="100" value="50" id="temperature-slider"></div>
+        <div class="option-group" style="margin-top:10px;">
+          <label>Cadrage de l'image</label>
+          <div class="option-row">
+            <button class="option-chip selected" data-image-fit="contain">Ajuster<small>Bandes noires</small></button>
+            <button class="option-chip" data-image-fit="cover">Remplir<small>Plein écran</small></button>
+          </div>
+        </div>
       </div>
       <div class="sub-screen" id="sub-google">
         <h3>Google Photos</h3>
@@ -451,6 +458,7 @@
     googleConnected: false,
     slideshowActive: true,
     activeGalleries: {},
+    imageFit: 'contain',
   };
 
   var artworks = [];
@@ -686,6 +694,7 @@
     imgEl.className = 'art-img';
     imgEl.alt = art.title;
     imgEl.decoding = 'async';
+    imgEl.style.objectFit = STATE.imageFit || 'contain';
 
     imgEl.onload = function() {
       el.style.background = 'none';
@@ -743,124 +752,97 @@
     }
 
     var fwPx = fw + 'px';
-    var halfPx = (fw/2) + 'px';
     var thirdPx = Math.round(fw*0.15) + 'px';
     var edgePx = Math.max(2, Math.round(fw*0.04)) + 'px';
 
     var frames = {
-      // 1. Chêne clair — veinage bois chaud miel
+      // 1. Chêne clair
       oak: {
-        border: fwPx + ' solid #b8903a',
-        bg: 'repeating-linear-gradient(9deg,#c8a050 0px,#b08030 2px,#d4b060 5px,#b89040 8px,#caa848 12px,#a87828 15px,#d0b060 19px)',
+        url: 'url("frames/oak.png")',
+        slice: 180,
         shadow: [
-          'inset 0 0 0 '+edgePx+' #e0c07080',
-          'inset 0 0 0 '+thirdPx+' #90601840',
-          'inset '+(5*i)+'px '+(5*i)+'px '+(18*i)+'px rgba(0,0,0,'+(0.45*i)+')',
-          'inset -'+(3*i)+'px -'+(3*i)+'px '+(12*i)+'px rgba(255,220,140,'+(0.2*i)+')',
-          '0 '+(10*i)+'px '+(40*i)+'px rgba(0,0,0,'+(0.55*i)+')'
+          'inset 0 0 10px rgba(0,0,0,'+(0.3*i)+')',
+          '0 '+(10*i)+'px '+(35*i)+'px rgba(0,0,0,'+(0.55*i)+')'
         ].join(',')
       },
-      // 2. Noyer foncé — bois brun profond, stries sombres
+      // 2. Noyer foncé
       walnut: {
-        border: fwPx + ' solid #2e1a08',
-        bg: 'repeating-linear-gradient(8deg,#3e2414 0px,#28100a 2px,#4a2c18 5px,#1e0c06 7px,#3a2010 11px,#261208 14px,#442a16 17px)',
+        url: 'url("frames/walnut.png")',
+        slice: 195,
         shadow: [
-          'inset 0 0 0 '+edgePx+' #5a3a2050',
-          'inset 0 0 0 '+thirdPx+' #0a060230',
-          'inset '+(6*i)+'px '+(6*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.6*i)+')',
-          'inset -'+(2*i)+'px -'+(2*i)+'px '+(8*i)+'px rgba(120,70,20,'+(0.15*i)+')',
-          '0 '+(10*i)+'px '+(45*i)+'px rgba(0,0,0,'+(0.65*i)+')'
+          'inset 0 0 12px rgba(0,0,0,'+(0.5*i)+')',
+          '0 '+(12*i)+'px '+(40*i)+'px rgba(0,0,0,'+(0.6*i)+')'
         ].join(',')
       },
-      // 3. Ébène noir chic — bois laqué noir, arêtes dorées
+      // 3. Ébène noir chic
       ebony: {
-        border: fwPx + ' solid #080808',
-        bg: 'linear-gradient(160deg,#1e1e1e 0%,#080808 35%,#141414 55%,#040404 75%,#0e0e0e 100%)',
+        url: 'url("frames/ebony.png")',
+        slice: 215,
         shadow: [
-          'inset 0 0 0 '+edgePx+' rgba(200,160,50,0.45)',
-          'inset 0 0 0 '+thirdPx+' rgba(0,0,0,0.9)',
-          'inset '+(4*i)+'px '+(4*i)+'px '+(16*i)+'px rgba(0,0,0,'+(0.8*i)+')',
-          'inset -'+(1*i)+'px -'+(1*i)+'px '+(6*i)+'px rgba(210,175,60,'+(0.18*i)+')',
-          '0 '+(12*i)+'px '+(50*i)+'px rgba(0,0,0,'+(0.75*i)+')'
+          'inset 0 0 14px rgba(0,0,0,'+(0.6*i)+')',
+          '0 '+(12*i)+'px '+(45*i)+'px rgba(0,0,0,'+(0.65*i)+')'
         ].join(',')
       },
-      // 4. Dorure baroque — or chaud multicouches
+      // 4. Dorure baroque
       gold: {
-        border: fwPx + ' solid #a87018',
-        bg: 'repeating-linear-gradient(42deg,#c8900a 0px,#f0c040 3px,#a07010 6px,#e8b030 9px,#b88010 12px,#f4cc50 15px,#c0900e 18px)',
+        url: 'url("frames/gold_baroque.png")',
+        slice: 215,
         shadow: [
-          'inset 0 0 0 '+edgePx+' #f5d06090',
-          'inset 0 0 0 '+thirdPx+' #80500880',
-          'inset '+(3*i)+'px '+(3*i)+'px '+(16*i)+'px rgba(0,0,0,'+(0.4*i)+')',
-          'inset -'+(4*i)+'px -'+(4*i)+'px '+(14*i)+'px rgba(255,220,50,'+(0.25*i)+')',
-          '0 '+(8*i)+'px '+(35*i)+'px rgba(150,100,0,'+(0.4*i)+')'
+          'inset 0 0 15px rgba(0,0,0,'+(0.45*i)+')',
+          '0 '+(10*i)+'px '+(40*i)+'px rgba(0,0,0,'+(0.5*i)+')'
         ].join(',')
       },
-      // 5. Filet doré mat — cadre fin galerie
+      // 5. Filet doré
       gold_slim: {
-        border: fwPx + ' solid #906010',
-        bg: 'linear-gradient(180deg,#c8a830 0%,#a07820 25%,#d4b840 50%,#906010 75%,#b89028 100%)',
+        url: 'url("frames/gold_slim.png")',
+        slice: 60,
         shadow: [
-          'inset 0 0 0 '+edgePx+' #e0c04070',
-          'inset '+(3*i)+'px '+(3*i)+'px '+(10*i)+'px rgba(0,0,0,'+(0.35*i)+')',
-          'inset -'+(2*i)+'px -'+(2*i)+'px '+(8*i)+'px rgba(230,190,60,'+(0.2*i)+')',
-          '0 '+(6*i)+'px '+(28*i)+'px rgba(0,0,0,'+(0.4*i)+')'
+          'inset 0 0 8px rgba(0,0,0,'+(0.3*i)+')',
+          '0 '+(6*i)+'px '+(24*i)+'px rgba(0,0,0,'+(0.45*i)+')'
         ].join(',')
       },
-      // 6. Argent brossé — métal poli avec stries de brossage
+      // 6. Argent brossé
       silver: {
-        border: fwPx + ' solid #909090',
-        bg: 'repeating-linear-gradient(90deg,#b0b0b0 0px,#e0e0e0 1px,#c0c0c0 2px,#d8d8d8 3px,#a0a0a0 5px,#d0d0d0 6px,#b8b8b8 8px)',
+        url: 'url("frames/silver.png")',
+        slice: 130,
         shadow: [
-          'inset 0 0 0 '+edgePx+' #f0f0f060',
-          'inset 0 0 0 '+thirdPx+' #60606040',
-          'inset '+(3*i)+'px '+(3*i)+'px '+(12*i)+'px rgba(0,0,0,'+(0.2*i)+')',
-          'inset -'+(2*i)+'px -'+(2*i)+'px '+(8*i)+'px rgba(255,255,255,'+(0.35*i)+')',
-          '0 '+(6*i)+'px '+(24*i)+'px rgba(0,0,0,'+(0.3*i)+')'
+          'inset 0 0 10px rgba(0,0,0,'+(0.3*i)+')',
+          '0 '+(8*i)+'px '+(28*i)+'px rgba(0,0,0,'+(0.4*i)+')'
         ].join(',')
       },
-      // 7. Cerisier rouge — bois rouge-brun satiné
+      // 7. Cerisier rouge
       cherry: {
-        border: fwPx + ' solid #701010',
-        bg: 'repeating-linear-gradient(11deg,#8e2018 0px,#6a1510 3px,#a02a20 6px,#701510 9px,#962218 12px,#5a1008 15px,#8e2018 18px)',
+        url: 'url("frames/cherry.png")',
+        slice: 190,
         shadow: [
-          'inset 0 0 0 '+edgePx+' #c04030 50',
-          'inset 0 0 0 '+thirdPx+' #30080430',
-          'inset '+(5*i)+'px '+(5*i)+'px '+(18*i)+'px rgba(0,0,0,'+(0.5*i)+')',
-          'inset -'+(2*i)+'px -'+(2*i)+'px '+(10*i)+'px rgba(200,80,50,'+(0.18*i)+')',
-          '0 '+(10*i)+'px '+(40*i)+'px rgba(0,0,0,'+(0.55*i)+')'
+          'inset 0 0 12px rgba(0,0,0,'+(0.45*i)+')',
+          '0 '+(10*i)+'px '+(35*i)+'px rgba(0,0,0,'+(0.55*i)+')'
         ].join(',')
       },
-      // 8. Rustique vieilli — bois blanchi, nœuds apparents
+      // 8. Rustique vieilli
       rustic: {
-        border: fwPx + ' solid #a09070',
-        bg: 'repeating-linear-gradient(5deg,#c8bca0 0px,#b0a480 3px,#d8ccb0 7px,#a09070 10px,#bcb090 14px,#c8bca0 17px)',
+        url: 'url("frames/rustic.png")',
+        slice: 235,
         shadow: [
-          'inset 0 0 0 '+edgePx+' #e0d8c060',
-          'inset 0 0 0 '+thirdPx+' #70604030',
-          'inset '+(4*i)+'px '+(4*i)+'px '+(14*i)+'px rgba(0,0,0,'+(0.3*i)+')',
-          'inset -'+(2*i)+'px -'+(2*i)+'px '+(8*i)+'px rgba(240,220,170,'+(0.2*i)+')',
-          '0 '+(8*i)+'px '+(32*i)+'px rgba(0,0,0,'+(0.35*i)+')'
+          'inset 0 0 10px rgba(0,0,0,'+(0.3*i)+')',
+          '0 '+(8*i)+'px '+(30*i)+'px rgba(0,0,0,'+(0.4*i)+')'
         ].join(',')
       },
-      // 9. Baroque sculpté — or avec moulures en relief
+      // 9. Baroque sculpté
       ornate: {
-        border: fwPx + ' solid #9a6808',
-        bg: 'repeating-linear-gradient(30deg,#b87808 0px,#e8a820 2px,#906008 4px,#d49018 6px,#a87010 8px,#f0b830 10px,#b07010 13px)',
+        url: 'url("frames/ornate.png")',
+        slice: 235,
         shadow: [
-          'inset 0 0 0 '+edgePx+' #f8e06080',
-          'inset 0 0 0 '+Math.round(fw*0.08)+'px #50340448',
-          'inset 0 0 0 '+thirdPx+' #c08010 50',
-          'inset '+(5*i)+'px '+(5*i)+'px '+(20*i)+'px rgba(0,0,0,'+(0.45*i)+')',
-          'inset -'+(4*i)+'px -'+(4*i)+'px '+(16*i)+'px rgba(255,210,50,'+(0.3*i)+')',
-          '0 '+(10*i)+'px '+(45*i)+'px rgba(80,50,0,'+(0.5*i)+')'
+          'inset 0 0 16px rgba(0,0,0,'+(0.5*i)+')',
+          '0 '+(12*i)+'px '+(45*i)+'px rgba(0,0,0,'+(0.6*i)+')'
         ].join(',')
       }
     };
 
     var s = frames[STATE.frameStyle] || frames.oak;
-    el.style.border = s.border;
-    el.style.backgroundImage = s.bg;
+    el.style.border = fwPx + ' solid transparent';
+    el.style.borderImageSource = s.url;
+    el.style.borderImageSlice = s.slice;
     el.style.boxShadow = s.shadow;
   }
 
@@ -1017,6 +999,7 @@
     document.getElementById('canvas-toggle').classList.toggle('on', STATE.canvasTexture);
     qa('[data-frame-size]').forEach(function(b){b.classList.toggle('selected',b.dataset.frameSize===(STATE.frameWidth===40?'thin':STATE.frameWidth===80?'medium':'thick'));});
     qa('[data-timer]').forEach(function(b){b.classList.toggle('selected',String(b.dataset.timer)===String(STATE.timerInterval));});
+    qa('[data-image-fit]').forEach(function(b){b.classList.toggle('selected',b.dataset.imageFit===STATE.imageFit);});
     document.getElementById('brightness-slider').value = STATE.brightness;
     document.getElementById('temperature-slider').value = STATE.temperature;
     document.getElementById('shadow-slider').value = STATE.shadowIntensity;
@@ -1075,6 +1058,12 @@
       var v = t.closest('[data-timer]').dataset.timer;
       STATE.timerInterval = v==='static'?'static':parseInt(v);
       renderTimerIndicator(); resetTimer(); syncSidebarValues(); return;
+    }
+    if (t.closest('[data-image-fit]')) {
+      STATE.imageFit = t.closest('[data-image-fit]').dataset.imageFit;
+      var img = document.querySelector('.art-img');
+      if (img) img.style.objectFit = STATE.imageFit;
+      syncSidebarValues(); return;
     }
     if (t.closest('.toggle-switch')) {
       if (t.id==='canvas-toggle'){STATE.canvasTexture=!STATE.canvasTexture;renderCanvasTexture();}
