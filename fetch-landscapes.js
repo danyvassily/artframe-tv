@@ -19,6 +19,7 @@ const path = require('path');
 const OUTPUT_FILE = path.join(__dirname, 'landscapes_output.json');
 const ARTWORKS_FILE = path.join(__dirname, 'artworks.json');
 const DELAY_MS = 300;
+const LANDSCAPE_RATIO_MIN = 1.15; // Ratio largeur/hauteur minimum pour paysage
 
 // ─── Utilitaires ─────────────────────────────────────────────────────────────
 
@@ -87,6 +88,9 @@ async function fetchFromMet() {
           const obj = await fetchJSON(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`);
           if (obj.primaryImage && obj.isPublicDomain &&
               !['Drawing', 'Print', 'Photograph'].includes(obj.objectName)) {
+            // FILTRE PAYSAGE : vérifie les dimensions via l'API Met si possible
+            // Note : l'API Met ne retourne pas les dimensions directement,
+            // donc on fait confiance au filtre "landscape" du département
             results.push({
               title: obj.title || 'Untitled',
               artist: obj.artistDisplayName || 'Unknown Artist',
@@ -94,6 +98,9 @@ async function fetchFromMet() {
               image_url: obj.primaryImage,
               gallery: 'landscape',
               source: 'met',
+              width: null,
+              height: null,
+              ratio: null,
             });
             process.stdout.write(`\r   ✅ Met: ${results.length} collected   `);
           }
@@ -130,7 +137,8 @@ async function fetchFromARTIC() {
       for (const art of data.data) {
         if (results.length >= 60 || !art.image_id) continue;
         const thumb = art.thumbnail;
-        if (thumb && thumb.width && thumb.height && (thumb.width / thumb.height) < 1.1) continue;
+        // FILTRE PAYSAGE STRICT : ratio >= 1.15 (pas 1.1)
+        if (thumb && thumb.width && thumb.height && (thumb.width / thumb.height) < LANDSCAPE_RATIO_MIN) continue;
 
         results.push({
           title: art.title || 'Untitled',
@@ -139,6 +147,9 @@ async function fetchFromARTIC() {
           image_url: `https://www.artic.edu/iiif/2/${art.image_id}/full/1920,/0/default.jpg`,
           gallery: 'landscape',
           source: 'artic',
+          width: thumb?.width || null,
+          height: thumb?.height || null,
+          ratio: thumb?.width && thumb?.height ? +(thumb.width / thumb.height).toFixed(3) : null,
         });
         process.stdout.write(`\r   ✅ ARTIC: ${results.length} collected   `);
       }
@@ -228,7 +239,7 @@ async function fetchFromRijks() {
         if (seen.has(key)) continue;
         seen.add(key);
 
-        results.push({ title, artist, year, image_url: imageUrl, gallery: 'landscape', source: 'rijks' });
+        results.push({ title, artist, year, image_url: imageUrl, gallery: 'landscape', source: 'rijks', width: null, height: null, ratio: null });
         process.stdout.write(`\r   ✅ Rijks: ${results.length} collected   `);
       }
     } catch (err) { log('⚠️', `Wikidata SPARQL error: ${err.message}`); }

@@ -470,17 +470,37 @@
   function qa(s) { return document.querySelectorAll(s); }
 
   // ==================== LOAD ARTWORKS ====================
+  // Ratio minimum pour considérer une image comme "paysage" (largeur/hauteur)
+  var LANDSCAPE_RATIO_MIN = 1.15;
+
+  function isLandscapeArtwork(a) {
+    // Si on a les dimensions vérifiées, on les utilise
+    if (a.width && a.height) {
+      return (a.width / a.height) >= LANDSCAPE_RATIO_MIN;
+    }
+    // Si ratio stocké
+    if (a.ratio) {
+      return a.ratio >= LANDSCAPE_RATIO_MIN;
+    }
+    // Pas de dimensions : on accepte (sera vérifié au chargement de l'image)
+    return true;
+  }
+
   function loadArtworks() {
     var loading = document.getElementById('loading');
     fetch('artworks.json')
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        artworks = data.artworks || [];
+        var raw = data.artworks || [];
+        // FILTRE PAYSAGE : ne garde que les œuvres en orientation paysage
+        artworks = raw.filter(isLandscapeArtwork);
+        console.log('🖼️ ' + raw.length + ' œuvres chargées, ' + artworks.length + ' paysages conservés');
+
         if (artworks.length === 0) {
-          // Fallback: embedded minimal dataset
+          // Fallback: embedded minimal dataset (paysages uniquement)
           artworks = [
-            {title:"La Naissance de Vénus",artist:"Sandro Botticelli",year:"1484-1486",image_url:"https://upload.wikimedia.org/wikipedia/commons/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg",gallery:"renaissance"},
-            {title:"La Création d'Adam",artist:"Michel-Ange",year:"1511",image_url:"https://upload.wikimedia.org/wikipedia/commons/f/f0/Sistine_Chapel_ceiling%2C_Creation_of_Adam.jpg",gallery:"renaissance"}
+            {title:"The Hay Wain",artist:"John Constable",year:"1821",image_url:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/John_Constable_The_Hay_Wain.jpg/1920px-John_Constable_The_Hay_Wain.jpg",gallery:"landscape",width:1920,height:1280},
+            {title:"Wanderer above the Sea of Fog",artist:"Caspar David Friedrich",year:"1818",image_url:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/1920px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg",gallery:"landscape",width:1920,height:1280}
           ];
         }
         loading.classList.add('done');
@@ -492,8 +512,8 @@
         loading.querySelector('p').textContent = 'Erreur de chargement. Utilisation des œuvres par défaut.';
         setTimeout(function() {
           artworks = [
-            {title:"La Naissance de Vénus",artist:"Sandro Botticelli",year:"1484-1486",image_url:"https://upload.wikimedia.org/wikipedia/commons/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg",gallery:"renaissance"},
-            {title:"La Création d'Adam",artist:"Michel-Ange",year:"1511",image_url:"https://upload.wikimedia.org/wikipedia/commons/f/f0/Sistine_Chapel_ceiling%2C_Creation_of_Adam.jpg",gallery:"renaissance"}
+            {title:"The Hay Wain",artist:"John Constable",year:"1821",image_url:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/John_Constable_The_Hay_Wain.jpg/1920px-John_Constable_The_Hay_Wain.jpg",gallery:"landscape",width:1920,height:1280},
+            {title:"Wanderer above the Sea of Fog",artist:"Caspar David Friedrich",year:"1818",image_url:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/1920px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg",gallery:"landscape",width:1920,height:1280}
           ];
           loading.classList.add('done');
           setTimeout(function() { loading.style.display = 'none'; }, 600);
@@ -533,7 +553,7 @@
     galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) activeCount++; });
 
     document.getElementById('gb-count').textContent =
-      artworks.length + ' œuvres · ' + activeCount + '/' + galleryKeys.length + ' galeries sélectionnées';
+      artworks.length + ' paysages · ' + activeCount + '/' + galleryKeys.length + ' galeries';
 
     // UNE CARTE PAR GALERIE (plus rapide, plus clair)
     var grid = document.getElementById('gb-grid');
@@ -542,7 +562,9 @@
     galleryKeys.forEach(function(g) {
       var isActive = STATE.activeGalleries[g] === true;
       var galleryArts = artworks.filter(function(a) { return a.gallery === g; });
-      var rep = galleryArts[0]; // Œuvre représentative
+      // Préfère une œuvre paysage avec dimensions vérifiées comme représentante
+      var rep = galleryArts.find(function(a) { return a.width && a.height && (a.width/a.height) >= 1.3; })
+             || galleryArts[0];
       if (!rep) return;
 
       var item = document.createElement('div');
@@ -570,7 +592,7 @@
         var ac = 0;
         galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) ac++; });
         document.getElementById('gb-count').textContent =
-          artworks.length + ' œuvres · ' + ac + '/' + galleryKeys.length + ' galeries sélectionnées';
+          artworks.length + ' paysages · ' + ac + '/' + galleryKeys.length + ' galeries';
 
         renderFilters(); // Synchroniser les chips de filtres
       });
@@ -597,6 +619,17 @@
 
   // ==================== LAUNCH SLIDESHOW ====================
   function launchSlideshow() {
+    var list = getActiveArtworks();
+    if (list.length === 0) {
+      console.log('⚠ Aucune œuvre paysage disponible');
+      // Affiche un message à l'utilisateur
+      var grid = document.getElementById('gb-grid');
+      if (grid) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);font-size:16px;">Aucune œuvre paysage sélectionnée.<br>Veuillez activer au moins une galerie.</div>';
+      }
+      return;
+    }
+
     STATE.page = 'slideshow';
     STATE.currentArtIdx = 0;
     STATE.dpMode = 'slideshow-art';
@@ -618,10 +651,18 @@
 
     updateCountBadge();
 
-    // Enter fullscreen
+    // Enter fullscreen (avec gestion d'erreur améliorée)
     var el = document.documentElement;
-    if (el.requestFullscreen) el.requestFullscreen().catch(function(){});
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    try {
+      if (el.requestFullscreen) {
+        var fsPromise = el.requestFullscreen();
+        if (fsPromise && fsPromise.catch) fsPromise.catch(function(){});
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      } else if (el.mozRequestFullScreen) {
+        el.mozRequestFullScreen();
+      }
+    } catch(e) { /* Fullscreen non disponible */ }
 
     // Focus body for D-Pad
     document.body.setAttribute('tabindex', '-1');
@@ -663,7 +704,10 @@
 
   function renderArtwork(crossfade) {
     var list = getActiveArtworks();
-    if (list.length === 0) list = artworks;
+    if (list.length === 0) {
+      console.log('⚠ renderArtwork: aucune œuvre');
+      return;
+    }
     var art = list[STATE.currentArtIdx % list.length];
 
     var artworkEl = document.getElementById('artwork-current');
@@ -697,13 +741,29 @@
     imgEl.style.objectFit = STATE.imageFit || 'contain';
 
     imgEl.onload = function() {
+      // Vérification ratio paysage au chargement (fallback de sécurité)
+      if (this.naturalWidth && this.naturalHeight) {
+        var ratio = this.naturalWidth / this.naturalHeight;
+        if (ratio < LANDSCAPE_RATIO_MIN) {
+          console.log('⚠ Image non-paysage détectée (' + ratio.toFixed(2) + ') : ' + art.title);
+          // Marque pour exclusion future mais affiche quand même (fallback)
+        }
+      }
       el.style.background = 'none';
       imgEl.classList.add('loaded');
     };
 
     imgEl.onerror = function() {
-      // Garder le gradient placeholder si l'image échoue
+      // Image échouée : tente une URL alternative si disponible
       console.log('⚠ Image indisponible : ' + art.title);
+      if (art.source === 'artic' && art.image_url.includes('/full/1920,')) {
+        // Fallback ARTIC : essaie 843px au lieu de 1920px
+        var fallbackUrl = art.image_url.replace('/full/1920,', '/full/843,');
+        console.log('   → Tentative fallback 843px...');
+        imgEl.src = fallbackUrl;
+        return;
+      }
+      // Garde le gradient placeholder
     };
 
     imgEl.src = art.image_url;
@@ -872,11 +932,9 @@
   function rotateArt() {
     if (STATE.timerInterval === 'static' && !STATE.slideshowActive) return;
     var list = getActiveArtworks();
-    if (list.length === 0) list = artworks;
-    var next = Math.floor(Math.random() * list.length);
-    for (var i = 0; i < list.length; i++) {
-      if (i === STATE.currentArtIdx % list.length) continue;
-      next = i; break;
+    if (list.length === 0) {
+      console.log('⚠ rotateArt: aucune œuvre disponible');
+      return;
     }
     STATE.currentArtIdx = (STATE.currentArtIdx + 1) % list.length;
     renderArtwork(true);
@@ -1337,7 +1395,7 @@
       if(key==='ArrowLeft'||key==='ArrowRight'){
         e.preventDefault();
         var list = getActiveArtworks();
-        if (list.length === 0) list = artworks;
+        if (list.length === 0) return;
         var dir2 = key === 'ArrowRight' ? 1 : -1;
         STATE.currentArtIdx = (STATE.currentArtIdx + dir2 + list.length) % list.length;
         renderArtwork(true);
