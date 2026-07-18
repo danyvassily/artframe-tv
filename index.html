@@ -488,7 +488,7 @@
 
   function loadArtworks() {
     var loading = document.getElementById('loading');
-    fetch('artworks.json')
+    fetch('artworks.json?v=' + Date.now())
       .then(function(r) { return r.json(); })
       .then(function(data) {
         var raw = data.artworks || [];
