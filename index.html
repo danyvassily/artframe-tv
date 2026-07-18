@@ -93,7 +93,7 @@
     }
     .gb-item.active .gb-check { border-color:var(--accent); background:var(--accent); color:var(--bg); }
     /* Art image element in slideshow */
-    .art-img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0; transition:opacity 1s ease; display:block; }
+    .art-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1s ease; display:block; }
     .art-img.loaded { opacity:1; }
 
     /* ============ SETTINGS BAR ============ */
@@ -407,8 +407,8 @@
         <div class="option-group" style="margin-top:10px;">
           <label>Cadrage de l'image</label>
           <div class="option-row">
-            <button class="option-chip selected" data-image-fit="contain">Ajuster<small>Bandes noires</small></button>
-            <button class="option-chip" data-image-fit="cover">Remplir<small>Plein écran</small></button>
+            <button class="option-chip" data-image-fit="contain">Ajuster<small>Bandes noires</small></button>
+            <button class="option-chip selected" data-image-fit="cover">Remplir<small>Plein écran</small></button>
           </div>
         </div>
       </div>
@@ -458,7 +458,7 @@
     googleConnected: false,
     slideshowActive: true,
     activeGalleries: {},
-    imageFit: 'contain',
+    imageFit: 'cover',
   };
 
   var artworks = [];
@@ -738,7 +738,7 @@
     imgEl.className = 'art-img';
     imgEl.alt = art.title;
     imgEl.decoding = 'async';
-    imgEl.style.objectFit = STATE.imageFit || 'contain';
+    imgEl.style.objectFit = STATE.imageFit || 'cover';
 
     imgEl.onload = function() {
       // Vérification ratio paysage au chargement (fallback de sécurité)
