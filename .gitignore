@@ -43,3 +43,6 @@ __pycache__/
 .env
 .env.local
 .vercel
+
+# Backups
+*backup*.json
