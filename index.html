@@ -247,12 +247,13 @@
     .toggle-switch::after { content:''; position:absolute; top:3px; left:3px; width:20px;height:20px; border-radius:50%; background:#fff; transition:transform 0.2s; }
     .toggle-switch.on::after { transform:translateX(18px); }
 
-    /* ============ FRAME OPTIONS ============ */
-    .frame-option { width:72px; height:54px; border-radius:6px; border:2.5px solid var(--border); cursor:pointer; transition:all 0.25s; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:0; padding-bottom:4px; font-size:9px; color:rgba(255,255,255,0.6); font-family:var(--font-body); }
+    /* ============ PASSE-PARTOUT & FRAME OPTIONS ============ */
+    .mat-overlay { position:absolute; pointer-events:none; z-index:3; transition:all 0.4s cubic-bezier(0.4,0,0.2,1); }
+    .frame-option { width:100%; height:62px; border-radius:8px; border:2px solid var(--border); cursor:pointer; transition:all 0.25s; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:0; padding-bottom:5px; font-size:11px; font-weight:500; color:rgba(255,255,255,0.85); font-family:var(--font-body); background:var(--surface2); }
     .frame-option .fo-preview { flex:1; width:100%; position:relative; }
-    .frame-option.dpad-focused { border-color:var(--accent); transform:scale(1.06); box-shadow:0 0 0 2px var(--accent-dim); }
-    .frame-option.selected { border-color:var(--fg); box-shadow:0 0 0 3px rgba(255,255,255,0.25); }
-    .frame-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+    .frame-option.dpad-focused { border-color:var(--accent)!important; transform:scale(1.08)!important; box-shadow:0 0 0 3px var(--accent),0 0 20px rgba(212,175,55,0.7)!important; z-index:10; }
+    .frame-option.selected { border-color:var(--accent); box-shadow:0 0 0 2.5px var(--accent-dim); background:rgba(255,255,255,0.06); }
+    .frame-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
 
     /* ============ AUTO-LAUNCH COUNTDOWN ============ */
     .auto-launch-overlay {
@@ -415,6 +416,7 @@
   <!-- ART MODE -->
   <section class="art-mode" id="art-mode">
     <div class="artwork" id="artwork-current"></div>
+    <div class="mat-overlay" id="mat-overlay"></div>
     <div class="frame-overlay" id="frame-overlay"></div>
     <div class="canvas-texture" id="canvas-texture"></div>
     <div class="ambient-filter" id="ambient-filter"></div>
@@ -490,78 +492,107 @@
     </nav>
     <div class="sidebar-content" id="sidebar-content">
       <div class="sub-screen" id="sub-frame">
-        <h3>Style de cadre</h3>
+        <h3>Design du Cadre & Passe-Partout</h3>
         <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
-        <div class="frame-grid" id="frame-selector">
+        
+        <!-- Finitions Réalistes -->
+        <div class="option-group">
+          <label>Finition du Cadre</label>
+          <div class="frame-grid" id="frame-selector">
 
-          <!-- 1. Chêne Clair -->
-          <button class="frame-option selected" data-frame="oak" title="Chêne Clair">
-            <div class="fo-preview" style="background:repeating-linear-gradient(10deg,#c8a05a 0px,#b8903a 2px,#d4b470 4px,#c0963e 7px,#dac080 10px,#c8a05a 13px);"></div>
-            <span>Chêne</span>
-          </button>
+            <!-- 1. Chêne Clair -->
+            <button class="frame-option selected" data-frame="oak" title="Chêne Scandinave">
+              <div class="fo-preview" style="background:repeating-linear-gradient(10deg,#c8a05a 0px,#b8903a 2px,#d4b470 4px,#c0963e 7px,#dac080 10px,#c8a05a 13px);"></div>
+              <span>Chêne</span>
+            </button>
 
-          <!-- 2. Noyer Foncé -->
-          <button class="frame-option" data-frame="walnut" title="Noyer Foncé">
-            <div class="fo-preview" style="background:repeating-linear-gradient(8deg,#3a2415 0px,#2a1608 2px,#4a2e1a 4px,#201005 6px,#3e2818 10px,#2c1a0c 13px);"></div>
-            <span>Noyer</span>
-          </button>
+            <!-- 2. Noyer Sombre -->
+            <button class="frame-option" data-frame="walnut" title="Noyer Sombre Mat">
+              <div class="fo-preview" style="background:repeating-linear-gradient(8deg,#3a2415 0px,#2a1608 2px,#4a2e1a 4px,#201005 6px,#3e2818 10px,#2c1a0c 13px);"></div>
+              <span>Noyer</span>
+            </button>
 
-          <!-- 3. Ébène Noir Chic -->
-          <button class="frame-option" data-frame="ebony" title="Ébène Noir Chic">
-            <div class="fo-preview" style="background:linear-gradient(160deg,#2a2a2a 0%,#0a0a0a 40%,#1a1a1a 60%,#050505 100%);box-shadow:inset 0 1px 0 rgba(200,170,80,0.4),inset 0 -1px 0 rgba(200,170,80,0.2);"></div>
-            <span>Ébène</span>
-          </button>
+            <!-- 3. Aluminium Noir -->
+            <button class="frame-option" data-frame="ebony" title="Aluminium Noir Mat">
+              <div class="fo-preview" style="background:linear-gradient(160deg,#2b2b2b 0%,#111111 40%,#1f1f1f 60%,#090909 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.2);"></div>
+              <span>Noir Mat</span>
+            </button>
 
-          <!-- 4. Dorure Baroque -->
-          <button class="frame-option" data-frame="gold" title="Dorure Baroque">
-            <div class="fo-preview" style="background:repeating-linear-gradient(45deg,#d4a017 0px,#f0c040 3px,#b8860b 6px,#e8b020 9px,#c89010 12px,#f5d060 15px,#d4a017 18px);"></div>
-            <span>Baroque</span>
-          </button>
+            <!-- 4. Laiton Doré -->
+            <button class="frame-option" data-frame="gold_slim" title="Laiton Doré Brossé">
+              <div class="fo-preview" style="background:linear-gradient(180deg,#d8b840 0%,#a88820 30%,#e4c850 50%,#987010 70%,#c8a028 100%);"></div>
+              <span>Laiton Doré</span>
+            </button>
 
-          <!-- 5. Filet Doré -->
-          <button class="frame-option" data-frame="gold_slim" title="Filet Doré Mat">
-            <div class="fo-preview" style="background:linear-gradient(180deg,#c8a830 0%,#a07820 30%,#d4b840 50%,#906010 70%,#b89028 100%);"></div>
-            <span>Filet Or</span>
-          </button>
+            <!-- 5. Argent Brossé -->
+            <button class="frame-option" data-frame="silver" title="Platine Argent Brossé">
+              <div class="fo-preview" style="background:repeating-linear-gradient(90deg,#b8b8b8 0px,#e0e0e0 1px,#c8c8c8 2px,#d8d8d8 3px,#a0a0a0 4px,#d0d0d0 5px,#b8b8b8 7px);"></div>
+              <span>Argent</span>
+            </button>
 
-          <!-- 6. Argent Brossé -->
-          <button class="frame-option" data-frame="silver" title="Argent Brossé">
-            <div class="fo-preview" style="background:repeating-linear-gradient(90deg,#b8b8b8 0px,#e0e0e0 1px,#c8c8c8 2px,#d8d8d8 3px,#a0a0a0 4px,#d0d0d0 5px,#b8b8b8 7px);"></div>
-            <span>Argent</span>
-          </button>
+            <!-- 6. Blanc Galerie -->
+            <button class="frame-option" data-frame="white" title="Blanc Galerie Épuré">
+              <div class="fo-preview" style="background:#f4f4f4;box-shadow:inset 0 0 4px rgba(0,0,0,0.15);"></div>
+              <span>Blanc Galerie</span>
+            </button>
 
-          <!-- 7. Cerisier Rouge -->
-          <button class="frame-option" data-frame="cherry" title="Cerisier Rouge">
-            <div class="fo-preview" style="background:repeating-linear-gradient(12deg,#8b2018 0px,#6a1510 2px,#a02820 4px,#701810 6px,#952215 9px,#5a1008 12px,#8b2018 15px);"></div>
-            <span>Cerisier</span>
-          </button>
+            <!-- 7. Caisse Américaine -->
+            <button class="frame-option" data-frame="floating" title="Caisse Américaine (Floating)">
+              <div class="fo-preview" style="background:#080808;border:1px dashed rgba(255,255,255,0.3);box-shadow:inset 0 0 10px rgba(0,0,0,0.9);"></div>
+              <span>Flottant</span>
+            </button>
 
-          <!-- 8. Rustique Vieilli -->
-          <button class="frame-option" data-frame="rustic" title="Rustique Vieilli">
-            <div class="fo-preview" style="background:repeating-linear-gradient(5deg,#c8bca0 0px,#b0a480 3px,#d8ccb0 6px,#a09070 8px,#bbb090 11px,#c8bca0 14px);filter:saturate(0.6);"></div>
-            <span>Rustique</span>
-          </button>
+            <!-- 8. Bois Brut -->
+            <button class="frame-option" data-frame="rustic" title="Bois Brut Patiné">
+              <div class="fo-preview" style="background:repeating-linear-gradient(5deg,#c8bca0 0px,#b0a480 3px,#d8ccb0 6px,#a09070 8px,#bbb090 11px,#c8bca0 14px);filter:saturate(0.6);"></div>
+              <span>Bois Brut</span>
+            </button>
 
-          <!-- 9. Baroque Sculpté -->
-          <button class="frame-option" data-frame="ornate" title="Baroque Sculpté">
-            <div class="fo-preview" style="background:repeating-linear-gradient(30deg,#c8900a 0px,#f0c040 2px,#a07010 4px,#e0b030 6px,#c8900a 8px);box-shadow:inset 0 2px 3px rgba(0,0,0,0.5),inset 0 -2px 3px rgba(255,220,80,0.3);"></div>
-            <span>Sculpté</span>
-          </button>
-
-          <!-- 10. Flottant Moderne -->
-          <button class="frame-option" data-frame="floating" title="Flottant Moderne">
-            <div class="fo-preview" style="background:transparent;border:1px dashed rgba(255,255,255,0.2);"></div>
-            <span>Flottant</span>
-          </button>
-
+          </div>
         </div>
-        <div class="option-group"><label>Taille du cadre</label><div class="option-row">
-          <button class="option-chip" data-frame-size="thin">Discret<small>10px</small></button>
-          <button class="option-chip selected" data-frame-size="medium">Moyen<small>20px</small></button>
-          <button class="option-chip" data-frame-size="thick">Large<small>36px</small></button>
-        </div></div>
-        <div class="option-group"><label>Ombre 3D</label><div class="slider-row"><div class="slider-label"><span>Intensité</span><span id="shadow-val">50%</span></div><input type="range" min="0" max="100" value="50" id="shadow-slider"></div></div>
-        <div class="option-group"><div class="toggle-row"><span>Texture de toile</span><button class="toggle-switch" id="canvas-toggle"></button></div></div>
+
+        <!-- Largeur du cadre -->
+        <div class="option-group">
+          <label>Épaisseur du Cadre</label>
+          <div class="option-row">
+            <button class="option-chip" data-frame-size="thin">Mince<small>12px</small></button>
+            <button class="option-chip selected" data-frame-size="medium">Classique<small>22px</small></button>
+            <button class="option-chip" data-frame-size="thick">Large<small>36px</small></button>
+          </div>
+        </div>
+
+        <!-- Passe-Partout (Marie-Louise) -->
+        <div class="option-group">
+          <label>Passe-Partout (Marie-Louise)</label>
+          <div class="option-row">
+            <button class="option-chip selected" data-mat-style="none">Sans<small>Plein Cadre</small></button>
+            <button class="option-chip" data-mat-style="cream">Blanc Crème<small>Chaud</small></button>
+            <button class="option-chip" data-mat-style="black">Noir Muséum<small>Profond</small></button>
+            <button class="option-chip" data-mat-style="bevel">Double Biseau<small>Doré</small></button>
+          </div>
+        </div>
+
+        <!-- Largeur du Passe-Partout -->
+        <div class="option-group">
+          <label>Taille du Passe-Partout</label>
+          <div class="option-row">
+            <button class="option-chip" data-mat-width="30">Fin<small>30px</small></button>
+            <button class="option-chip selected" data-mat-width="50">Moyen<small>50px</small></button>
+            <button class="option-chip" data-mat-width="80">Large<small>80px</small></button>
+          </div>
+        </div>
+
+        <!-- Ombre 3D & Texture -->
+        <div class="option-group">
+          <label>Ombre 3D Profondeur</label>
+          <div class="slider-row">
+            <div class="slider-label"><span>Intensité</span><span id="shadow-val">50%</span></div>
+            <input type="range" min="0" max="100" value="50" id="shadow-slider">
+          </div>
+        </div>
+        <div class="option-group">
+          <div class="toggle-row"><span>Texture Toile Muséum</span><button class="toggle-switch" id="canvas-toggle"></button></div>
+        </div>
       </div>
       <div class="sub-screen" id="sub-timer">
         <h3>Défilement automatique</h3>
@@ -627,6 +658,8 @@
     dpIdx: 0,
     frameStyle: 'oak',
     frameWidth: 20,
+    matStyle: 'none',          // 'none' | 'cream' | 'black' | 'bevel'
+    matWidth: 50,             // 30 | 50 | 80
     shadowIntensity: 50,
     canvasTexture: false,
     timerInterval: 30,
@@ -647,19 +680,15 @@
   function qa(s) { return document.querySelectorAll(s); }
 
   // ==================== LOAD ARTWORKS ====================
-  // Ratio minimum pour considérer une image comme "paysage" (largeur/hauteur)
   var LANDSCAPE_RATIO_MIN = 1.15;
 
   function isLandscapeArtwork(a) {
-    // Si on a les dimensions vérifiées, on les utilise
     if (a.width && a.height) {
       return (a.width / a.height) >= LANDSCAPE_RATIO_MIN;
     }
-    // Si ratio stocké
     if (a.ratio) {
       return a.ratio >= LANDSCAPE_RATIO_MIN;
     }
-    // Pas de dimensions : on accepte (sera vérifié au chargement de l'image)
     return true;
   }
 
@@ -711,7 +740,6 @@
 
   // ==================== GALLERY ====================
   function initGallery() {
-    // Build gallery keys
     var galleryMap = {};
     artworks.forEach(function(a) {
       if (!galleryMap[a.gallery]) galleryMap[a.gallery] = { count: 0, artists: {} };
@@ -720,18 +748,15 @@
     });
     galleryKeys = Object.keys(galleryMap).sort();
 
-    // Initialize all as active
     galleryKeys.forEach(function(g) { STATE.activeGalleries[g] = true; });
 
     updateGallery();
     renderFilters();
 
-    // Auto-launch slideshow on start
     launchSlideshow();
   }
 
   function updateGallery() {
-    // Mettre à jour filteredArtworks pour le diaporama
     filteredArtworks = artworks.filter(function(a) {
       return STATE.activeGalleries[a.gallery] === true;
     });
@@ -742,7 +767,6 @@
     document.getElementById('gb-count').textContent =
       artworks.length + ' tableaux · ' + activeCount + '/' + galleryKeys.length + ' galeries';
 
-    // UNE CARTE PAR GALERIE
     var grid = document.getElementById('gb-grid');
     grid.innerHTML = '';
 
@@ -773,14 +797,13 @@
         var nowActive = STATE.activeGalleries[gallery];
         this.classList.toggle('active', nowActive);
 
-        // Mettre à jour filteredArtworks et le compteur sans re-renderer toute la grille
         filteredArtworks = artworks.filter(function(a) { return STATE.activeGalleries[a.gallery]; });
         var ac = 0;
         galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) ac++; });
         document.getElementById('gb-count').textContent =
           artworks.length + ' tableaux · ' + ac + '/' + galleryKeys.length + ' galeries';
 
-        renderFilters(); // Synchroniser les chips de filtres
+        renderFilters();
       });
 
       grid.appendChild(item);
@@ -808,7 +831,6 @@
     var list = getActiveArtworks();
     if (list.length === 0) {
       console.log('⚠ Aucune œuvre paysage disponible');
-      // Affiche un message à l'utilisateur
       var grid = document.getElementById('gb-grid');
       if (grid) {
         grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);font-size:16px;">Aucune œuvre paysage sélectionnée.<br>Veuillez activer au moins une galerie.</div>';
@@ -830,14 +852,12 @@
     resetTimer();
     syncSidebarValues();
 
-    // Launch animation
     els.artwork = document.getElementById('artwork-current');
     els.artwork.classList.add('launching');
     setTimeout(function() { els.artwork.classList.remove('launching'); }, 2300);
 
     updateCountBadge();
 
-    // Enter fullscreen (avec gestion d'erreur améliorée)
     var el = document.documentElement;
     try {
       if (el.requestFullscreen) {
@@ -848,9 +868,8 @@
       } else if (el.mozRequestFullScreen) {
         el.mozRequestFullScreen();
       }
-    } catch(e) { /* Fullscreen non disponible */ }
+    } catch(e) { }
 
-    // Focus body for D-Pad
     document.body.setAttribute('tabindex', '-1');
     document.body.focus({ preventScroll: true });
   }
@@ -871,11 +890,9 @@
     document.getElementById('art-mode').style.display = 'none';
     document.getElementById('gallery-browser').classList.remove('hidden');
 
-    // Update gallery to reflect any changes
     updateGallery();
 
     document.body.focus({ preventScroll: true });
-    // Focus first item
     setTimeout(function() {
       var items = qa('.gb-item');
       if (items.length > 0) { items[0].classList.add('dpad-focused'); items[0].focus(); }
@@ -911,15 +928,12 @@
   }
 
   function applyArt(el, art) {
-    // Supprimer l'image précédente
     var prev = el.querySelector('.art-img');
     if (prev) prev.remove();
 
-    // Placeholder gradient immédiat (couleur unique par tableau)
     var hue = 30 + Math.abs(art.title.length * 7 + art.artist.length * 13) % 260;
     el.style.background = 'radial-gradient(ellipse at 40% 40%, oklch(45% 0.10 ' + hue + '), oklch(12% 0.04 ' + ((hue + 100) % 360) + '))';
 
-    // Élément <img> réel — bien plus fiable que CSS background-image dans les WebViews
     var imgEl = document.createElement('img');
     imgEl.className = 'art-img';
     imgEl.alt = art.title;
@@ -927,12 +941,10 @@
     imgEl.style.objectFit = STATE.imageFit || 'cover';
 
     imgEl.onload = function() {
-      // Vérification ratio paysage au chargement (fallback de sécurité)
       if (this.naturalWidth && this.naturalHeight) {
         var ratio = this.naturalWidth / this.naturalHeight;
         if (ratio < LANDSCAPE_RATIO_MIN) {
           console.log('⚠ Image non-paysage détectée (' + ratio.toFixed(2) + ') : ' + art.title);
-          // Marque pour exclusion future mais affiche quand même (fallback)
         }
       }
       el.style.background = 'none';
@@ -967,18 +979,45 @@
     badge.classList.add('visible');
   }
 
-  // ==================== FRAMES ====================
-  // Ultra-realistic museum frames rendered from real photo textures
+  // ==================== FRAMES & PASSE-PARTOUT ====================
+  // Ultra-realistic museum frames & bevel matting rendered dynamically
   function renderFrame() {
-    var fw = STATE.frameWidth; // 10px, 20px, 36px
+    var fw = STATE.frameWidth; // 12px, 22px, 36px
     var i = STATE.shadowIntensity / 100;
     var el = document.getElementById('frame-overlay');
+    var matEl = document.getElementById('mat-overlay');
     var artworkEl = document.getElementById('artwork-current');
 
-    // Inset artwork so it sits physically INSIDE the real frame border
-    var inset = (STATE.frameStyle === 'floating') ? 0 : fw;
-    artworkEl.style.inset = inset + 'px';
+    var mw = (STATE.matStyle === 'none' || !STATE.matStyle) ? 0 : (STATE.matWidth || 50);
 
+    // 1. Position et style du Passe-Partout (Marie-Louise)
+    if (mw > 0 && matEl) {
+      matEl.style.display = 'block';
+      matEl.style.position = 'absolute';
+      matEl.style.inset = (STATE.frameStyle === 'floating' ? 0 : fw) + 'px';
+
+      if (STATE.matStyle === 'cream') {
+        matEl.style.background = '#f5f3ec';
+        matEl.style.boxShadow = 'inset 0 0 14px rgba(0,0,0,0.35), inset 0 0 2px rgba(0,0,0,0.2)';
+        matEl.style.border = '1px solid #e2ded2';
+      } else if (STATE.matStyle === 'black') {
+        matEl.style.background = '#141414';
+        matEl.style.boxShadow = 'inset 0 0 16px rgba(0,0,0,0.85), inset 0 0 1px rgba(255,255,255,0.12)';
+        matEl.style.border = '1px solid #2a2a2a';
+      } else if (STATE.matStyle === 'bevel') {
+        matEl.style.background = '#f5f3ec';
+        matEl.style.border = '4px solid #c8a830';
+        matEl.style.boxShadow = 'inset 0 0 18px rgba(0,0,0,0.4)';
+      }
+    } else if (matEl) {
+      matEl.style.display = 'none';
+    }
+
+    // 2. Inset de l'œuvre d'art (Cadre + Passe-partout)
+    var totalInset = (STATE.frameStyle === 'floating' ? 0 : fw) + mw;
+    artworkEl.style.inset = totalInset + 'px';
+
+    // 3. Cadre Extérieur (Frame Overlay)
     el.style.cssText = '';
     el.style.position = 'absolute';
     el.style.inset = '0';
@@ -988,7 +1027,42 @@
 
     if (STATE.frameStyle === 'floating') {
       el.style.background = 'transparent';
-      el.style.boxShadow = 'inset 0 0 ' + (35 * i) + 'px rgba(0,0,0,' + (0.6 * i) + ')';
+      el.style.boxShadow = [
+        'inset 0 0 0 10px #080808',
+        'inset 0 0 24px rgba(0,0,0,0.9)',
+        '0 ' + (20 * i) + 'px ' + (50 * i) + 'px rgba(0,0,0,' + (0.85 * i) + ')'
+      ].join(',');
+      return;
+    }
+
+    if (STATE.frameStyle === 'ebony') {
+      el.style.border = fw + 'px solid #161616';
+      el.style.boxShadow = [
+        'inset 0 1px 0 rgba(255,255,255,0.15)',
+        'inset 0 -1px 0 rgba(0,0,0,0.8)',
+        'inset 0 0 ' + (fw * 0.4) + 'px rgba(0,0,0,0.6)',
+        '0 ' + (15 * i) + 'px ' + (45 * i) + 'px rgba(0,0,0,' + (0.8 * i) + ')'
+      ].join(',');
+      return;
+    }
+
+    if (STATE.frameStyle === 'white') {
+      el.style.border = fw + 'px solid #f8f8f8';
+      el.style.boxShadow = [
+        'inset 0 0 ' + (fw * 0.3) + 'px rgba(0,0,0,0.15)',
+        '0 ' + (15 * i) + 'px ' + (40 * i) + 'px rgba(0,0,0,' + (0.6 * i) + ')'
+      ].join(',');
+      return;
+    }
+
+    if (STATE.frameStyle === 'gold_slim') {
+      el.style.border = fw + 'px solid #c8a830';
+      el.style.boxShadow = [
+        'inset 0 1px 1px rgba(255,255,255,0.4)',
+        'inset 0 -1px 2px rgba(0,0,0,0.5)',
+        'inset 0 0 ' + (fw * 0.35) + 'px rgba(120,80,20,0.4)',
+        '0 ' + (15 * i) + 'px ' + (45 * i) + 'px rgba(0,0,0,' + (0.75 * i) + ')'
+      ].join(',');
       return;
     }
 
@@ -996,17 +1070,11 @@
     var frameTextures = {
       oak: b64.oak || 'frames/oak.png',
       walnut: b64.walnut || 'frames/walnut.png',
-      ebony: b64.ebony || 'frames/ebony.png',
-      gold: b64.gold_baroque || 'frames/gold_baroque.png',
-      gold_slim: b64.gold_baroque || 'frames/gold_baroque.png',
       silver: b64.silver || 'frames/silver.png',
-      cherry: b64.walnut || 'frames/walnut.png',
-      rustic: b64.oak || 'frames/oak.png',
-      ornate: b64.gold_baroque || 'frames/gold_baroque.png'
+      rustic: b64.oak || 'frames/oak.png'
     };
 
     var texUrl = frameTextures[STATE.frameStyle] || frameTextures.oak;
-
     el.style.border = fw + 'px solid transparent';
     el.style.borderImageSource = 'url("' + texUrl + '")';
     el.style.borderImageSlice = '512';
@@ -1155,9 +1223,11 @@
   }
 
   function syncSidebarValues() {
-    var fl = {oak:'Chêne clair',walnut:'Noyer/ébène',gold:'Dorure baroque',aluminum:'Aluminium',white:'Blanc mat',black:'Noir satiné',matte:'Passe-partout',bevel:'Double biseau',loft:'Industriel',floating:'Flottant'};
-    var fl2 = {oak:'Chêne Clair',walnut:'Noyer Foncé',ebony:'Ébène Noir',gold:'Dorure Baroque',gold_slim:'Filet Doré',silver:'Argent Brossé',cherry:'Cerisier',rustic:'Rustique',ornate:'Sculpté',floating:'Flottant'};
-    document.getElementById('nav-frame-val').textContent = fl2[STATE.frameStyle]||'Chêne Clair';
+    var fl2 = {oak:'Chêne Scandinave',walnut:'Noyer Sombre',ebony:'Noir Mat',gold_slim:'Laiton Doré',silver:'Argent Brossé',white:'Blanc Galerie',floating:'Flottant',rustic:'Bois Brut'};
+    var matLabels = {none:'',cream:' + Passe-partout Blanc',black:' + Passe-partout Noir',bevel:' + Passe-partout Biseauté'};
+    var matLabel = matLabels[STATE.matStyle || 'none'] || '';
+    document.getElementById('nav-frame-val').textContent = (fl2[STATE.frameStyle] || 'Chêne') + matLabel;
+    
     var tl = {10:'10 sec',30:'30 sec',60:'1 minute','static':'Manuel'};
     document.getElementById('nav-timer-val').textContent = tl[STATE.timerInterval] || STATE.timerInterval+'s';
     document.getElementById('nav-ambient-val').textContent = STATE.brightness===100&&STATE.temperature===50?'Auto':STATE.brightness+'% · '+(STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre');
@@ -1167,9 +1237,14 @@
     var tv = document.getElementById('temperature-val');
     tv.textContent = STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre';
     document.getElementById('canvas-toggle').classList.toggle('on', STATE.canvasTexture);
+    
+    qa('[data-frame]').forEach(function(b){b.classList.toggle('selected',b.dataset.frame===STATE.frameStyle);});
     qa('[data-frame-size]').forEach(function(b){b.classList.toggle('selected',b.dataset.frameSize===(STATE.frameWidth<=12?'thin':STATE.frameWidth<=24?'medium':'thick'));});
+    qa('[data-mat-style]').forEach(function(b){b.classList.toggle('selected',b.dataset.matStyle===(STATE.matStyle||'none'));});
+    qa('[data-mat-width]').forEach(function(b){b.classList.toggle('selected',String(b.dataset.matWidth)===String(STATE.matWidth||50));});
     qa('[data-timer]').forEach(function(b){b.classList.toggle('selected',String(b.dataset.timer)===String(STATE.timerInterval));});
     qa('[data-image-fit]').forEach(function(b){b.classList.toggle('selected',b.dataset.imageFit===STATE.imageFit);});
+    
     document.getElementById('brightness-slider').value = STATE.brightness;
     document.getElementById('temperature-slider').value = STATE.temperature;
     document.getElementById('shadow-slider').value = STATE.shadowIntensity;
@@ -1177,7 +1252,7 @@
 
   // ==================== CLICK HANDLER ====================
   document.addEventListener('click', function(e) {
-    var t = e.target.closest('[data-action],[data-sub],[data-back],.toggle-switch,#sidebar-close,#google-connect-btn,#auth-back,[data-frame],[data-frame-size],[data-timer],.frame-option,.option-chip:not([data-back]),#btn-launch,#btn-all,#btn-none');
+    var t = e.target.closest('[data-action],[data-sub],[data-back],.toggle-switch,#sidebar-close,#google-connect-btn,#auth-back,[data-frame],[data-frame-size],[data-mat-style],[data-mat-width],[data-timer],.frame-option,.option-chip:not([data-back]),#btn-launch,#btn-all,#btn-none');
 
     if (!t) {
       if (e.target.closest('#art-mode') && STATE.page==='slideshow' && !STATE.menuVisible && !STATE.sidebarOpen) { showMenu(); }
@@ -1217,11 +1292,18 @@
 
     if (t.closest('[data-frame]')) {
       STATE.frameStyle = t.closest('[data-frame]').dataset.frame;
-      qa('.frame-option').forEach(function(f){f.classList.toggle('selected',f.dataset.frame===STATE.frameStyle);});
       renderFrame(); syncSidebarValues(); return;
     }
     if (t.closest('[data-frame-size]')) {
-      STATE.frameWidth = {thin:10,medium:20,thick:36}[t.closest('[data-frame-size]').dataset.frameSize];
+      STATE.frameWidth = {thin:12,medium:22,thick:36}[t.closest('[data-frame-size]').dataset.frameSize];
+      renderFrame(); syncSidebarValues(); return;
+    }
+    if (t.closest('[data-mat-style]')) {
+      STATE.matStyle = t.closest('[data-mat-style]').dataset.matStyle;
+      renderFrame(); syncSidebarValues(); return;
+    }
+    if (t.closest('[data-mat-width]')) {
+      STATE.matWidth = parseInt(t.closest('[data-mat-width]').dataset.matWidth);
       renderFrame(); syncSidebarValues(); return;
     }
     if (t.closest('[data-timer]')) {
@@ -1529,17 +1611,17 @@
         e.preventDefault();
         if (!curItem) return;
 
-        // Frame grid (5 columns x 2 rows) 2D vertical navigation
+        // Frame grid (4 columns x 2 rows) 2D vertical navigation
         if (curItem.classList.contains('frame-option')) {
           var fList2 = Array.prototype.slice.call(subContainer.querySelectorAll('.frame-option'));
           var fIdx2 = fList2.indexOf(curItem);
           if (fIdx2 !== -1) {
             var targetF2 = null;
             if (isUp) {
-              if (fIdx2 >= 5) targetF2 = fList2[fIdx2 - 5];
+              if (fIdx2 >= 4) targetF2 = fList2[fIdx2 - 4];
               else targetF2 = subContainer.querySelector('[data-back]') || subItems[0];
             } else if (isDown) {
-              if (fIdx2 < 5 && fIdx2 + 5 < fList2.length) targetF2 = fList2[fIdx2 + 5];
+              if (fIdx2 < 4 && fIdx2 + 4 < fList2.length) targetF2 = fList2[fIdx2 + 4];
               else targetF2 = subContainer.querySelector('.option-chip') || subItems[STATE.dpIdx + 1];
             }
             if (targetF2) {
