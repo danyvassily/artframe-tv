@@ -863,8 +863,6 @@
     els.artwork.classList.add('launching');
     setTimeout(function() { els.artwork.classList.remove('launching'); }, 2300);
 
-    updateCountBadge();
-
     var el = document.documentElement;
     try {
       if (el.requestFullscreen) {
@@ -973,17 +971,45 @@
   function updateArtInfo(art) {
     document.getElementById('art-title').textContent = art.title;
     document.getElementById('art-artist').textContent = art.artist + (art.year ? ' · ' + art.year : '');
+    var list = getActiveArtworks();
+    var badge = document.getElementById('count-badge');
+    if (badge) {
+      badge.textContent = (STATE.currentArtIdx % list.length + 1) + ' / ' + list.length;
+    }
+  }
+
+  function toggleArtworkInfo() {
     var info = document.getElementById('artwork-info');
-    info.classList.add('visible');
+    var badge = document.getElementById('count-badge');
+    if (!info || !badge) return;
+
+    var isCurrentlyVisible = info.classList.contains('visible');
     clearTimeout(window._infoTimer);
-    window._infoTimer = setTimeout(function() { info.classList.remove('visible'); }, 12000);
+
+    if (isCurrentlyVisible) {
+      info.classList.remove('visible');
+      badge.classList.remove('visible');
+    } else {
+      var list = getActiveArtworks();
+      if (list.length > 0) {
+        var art = list[STATE.currentArtIdx % list.length];
+        updateArtInfo(art);
+      }
+      info.classList.add('visible');
+      badge.classList.add('visible');
+      window._infoTimer = setTimeout(function() {
+        if (info) info.classList.remove('visible');
+        if (badge) badge.classList.remove('visible');
+      }, 7000);
+    }
   }
 
   function updateCountBadge() {
     var list = getActiveArtworks();
     var badge = document.getElementById('count-badge');
-    badge.textContent = (STATE.currentArtIdx % list.length + 1) + ' / ' + list.length;
-    badge.classList.add('visible');
+    if (badge) {
+      badge.textContent = (STATE.currentArtIdx % list.length + 1) + ' / ' + list.length;
+    }
   }
 
   // ==================== FRAMES & PASSE-PARTOUT ====================
@@ -1480,10 +1506,14 @@
         renderArtwork(true);
         renderTimerIndicator();
         resetTimer();
-        updateCountBadge();
         return;
       }
-      if (isUp || isDown || isEnter) {
+      if (isDown) {
+        e.preventDefault();
+        toggleArtworkInfo();
+        return;
+      }
+      if (isUp || isEnter) {
         e.preventDefault();
         showMenu();
         return;
