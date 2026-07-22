@@ -682,7 +682,7 @@
   function qa(s) { return document.querySelectorAll(s); }
 
   // ==================== LOAD ARTWORKS ====================
-  var LANDSCAPE_RATIO_MIN = 1.15;
+  var LANDSCAPE_RATIO_MIN = 1.30;
 
   function isLandscapeArtwork(a) {
     if (a.width && a.height) {
@@ -957,22 +957,15 @@
     imgEl.onload = function() {
       if (this.naturalWidth && this.naturalHeight) {
         var ratio = this.naturalWidth / this.naturalHeight;
-        var screenRatio = (window.innerWidth && window.innerHeight) ? (window.innerWidth / window.innerHeight) : 1.77;
 
-        // Smart Adaptive Framing: NEVER crop paintings awkwardly!
-        if (STATE.imageFit === 'cover') {
-          if (ratio < 1.35 || ratio > 2.1) {
-            imgEl.style.objectFit = 'contain';
-            bgEl.classList.add('loaded');
-          } else {
-            imgEl.style.objectFit = 'cover';
-          }
+        // Perfect 16:9 TV Framing: Fill frame edge-to-edge for 16:9 landscape paintings
+        if (ratio >= 1.30 && ratio <= 1.95) {
+          imgEl.style.objectFit = 'cover';
+          imgEl.style.objectPosition = 'center 35%';
         } else {
-          // Default contain mode with ambient blurred border filling
+          // Ultra-wide panoramas: contain + ambient blur to preserve full painting
           imgEl.style.objectFit = 'contain';
-          if (Math.abs(ratio - screenRatio) > 0.15) {
-            bgEl.classList.add('loaded');
-          }
+          bgEl.classList.add('loaded');
         }
       }
       el.style.background = 'none';
