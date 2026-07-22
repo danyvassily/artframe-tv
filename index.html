@@ -122,8 +122,10 @@
     /* artwork is inset dynamically via JS to fit inside frame */
     .artwork { position:absolute; transition:opacity 0.9s cubic-bezier(0.4,0,0.2,1); background:#000; overflow:hidden; }
     .artwork.fading { opacity:0; }
-    .art-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1s ease, transform 0.5s ease; display:block; transform:scale(1.06); }
+    .art-img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0; transition:opacity 0.8s ease, transform 0.4s ease; display:block; z-index:2; }
     .art-img.loaded { opacity:1; }
+    .art-bg-blur { position:absolute; inset:-12%; width:124%; height:124%; object-fit:cover; filter:blur(45px) brightness(0.65) contrast(1.05); opacity:0; transition:opacity 0.8s ease; z-index:1; pointer-events:none; }
+    .art-bg-blur.loaded { opacity:0.6; }
     /* frame-overlay: CSS-only frame drawn on top of the artwork inset zone */
     .frame-overlay { position:absolute; inset:0; pointer-events:none; z-index:5; transition:all 0.6s cubic-bezier(0.4,0,0.2,1); }
     .vignette-overlay { display:none; }
@@ -933,23 +935,44 @@
   }
 
   function applyArt(el, art) {
-    var prev = el.querySelector('.art-img');
-    if (prev) prev.remove();
+    var prevImg = el.querySelector('.art-img');
+    if (prevImg) prevImg.remove();
+    var prevBg = el.querySelector('.art-bg-blur');
+    if (prevBg) prevBg.remove();
 
     var hue = 30 + Math.abs(art.title.length * 7 + art.artist.length * 13) % 260;
     el.style.background = 'radial-gradient(ellipse at 40% 40%, oklch(45% 0.10 ' + hue + '), oklch(12% 0.04 ' + ((hue + 100) % 360) + '))';
+
+    var bgEl = document.createElement('img');
+    bgEl.className = 'art-bg-blur';
+    bgEl.alt = '';
+    bgEl.ariaHidden = 'true';
+    bgEl.src = art.image_url;
 
     var imgEl = document.createElement('img');
     imgEl.className = 'art-img';
     imgEl.alt = art.title;
     imgEl.decoding = 'async';
-    imgEl.style.objectFit = STATE.imageFit || 'cover';
 
     imgEl.onload = function() {
       if (this.naturalWidth && this.naturalHeight) {
         var ratio = this.naturalWidth / this.naturalHeight;
-        if (ratio < LANDSCAPE_RATIO_MIN) {
-          console.log('⚠ Image non-paysage détectée (' + ratio.toFixed(2) + ') : ' + art.title);
+        var screenRatio = (window.innerWidth && window.innerHeight) ? (window.innerWidth / window.innerHeight) : 1.77;
+
+        // Smart Adaptive Framing: NEVER crop paintings awkwardly!
+        if (STATE.imageFit === 'cover') {
+          if (ratio < 1.35 || ratio > 2.1) {
+            imgEl.style.objectFit = 'contain';
+            bgEl.classList.add('loaded');
+          } else {
+            imgEl.style.objectFit = 'cover';
+          }
+        } else {
+          // Default contain mode with ambient blurred border filling
+          imgEl.style.objectFit = 'contain';
+          if (Math.abs(ratio - screenRatio) > 0.15) {
+            bgEl.classList.add('loaded');
+          }
         }
       }
       el.style.background = 'none';
@@ -961,10 +984,12 @@
       if (!this._retried) {
         this._retried = true;
         this.src = 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1920&q=85';
+        bgEl.src = this.src;
       }
     };
 
     imgEl.src = art.image_url;
+    el.appendChild(bgEl);
     el.appendChild(imgEl);
   }
 
