@@ -620,11 +620,12 @@
         </div>
       </div>
       <div class="sub-screen" id="sub-google">
-        <h3>Google Photos</h3>
+        <h3>Google Photos & Amazon Photos</h3>
         <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
-        <div style="display:flex;flex-direction:column;gap:14px;">
-          <button class="auth-btn" id="google-connect-btn">Se connecter avec Google</button>
-          <p style="font-size:12px;color:var(--muted);line-height:1.6;">Connectez-vous pour synchroniser vos albums Google Photos.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px;">
+          <button class="auth-btn" id="google-connect-btn" data-auth-service="google" style="text-align:left;padding:14px 20px;">📱 Google Photos (QR Code)</button>
+          <button class="auth-btn" id="amazon-connect-btn" data-auth-service="amazon" style="text-align:left;padding:14px 20px;">📦 Amazon Photos (QR Code)</button>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:6px;">Scannez le QR code avec l'appareil photo de votre smartphone pour synchroniser vos albums photos.</p>
         </div>
       </div>
     </div>
@@ -633,11 +634,16 @@
   <!-- AUTH OVERLAY -->
   <div class="auth-overlay" id="auth-overlay">
     <div class="auth-card">
-      <h2>Connexion Google</h2>
-      <p>Scannez le QR code ou saisissez le code sur <strong>google.com/device</strong></p>
-      <div class="auth-code-display" id="auth-code">---</div>
-      <div class="auth-url">google.com/device</div>
-      <button class="auth-btn secondary" data-back id="auth-back">Annuler</button>
+      <h2 id="auth-title">Connexion Photos</h2>
+      <p id="auth-desc" style="font-size:14px;color:var(--muted);margin:4px 0 12px;">Scannez le QR Code ci-dessous avec votre téléphone :</p>
+      <div class="auth-qr-wrap" style="background:#fff;padding:12px;border-radius:16px;display:inline-block;box-shadow:0 12px 32px rgba(0,0,0,0.5);">
+        <img id="auth-qr-img" src="" alt="QR Code" style="width:200px;height:200px;display:block;border:none;border-radius:8px;">
+      </div>
+      <div class="auth-url" id="auth-url" style="font-family:var(--font-mono);font-size:14px;color:var(--accent);margin-top:8px;">https://photos.google.com</div>
+      <div style="display:flex;gap:12px;margin-top:12px;">
+        <button class="auth-btn" id="auth-sim-connect">Valider la connexion</button>
+        <button class="auth-btn secondary" data-back id="auth-back">Fermer</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1259,11 +1265,34 @@
     syncSidebarValues();
   }
 
-  function openAuth() {
+  function openAuth(service) {
+    service = service || 'google';
+    var title = 'Connexion Google Photos';
+    var desc = 'Scannez le QR Code ci-dessous avec votre smartphone pour synchroniser vos albums Google Photos :';
+    var url = 'https://photos.google.com';
+
+    if (service === 'amazon') {
+      title = 'Connexion Amazon Photos';
+      desc = 'Scannez le QR Code ci-dessous avec votre téléphone pour accéder à votre espace Amazon Photos :';
+      url = 'https://www.amazon.com/photos';
+    }
+
+    var titleEl = document.getElementById('auth-title');
+    var descEl = document.getElementById('auth-desc');
+    var urlEl = document.getElementById('auth-url');
+    if (titleEl) titleEl.textContent = title;
+    if (descEl) descEl.textContent = desc;
+    if (urlEl) urlEl.textContent = url;
+
+    var qrImg = document.getElementById('auth-qr-img');
+    if (qrImg) {
+      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&data=' + encodeURIComponent(url);
+    }
+
     STATE.dpMode = 'auth'; STATE.dpIdx = 0;
     document.getElementById('auth-overlay').classList.add('open');
-    var items = Array.prototype.slice.call(qa('#auth-overlay .auth-btn, #auth-overlay .auth-code-display'));
-    focusEl(0, items);
+    var items = Array.prototype.slice.call(qa('#auth-overlay .auth-btn'));
+    if (items.length > 0) focusEl(0, items);
   }
 
   function closeAuth() {
@@ -1374,11 +1403,18 @@
     }
     if (t.id==='sidebar-close'){closeSidebar();return;}
     if (t.id==='auth-back'){closeAuth();return;}
-    if (t.id==='google-connect-btn'){openAuth();startGoogleAuth();return;}
+    if (t.id==='auth-sim-connect'){
+      STATE.googleConnected = true;
+      syncSidebarValues();
+      closeAuth();
+      return;
+    }
+    if (t.id==='google-connect-btn'||(t.dataset&&t.dataset.authService==='google')){openAuth('google');return;}
+    if (t.id==='amazon-connect-btn'||(t.dataset&&t.dataset.authService==='amazon')){openAuth('amazon');return;}
     if (t.closest('[data-back]')){backToNav();return;}
     if (t.closest('.sidebar-nav-item')){
       var ni=t.closest('.sidebar-nav-item');
-      if(ni.dataset.sub==='google'){openAuth();return;}
+      if(ni.dataset.sub==='google'){openSubScreen('google');return;}
       if(ni.dataset.sub){openSubScreen(ni.dataset.sub);return;}
     }
   });
