@@ -710,7 +710,14 @@
     function processData(data) {
       var raw = data.artworks || [];
       artworks = raw.filter(isLandscapeArtwork);
-      console.log('🖼️ ' + raw.length + ' œuvres chargées, ' + artworks.length + ' tableaux conservés');
+      // Shuffle artworks array randomly on app startup
+      for (var i = artworks.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = artworks[i];
+        artworks[i] = artworks[j];
+        artworks[j] = temp;
+      }
+      console.log('🖼️ ' + raw.length + ' œuvres chargées, ' + artworks.length + ' tableaux conservés (mode mélangé aléatoire)');
 
       var splashEl = document.getElementById('splash');
       var splashStart = window._splashStart || Date.now();
@@ -839,7 +846,7 @@
     }
 
     STATE.page = 'slideshow';
-    STATE.currentArtIdx = 0;
+    STATE.currentArtIdx = Math.floor(Math.random() * list.length);
     STATE.dpMode = 'slideshow-art';
 
     document.getElementById('gallery-browser').classList.add('hidden');
