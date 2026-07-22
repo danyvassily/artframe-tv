@@ -4,9 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="mobile-web-app-capable" content="yes" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <!-- Prevents ArtFrame from stealing audio focus from Spotify/music apps -->
   <meta name="media-playback-requires-user-gesture" content="true" />
   <title>ArtFrame — Galerie d'Art</title>
+  <script src="artworks_data.js"></script>
+  <script src="frames_data.js"></script>
   <style>
     :root {
       --bg: oklch(8% 0.003 95);
@@ -22,18 +27,106 @@
       --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); font-family:var(--font-body); color:var(--fg); -webkit-font-smoothing:antialiased; user-select:none; }
-    body { display:flex; align-items:center; justify-content:center; }
+    html, body { width:100%; height:100%; overflow:hidden; background:#000; font-family:var(--font-body); color:var(--fg); -webkit-font-smoothing:antialiased; user-select:none; }
+    /* TV fullscreen: body fills entire screen */
+    body { display:block; }
 
-    .tv-frame { width:1920px; height:1080px; position:relative; overflow:hidden; background:var(--bg); transform-origin:top left; }
-    @media (max-width:1920px),(max-height:1080px) { .tv-frame { transform:scale(calc(min(100vw/1920,100vh/1080))); } }
+    /* .tv-frame fills entire viewport — no scale trick, native 100% */
+    .tv-frame {
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      background:var(--bg);
+      overflow:hidden;
+    }
+
+    /* ====== SPLASH SCREEN ====== */
+    @keyframes splash-logo-in { 0%{opacity:0;transform:scale(0.8) translateY(20px)} 100%{opacity:1;transform:scale(1) translateY(0)} }
+    @keyframes splash-text-in { 0%{opacity:0;transform:translateY(18px)} 100%{opacity:1;transform:translateY(0)} }
+    @keyframes splash-sub-in  { 0%{opacity:0;transform:translateY(10px)} 100%{opacity:1;transform:translateY(0)} }
+    @keyframes splash-bar     { 0%{width:0} 100%{width:60%} }
+    @keyframes glow-pulse     { 0%,100%{opacity:0.4;filter:blur(32px)} 50%{opacity:0.7;filter:blur(40px)} }
+
+    .splash-screen {
+      position:fixed; inset:0; z-index:200;
+      background:radial-gradient(ellipse at 50% 35%, oklch(12% 0.025 85) 0%, oklch(5% 0.008 95) 100%);
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0;
+      transition:opacity 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .splash-screen.done { opacity:0; pointer-events:none; }
+    .splash-glow {
+      position:absolute; width:500px; height:300px;
+      background:radial-gradient(ellipse, oklch(65% 0.15 85) 0%, transparent 70%);
+      animation:glow-pulse 3s ease-in-out infinite;
+      pointer-events:none;
+    }
+    .splash-logo-wrap {
+      animation:splash-logo-in 0.9s cubic-bezier(0.22,1,0.36,1) 0.2s both;
+      margin-bottom:32px;
+      position:relative; z-index:1;
+    }
+    .splash-logo-svg {
+      width:120px; height:120px;
+      filter:drop-shadow(0 0 24px oklch(65% 0.15 85));
+    }
+    .splash-title {
+      font-family:'Georgia','Iowan Old Style',serif;
+      font-size:clamp(52px, 6vw, 80px);
+      font-weight:400;
+      letter-spacing:-0.02em;
+      color:#fff;
+      animation:splash-text-in 0.9s cubic-bezier(0.22,1,0.36,1) 0.5s both;
+      position:relative; z-index:1;
+      background:linear-gradient(180deg, #ffffff 0%, oklch(85% 0.12 85) 50%, #ffffff 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .splash-divider {
+      width:80px; height:1px;
+      background:linear-gradient(90deg, transparent, oklch(70% 0.13 85), transparent);
+      margin:20px auto;
+      animation:splash-sub-in 0.8s cubic-bezier(0.22,1,0.36,1) 0.8s both;
+      position:relative; z-index:1;
+    }
+    .splash-by {
+      font-size:clamp(14px, 1.5vw, 20px);
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      color:oklch(55% 0.012 95);
+      animation:splash-sub-in 0.8s cubic-bezier(0.22,1,0.36,1) 1.0s both;
+      position:relative; z-index:1;
+    }
+    .splash-author {
+      font-size:clamp(16px, 1.8vw, 22px);
+      letter-spacing:0.06em;
+      color:oklch(75% 0.08 85);
+      margin-top:6px;
+      font-style:italic;
+      animation:splash-sub-in 0.8s cubic-bezier(0.22,1,0.36,1) 1.1s both;
+      position:relative; z-index:1;
+    }
+    .splash-progress {
+      position:absolute; bottom:0; left:0; right:0; height:2px;
+      background:oklch(18% 0.006 95);
+    }
+    .splash-progress-bar {
+      height:100%;
+      background:linear-gradient(90deg, oklch(55% 0.08 85), oklch(70% 0.13 85), oklch(55% 0.08 85));
+      animation:splash-bar 2.5s cubic-bezier(0.4,0,0.2,1) 0.3s both;
+    }
 
     /* ============ ART MODE ============ */
-    .art-mode { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:var(--bg); z-index:1; }
-    .artwork { position:absolute; inset:0; transition:opacity 0.9s cubic-bezier(0.4,0,0.2,1); background-size:contain; background-position:center; background-repeat:no-repeat; }
+    .art-mode { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#000; z-index:1; }
+    /* artwork is inset dynamically via JS to fit inside frame */
+    .artwork { position:absolute; transition:opacity 0.9s cubic-bezier(0.4,0,0.2,1); background:#000; }
     .artwork.fading { opacity:0; }
-    .vignette-overlay { position:absolute; inset:0; pointer-events:none; z-index:1; background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%); }
-    .frame-overlay { position:absolute; inset:0; pointer-events:none; z-index:2; transition:all 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .art-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1s ease; display:block; }
+    .art-img.loaded { opacity:1; }
+    /* frame-overlay: CSS-only frame drawn on top of the artwork inset zone */
+    .frame-overlay { position:absolute; inset:0; pointer-events:none; z-index:5; transition:all 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .vignette-overlay { display:none; }
     .canvas-texture { position:absolute; inset:0; pointer-events:none; z-index:3; opacity:0; transition:opacity 0.6s;
       background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(180,160,130,0.03) 2px,rgba(180,160,130,0.03) 3px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(160,140,110,0.02) 3px,rgba(160,140,110,0.02) 4px); }
     .canvas-texture.on { opacity:1; }
@@ -92,9 +185,7 @@
       transition:all 0.2s; backdrop-filter:blur(4px);
     }
     .gb-item.active .gb-check { border-color:var(--accent); background:var(--accent); color:var(--bg); }
-    /* Art image element in slideshow */
-    .art-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1s ease; display:block; }
-    .art-img.loaded { opacity:1; }
+
 
     /* ============ SETTINGS BAR ============ */
     .settings-bar {
@@ -202,17 +293,17 @@
     .auth-btn:hover,.auth-btn.dpad-focused { background:var(--accent);color:var(--bg); }
     .auth-btn.secondary { border-color:var(--border);color:var(--muted); }
 
-    /* ============ FOCUS ============ */
-    :focus-visible { box-shadow:0 0 0 3px var(--accent),0 0 14px 2px var(--accent-dim); outline:none; }
-    .dpad-focused { border-color:var(--accent)!important; box-shadow:0 0 0 3px var(--accent),0 0 18px 3px var(--accent-dim); outline:none; }
+    /* ============ FOCUS TV ============ */
+    :focus-visible { box-shadow:0 0 0 3.5px var(--accent),0 0 20px 4px var(--accent-dim); outline:none; }
+    .dpad-focused { border-color:var(--accent)!important; box-shadow:0 0 0 3.5px var(--accent),0 0 22px 5px var(--accent-dim); outline:none; }
+    .frame-option.dpad-focused { border-color:var(--accent)!important; transform:scale(1.10)!important; box-shadow:0 0 0 3.5px var(--accent),0 0 20px rgba(212,175,55,0.7)!important; z-index:10; }
+    .option-chip.dpad-focused { border-color:var(--accent)!important; background:rgba(255,255,255,0.12)!important; color:var(--accent)!important; transform:scale(1.06)!important; box-shadow:0 0 0 3px var(--accent); }
+    .sidebar-nav-item.dpad-focused { border-color:var(--accent)!important; background:rgba(255,255,255,0.08)!important; box-shadow:0 0 0 2.5px var(--accent); }
     .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
 
-    /* Loading */
-    .loading-screen { position:absolute; inset:0; z-index:100; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:24px; transition:opacity 0.6s; }
-    .loading-screen.done { opacity:0;pointer-events:none; }
-    .loading-screen .spinner { width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite; }
+    /* Legacy loading screen (hidden, splash replaces it) */
+    .loading-screen { display:none; }
     @keyframes spin { to { transform:rotate(360deg); } }
-    .loading-screen p { color:var(--muted); font-size:14px; }
 
     /* Animations */
     @keyframes art-appear { 0%{filter:brightness(0.4)saturate(0.3);transform:scale(1.04)} 100%{filter:brightness(1)saturate(1);transform:scale(1)} }
@@ -226,20 +317,104 @@
       .color-swatch:hover,.color-swatch.dpad-focused { transform:none; }
       .artwork.launching { animation:none; }
     }
+    /* Exit Toast Notification */
+    .exit-toast {
+      position: fixed;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: rgba(18, 16, 14, 0.94);
+      color: #fff;
+      border: 1.5px solid var(--accent);
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      font-family: var(--font-body);
+    }
+    .exit-toast.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
-<div class="loading-screen" id="loading">
-  <div class="spinner"></div>
-  <p>Chargement de la galerie...</p>
+<!-- Splash Screen -->
+<div class="splash-screen" id="splash">
+  <div class="splash-glow"></div>
+  <div class="splash-logo-wrap">
+    <!-- ArtFrame Logo SVG -->
+    <svg class="splash-logo-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="goldfg" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f5e4a3"/>
+          <stop offset="40%" stop-color="#d4af37"/>
+          <stop offset="70%" stop-color="#f0c040"/>
+          <stop offset="100%" stop-color="#9e7807"/>
+        </linearGradient>
+        <linearGradient id="goldinner" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#9e7807"/>
+          <stop offset="50%" stop-color="#d4af37"/>
+          <stop offset="100%" stop-color="#f5e4a3"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+      </defs>
+      <!-- Outer ornate frame -->
+      <rect x="8" y="8" width="104" height="104" rx="4" stroke="url(#goldfg)" stroke-width="5" fill="none"/>
+      <!-- Corner ornaments -->
+      <circle cx="8" cy="8" r="5" fill="url(#goldfg)"/>
+      <circle cx="112" cy="8" r="5" fill="url(#goldfg)"/>
+      <circle cx="8" cy="112" r="5" fill="url(#goldfg)"/>
+      <circle cx="112" cy="112" r="5" fill="url(#goldfg)"/>
+      <!-- Inner frame line -->
+      <rect x="16" y="16" width="88" height="88" rx="2" stroke="url(#goldinner)" stroke-width="1.5" fill="none" opacity="0.6"/>
+      <!-- Canvas area -->
+      <rect x="22" y="22" width="76" height="76" rx="1" fill="oklch(8% 0.003 95)"/>
+      <!-- Abstract painting suggestion -->
+      <rect x="22" y="22" width="76" height="76" rx="1" fill="url(#paintfill)" opacity="0.85"/>
+      <defs>
+        <radialGradient id="paintfill" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#8ab4c8" stop-opacity="0.9"/>
+          <stop offset="35%" stop-color="#c8a460" stop-opacity="0.7"/>
+          <stop offset="70%" stop-color="#4a7a5a" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#2a2a3a" stop-opacity="1"/>
+        </radialGradient>
+      </defs>
+      <!-- Brush stroke hints -->
+      <ellipse cx="50" cy="48" rx="18" ry="10" fill="#d4af60" opacity="0.25" transform="rotate(-15 50 48)"/>
+      <ellipse cx="72" cy="62" rx="12" ry="8" fill="#7ab8d8" opacity="0.2" transform="rotate(20 72 62)"/>
+      <!-- Top center ornament -->
+      <path d="M55 8 L60 3 L65 8" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Bottom center ornament -->
+      <path d="M55 112 L60 117 L65 112" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Left center ornament -->
+      <path d="M8 55 L3 60 L8 65" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Right center ornament -->
+      <path d="M112 55 L117 60 L112 65" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="splash-title">ArtFrame</div>
+  <div class="splash-divider"></div>
+  <div class="splash-by">by</div>
+  <div class="splash-author">Dany Vassiliakos</div>
+  <div class="splash-progress"><div class="splash-progress-bar"></div></div>
 </div>
+<!-- Legacy loading (hidden) -->
+<div class="loading-screen" id="loading"></div>
 
 <div class="tv-frame" id="tv-frame">
 
   <!-- ART MODE -->
   <section class="art-mode" id="art-mode">
     <div class="artwork" id="artwork-current"></div>
-    <div class="vignette-overlay"></div>
     <div class="frame-overlay" id="frame-overlay"></div>
     <div class="canvas-texture" id="canvas-texture"></div>
     <div class="ambient-filter" id="ambient-filter"></div>
@@ -380,23 +555,22 @@
           </button>
 
         </div>
-        <div class="option-group"><label>Taille</label><div class="option-row">
-          <button class="option-chip" data-frame-size="thin">Fin<small>40px</small></button>
-          <button class="option-chip selected" data-frame-size="medium">Moyen<small>80px</small></button>
-          <button class="option-chip" data-frame-size="thick">Large<small>140px</small></button>
+        <div class="option-group"><label>Taille du cadre</label><div class="option-row">
+          <button class="option-chip" data-frame-size="thin">Discret<small>10px</small></button>
+          <button class="option-chip selected" data-frame-size="medium">Moyen<small>20px</small></button>
+          <button class="option-chip" data-frame-size="thick">Large<small>36px</small></button>
         </div></div>
         <div class="option-group"><label>Ombre 3D</label><div class="slider-row"><div class="slider-label"><span>Intensité</span><span id="shadow-val">50%</span></div><input type="range" min="0" max="100" value="50" id="shadow-slider"></div></div>
         <div class="option-group"><div class="toggle-row"><span>Texture de toile</span><button class="toggle-switch" id="canvas-toggle"></button></div></div>
       </div>
       <div class="sub-screen" id="sub-timer">
-        <h3>Minuterie</h3>
+        <h3>Défilement automatique</h3>
         <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
-        <div class="option-group"><label>Intervalle</label><div style="display:flex;flex-direction:column;gap:8px;">
-          <button class="option-chip selected" data-timer="15">15 min<small>Rotation régulière</small></button>
-          <button class="option-chip" data-timer="30">30 min<small>Rotation modérée</small></button>
-          <button class="option-chip" data-timer="60">1 heure<small>Contemplation</small></button>
-          <button class="option-chip" data-timer="120">2 heures<small>Longue contemplation</small></button>
-          <button class="option-chip" data-timer="static">Statique<small>Manuel uniquement</small></button>
+        <div class="option-group"><label>Intervalle entre les peintures</label><div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="option-chip" data-timer="10">10 secondes<small>Défilement rapide</small></button>
+          <button class="option-chip selected" data-timer="30">30 secondes<small>Recommandé</small></button>
+          <button class="option-chip" data-timer="60">1 minute<small>Contemplation</small></button>
+          <button class="option-chip" data-timer="static">Manuel<small>Télécommande uniquement</small></button>
         </div></div>
       </div>
       <div class="sub-screen" id="sub-ambient">
@@ -435,9 +609,12 @@
   </div>
 </div>
 
+<div class="exit-toast" id="exit-toast">Appuyez à nouveau sur Retour pour quitter</div>
+
 <script>
 (function(){
   'use strict';
+  window._splashStart = Date.now();
 
   var STATE = {
     page: 'gallery',          // 'gallery' | 'slideshow'
@@ -449,10 +626,10 @@
     dpMode: 'gallery',        // gallery | slideshow-art | slideshow-menu | sidebar-nav | sub | auth
     dpIdx: 0,
     frameStyle: 'oak',
-    frameWidth: 80,
+    frameWidth: 20,
     shadowIntensity: 50,
     canvasTexture: false,
-    timerInterval: 15,
+    timerInterval: 30,
     brightness: 100,
     temperature: 50,
     googleConnected: false,
@@ -486,39 +663,49 @@
     return true;
   }
 
+  var GALLERY_NAMES = {
+    landscape: 'Paysages',
+    impressionism: 'Impressionnisme',
+    postimpressionism: 'Post-impressionnisme',
+    renaissance: 'Renaissance',
+    baroque: 'Baroque',
+    romanticism: 'Romantisme',
+    classic: 'Art Classique',
+    modern: 'Art Moderne',
+    rococo: 'Rococo',
+    fauvism: 'Fauvisme',
+    cubism: 'Cubisme'
+  };
+
   function loadArtworks() {
-    var loading = document.getElementById('loading');
+    function processData(data) {
+      var raw = data.artworks || [];
+      artworks = raw.filter(isLandscapeArtwork);
+      console.log('🖼️ ' + raw.length + ' œuvres chargées, ' + artworks.length + ' tableaux conservés');
+
+      var splashEl = document.getElementById('splash');
+      var splashStart = window._splashStart || Date.now();
+      var elapsed = Date.now() - splashStart;
+      var delay = Math.max(0, 2800 - elapsed);
+      setTimeout(function() {
+        if (splashEl) { splashEl.classList.add('done'); setTimeout(function(){ splashEl.style.display='none'; }, 1200); }
+      }, delay);
+      initGallery();
+    }
+
+    if (window.ARTWORKS_DATA && window.ARTWORKS_DATA.artworks && window.ARTWORKS_DATA.artworks.length > 2) {
+      processData(window.ARTWORKS_DATA);
+      return;
+    }
+
     fetch('artworks.json?v=' + Date.now())
       .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var raw = data.artworks || [];
-        // FILTRE PAYSAGE : ne garde que les œuvres en orientation paysage
-        artworks = raw.filter(isLandscapeArtwork);
-        console.log('🖼️ ' + raw.length + ' œuvres chargées, ' + artworks.length + ' paysages conservés');
-
-        if (artworks.length === 0) {
-          // Fallback: embedded minimal dataset (paysages uniquement)
-          artworks = [
-            {title:"The Hay Wain",artist:"John Constable",year:"1821",image_url:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/John_Constable_The_Hay_Wain.jpg/1920px-John_Constable_The_Hay_Wain.jpg",gallery:"landscape",width:1920,height:1280},
-            {title:"Wanderer above the Sea of Fog",artist:"Caspar David Friedrich",year:"1818",image_url:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/1920px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg",gallery:"landscape",width:1920,height:1280}
-          ];
-        }
-        loading.classList.add('done');
-        setTimeout(function() { loading.style.display = 'none'; }, 600);
-        initGallery();
-      })
+      .then(function(data) { processData(data); })
       .catch(function(err) {
-        console.error('Failed to load artworks:', err);
-        loading.querySelector('p').textContent = 'Erreur de chargement. Utilisation des œuvres par défaut.';
-        setTimeout(function() {
-          artworks = [
-            {title:"The Hay Wain",artist:"John Constable",year:"1821",image_url:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/John_Constable_The_Hay_Wain.jpg/1920px-John_Constable_The_Hay_Wain.jpg",gallery:"landscape",width:1920,height:1280},
-            {title:"Wanderer above the Sea of Fog",artist:"Caspar David Friedrich",year:"1818",image_url:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/1920px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg",gallery:"landscape",width:1920,height:1280}
-          ];
-          loading.classList.add('done');
-          setTimeout(function() { loading.style.display = 'none'; }, 600);
-          initGallery();
-        }, 1000);
+        console.error('Failed to load artworks.json via fetch:', err);
+        if (window.ARTWORKS_DATA) {
+          processData(window.ARTWORKS_DATA);
+        }
       });
   }
 
@@ -553,16 +740,15 @@
     galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) activeCount++; });
 
     document.getElementById('gb-count').textContent =
-      artworks.length + ' paysages · ' + activeCount + '/' + galleryKeys.length + ' galeries';
+      artworks.length + ' tableaux · ' + activeCount + '/' + galleryKeys.length + ' galeries';
 
-    // UNE CARTE PAR GALERIE (plus rapide, plus clair)
+    // UNE CARTE PAR GALERIE
     var grid = document.getElementById('gb-grid');
     grid.innerHTML = '';
 
     galleryKeys.forEach(function(g) {
       var isActive = STATE.activeGalleries[g] === true;
       var galleryArts = artworks.filter(function(a) { return a.gallery === g; });
-      // Préfère une œuvre paysage avec dimensions vérifiées comme représentante
       var rep = galleryArts.find(function(a) { return a.width && a.height && (a.width/a.height) >= 1.3; })
              || galleryArts[0];
       if (!rep) return;
@@ -572,7 +758,7 @@
       item.tabIndex = -1;
       item.dataset.gallery = g;
 
-      var galleryLabel = g.charAt(0).toUpperCase() + g.slice(1).replace(/_/g, ' ');
+      var galleryLabel = GALLERY_NAMES[g] || (g.charAt(0).toUpperCase() + g.slice(1).replace(/_/g, ' '));
       item.innerHTML =
         '<div class="gb-thumb" style="background-image:url(' + rep.image_url + ')"></div>' +
         '<div class="gb-label">' +
@@ -592,7 +778,7 @@
         var ac = 0;
         galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) ac++; });
         document.getElementById('gb-count').textContent =
-          artworks.length + ' paysages · ' + ac + '/' + galleryKeys.length + ' galeries';
+          artworks.length + ' tableaux · ' + ac + '/' + galleryKeys.length + ' galeries';
 
         renderFilters(); // Synchroniser les chips de filtres
       });
@@ -607,7 +793,7 @@
     galleryKeys.forEach(function(g) {
       var chip = document.createElement('button');
       chip.className = 'filter-chip' + (STATE.activeGalleries[g] ? ' active' : '');
-      chip.textContent = g.charAt(0).toUpperCase() + g.slice(1);
+      chip.textContent = GALLERY_NAMES[g] || (g.charAt(0).toUpperCase() + g.slice(1));
       chip.addEventListener('click', function() {
         STATE.activeGalleries[g] = !STATE.activeGalleries[g];
         renderFilters();
@@ -754,16 +940,11 @@
     };
 
     imgEl.onerror = function() {
-      // Image échouée : tente une URL alternative si disponible
-      console.log('⚠ Image indisponible : ' + art.title);
-      if (art.source === 'artic' && art.image_url.includes('/full/1920,')) {
-        // Fallback ARTIC : essaie 843px au lieu de 1920px
-        var fallbackUrl = art.image_url.replace('/full/1920,', '/full/843,');
-        console.log('   → Tentative fallback 843px...');
-        imgEl.src = fallbackUrl;
-        return;
+      console.warn('⚠️ Image indisponible : ' + art.title + ', chargement du secours...');
+      if (!this._retried) {
+        this._retried = true;
+        this.src = 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1920&q=85';
       }
-      // Garde le gradient placeholder
     };
 
     imgEl.src = art.image_url;
@@ -787,123 +968,53 @@
   }
 
   // ==================== FRAMES ====================
-  // 10 cadres réalistes avec veinage bois, dorures et reflets multicouches
+  // Ultra-realistic museum frames rendered from real photo textures
   function renderFrame() {
-    var fw = STATE.frameWidth;
+    var fw = STATE.frameWidth; // 10px, 20px, 36px
     var i = STATE.shadowIntensity / 100;
     var el = document.getElementById('frame-overlay');
+    var artworkEl = document.getElementById('artwork-current');
 
-    // Réinitialise les styles inline
+    // Inset artwork so it sits physically INSIDE the real frame border
+    var inset = (STATE.frameStyle === 'floating') ? 0 : fw;
+    artworkEl.style.inset = inset + 'px';
+
     el.style.cssText = '';
     el.style.position = 'absolute';
     el.style.inset = '0';
     el.style.pointerEvents = 'none';
-    el.style.zIndex = '2';
-    el.style.transition = 'all 0.6s cubic-bezier(0.4,0,0.2,1)';
+    el.style.zIndex = '5';
+    el.style.transition = 'all 0.4s cubic-bezier(0.4,0,0.2,1)';
 
     if (STATE.frameStyle === 'floating') {
-      el.style.border = 'none';
       el.style.background = 'transparent';
-      el.style.boxShadow = [
-        '0 0 0 '+(4*i)+'px rgba(255,255,255,'+(0.07*i)+')',
-        '0 '+(30*i)+'px '+(80*i)+'px rgba(0,0,0,'+(0.7*i)+')'
-      ].join(',');
+      el.style.boxShadow = 'inset 0 0 ' + (35 * i) + 'px rgba(0,0,0,' + (0.6 * i) + ')';
       return;
     }
 
-    var fwPx = fw + 'px';
-    var thirdPx = Math.round(fw*0.15) + 'px';
-    var edgePx = Math.max(2, Math.round(fw*0.04)) + 'px';
-
-    var frames = {
-      // 1. Chêne clair
-      oak: {
-        url: 'url("frames/oak.png")',
-        slice: 180,
-        shadow: [
-          'inset 0 0 10px rgba(0,0,0,'+(0.3*i)+')',
-          '0 '+(10*i)+'px '+(35*i)+'px rgba(0,0,0,'+(0.55*i)+')'
-        ].join(',')
-      },
-      // 2. Noyer foncé
-      walnut: {
-        url: 'url("frames/walnut.png")',
-        slice: 195,
-        shadow: [
-          'inset 0 0 12px rgba(0,0,0,'+(0.5*i)+')',
-          '0 '+(12*i)+'px '+(40*i)+'px rgba(0,0,0,'+(0.6*i)+')'
-        ].join(',')
-      },
-      // 3. Ébène noir chic
-      ebony: {
-        url: 'url("frames/ebony.png")',
-        slice: 215,
-        shadow: [
-          'inset 0 0 14px rgba(0,0,0,'+(0.6*i)+')',
-          '0 '+(12*i)+'px '+(45*i)+'px rgba(0,0,0,'+(0.65*i)+')'
-        ].join(',')
-      },
-      // 4. Dorure baroque
-      gold: {
-        url: 'url("frames/gold_baroque.png")',
-        slice: 215,
-        shadow: [
-          'inset 0 0 15px rgba(0,0,0,'+(0.45*i)+')',
-          '0 '+(10*i)+'px '+(40*i)+'px rgba(0,0,0,'+(0.5*i)+')'
-        ].join(',')
-      },
-      // 5. Filet doré
-      gold_slim: {
-        url: 'url("frames/gold_slim.png")',
-        slice: 60,
-        shadow: [
-          'inset 0 0 8px rgba(0,0,0,'+(0.3*i)+')',
-          '0 '+(6*i)+'px '+(24*i)+'px rgba(0,0,0,'+(0.45*i)+')'
-        ].join(',')
-      },
-      // 6. Argent brossé
-      silver: {
-        url: 'url("frames/silver.png")',
-        slice: 130,
-        shadow: [
-          'inset 0 0 10px rgba(0,0,0,'+(0.3*i)+')',
-          '0 '+(8*i)+'px '+(28*i)+'px rgba(0,0,0,'+(0.4*i)+')'
-        ].join(',')
-      },
-      // 7. Cerisier rouge
-      cherry: {
-        url: 'url("frames/cherry.png")',
-        slice: 190,
-        shadow: [
-          'inset 0 0 12px rgba(0,0,0,'+(0.45*i)+')',
-          '0 '+(10*i)+'px '+(35*i)+'px rgba(0,0,0,'+(0.55*i)+')'
-        ].join(',')
-      },
-      // 8. Rustique vieilli
-      rustic: {
-        url: 'url("frames/rustic.png")',
-        slice: 235,
-        shadow: [
-          'inset 0 0 10px rgba(0,0,0,'+(0.3*i)+')',
-          '0 '+(8*i)+'px '+(30*i)+'px rgba(0,0,0,'+(0.4*i)+')'
-        ].join(',')
-      },
-      // 9. Baroque sculpté
-      ornate: {
-        url: 'url("frames/ornate.png")',
-        slice: 235,
-        shadow: [
-          'inset 0 0 16px rgba(0,0,0,'+(0.5*i)+')',
-          '0 '+(12*i)+'px '+(45*i)+'px rgba(0,0,0,'+(0.6*i)+')'
-        ].join(',')
-      }
+    var b64 = window.FRAME_BASE64 || {};
+    var frameTextures = {
+      oak: b64.oak || 'frames/oak.png',
+      walnut: b64.walnut || 'frames/walnut.png',
+      ebony: b64.ebony || 'frames/ebony.png',
+      gold: b64.gold_baroque || 'frames/gold_baroque.png',
+      gold_slim: b64.gold_baroque || 'frames/gold_baroque.png',
+      silver: b64.silver || 'frames/silver.png',
+      cherry: b64.walnut || 'frames/walnut.png',
+      rustic: b64.oak || 'frames/oak.png',
+      ornate: b64.gold_baroque || 'frames/gold_baroque.png'
     };
 
-    var s = frames[STATE.frameStyle] || frames.oak;
-    el.style.border = fwPx + ' solid transparent';
-    el.style.borderImageSource = s.url;
-    el.style.borderImageSlice = s.slice;
-    el.style.boxShadow = s.shadow;
+    var texUrl = frameTextures[STATE.frameStyle] || frameTextures.oak;
+
+    el.style.border = fw + 'px solid transparent';
+    el.style.borderImageSource = 'url("' + texUrl + '")';
+    el.style.borderImageSlice = '512';
+    el.style.borderImageRepeat = 'stretch';
+    el.style.boxShadow = [
+      'inset 0 0 ' + (fw * 0.4) + 'px rgba(0,0,0,0.55)',
+      '0 ' + (15 * i) + 'px ' + (45 * i) + 'px rgba(0,0,0,' + (0.75 * i) + ')'
+    ].join(',');
   }
 
   function renderCanvasTexture() {
@@ -922,11 +1033,11 @@
     var el = document.getElementById('timer-indicator');
     if (STATE.timerInterval === 'static') { el.classList.remove('visible'); return; }
     el.classList.add('visible');
-    var mins = parseInt(STATE.timerInterval);
+    var secs = parseInt(STATE.timerInterval);
     var now = new Date();
-    now.setMinutes(now.getMinutes() + mins);
-    el.textContent = 'Prochain changement · ' +
-      String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    now.setSeconds(now.getSeconds() + secs);
+    var label = secs < 60 ? secs + 's' : (secs / 60) + ' min';
+    el.textContent = 'Prochain changement dans ' + label;
   }
 
   function rotateArt() {
@@ -945,7 +1056,8 @@
   function resetTimer() {
     clearInterval(window._artTimer);
     if (STATE.timerInterval !== 'static') {
-      window._artTimer = setInterval(rotateArt, parseInt(STATE.timerInterval) * 60 * 1000);
+      // timerInterval is now in SECONDS
+      window._artTimer = setInterval(rotateArt, parseInt(STATE.timerInterval) * 1000);
     }
   }
 
@@ -1046,8 +1158,8 @@
     var fl = {oak:'Chêne clair',walnut:'Noyer/ébène',gold:'Dorure baroque',aluminum:'Aluminium',white:'Blanc mat',black:'Noir satiné',matte:'Passe-partout',bevel:'Double biseau',loft:'Industriel',floating:'Flottant'};
     var fl2 = {oak:'Chêne Clair',walnut:'Noyer Foncé',ebony:'Ébène Noir',gold:'Dorure Baroque',gold_slim:'Filet Doré',silver:'Argent Brossé',cherry:'Cerisier',rustic:'Rustique',ornate:'Sculpté',floating:'Flottant'};
     document.getElementById('nav-frame-val').textContent = fl2[STATE.frameStyle]||'Chêne Clair';
-    var tl = {15:'15 min',30:'30 min',60:'1 heure',120:'2 heures','static':'Statique'};
-    document.getElementById('nav-timer-val').textContent = tl[STATE.timerInterval];
+    var tl = {10:'10 sec',30:'30 sec',60:'1 minute','static':'Manuel'};
+    document.getElementById('nav-timer-val').textContent = tl[STATE.timerInterval] || STATE.timerInterval+'s';
     document.getElementById('nav-ambient-val').textContent = STATE.brightness===100&&STATE.temperature===50?'Auto':STATE.brightness+'% · '+(STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre');
     document.getElementById('nav-google-val').textContent = STATE.googleConnected?'Connecté':'Non connecté';
     document.getElementById('shadow-val').textContent = STATE.shadowIntensity+'%';
@@ -1055,7 +1167,7 @@
     var tv = document.getElementById('temperature-val');
     tv.textContent = STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre';
     document.getElementById('canvas-toggle').classList.toggle('on', STATE.canvasTexture);
-    qa('[data-frame-size]').forEach(function(b){b.classList.toggle('selected',b.dataset.frameSize===(STATE.frameWidth===40?'thin':STATE.frameWidth===80?'medium':'thick'));});
+    qa('[data-frame-size]').forEach(function(b){b.classList.toggle('selected',b.dataset.frameSize===(STATE.frameWidth<=12?'thin':STATE.frameWidth<=24?'medium':'thick'));});
     qa('[data-timer]').forEach(function(b){b.classList.toggle('selected',String(b.dataset.timer)===String(STATE.timerInterval));});
     qa('[data-image-fit]').forEach(function(b){b.classList.toggle('selected',b.dataset.imageFit===STATE.imageFit);});
     document.getElementById('brightness-slider').value = STATE.brightness;
@@ -1109,7 +1221,7 @@
       renderFrame(); syncSidebarValues(); return;
     }
     if (t.closest('[data-frame-size]')) {
-      STATE.frameWidth = {thin:40,medium:80,thick:140}[t.closest('[data-frame-size]').dataset.frameSize];
+      STATE.frameWidth = {thin:10,medium:20,thick:36}[t.closest('[data-frame-size]').dataset.frameSize];
       renderFrame(); syncSidebarValues(); return;
     }
     if (t.closest('[data-timer]')) {
@@ -1155,19 +1267,309 @@
     renderFrame();
   });
 
-  // ==================== D-PAD NAVIGATION ====================
+  // ==================== D-PAD & BACK NAVIGATION ====================
+  var _lastBackPressTime = 0;
+
+  function isBackKey(e) {
+    var k = e.key;
+    var code = e.keyCode || e.which;
+    return k === 'Escape' || k === 'Backspace' || k === 'GoBack' || k === 'Back' || code === 4 || code === 27 || code === 8 || code === 10009;
+  }
+
+  function isMenuKey(e) {
+    var k = e.key;
+    var code = e.keyCode || e.which;
+    return k === 'Menu' || k === 'Settings' || code === 82 || code === 176 || code === 188 || code === 224;
+  }
+
+  function showExitToast() {
+    var toast = document.getElementById('exit-toast');
+    if (!toast) return;
+    toast.classList.add('visible');
+    clearTimeout(window._exitToastTimer);
+    window._exitToastTimer = setTimeout(function() {
+      toast.classList.remove('visible');
+    }, 2200);
+  }
+
   document.addEventListener('keydown', function(e) {
     var key = e.key;
+    var code = e.keyCode || e.which;
+
+    var isLeft = key === 'ArrowLeft' || key === 'Left' || code === 37 || code === 21;
+    var isRight = key === 'ArrowRight' || key === 'Right' || code === 39 || code === 22;
+    var isUp = key === 'ArrowUp' || key === 'Up' || code === 38 || code === 19;
+    var isDown = key === 'ArrowDown' || key === 'Down' || code === 40 || code === 20;
+    var isEnter = key === 'Enter' || key === 'Select' || key === ' ' || code === 13 || code === 32 || code === 23 || code === 66;
+    var isBack = isBackKey(e);
+    var isMenu = isMenuKey(e);
+
     var mode = STATE.dpMode;
 
-    // GALLERY mode
+    // --- DEDICATED MENU / SETTINGS BUTTON ---
+    if (isMenu) {
+      e.preventDefault();
+      if (STATE.sidebarOpen) { closeSidebar(); return; }
+      if (STATE.menuVisible) { hideMenu(); return; }
+      if (STATE.page === 'slideshow') showMenu();
+      else {
+        STATE.sidebarOpen = true;
+        STATE.dpMode = 'sidebar-nav';
+        STATE.dpIdx = 0;
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('open');
+        syncSidebarValues();
+        focusEl(0, getSidebarNavItems());
+      }
+      return;
+    }
+
+    // --- GLOBAL BACK BUTTON HANDLER ---
+    if (isBack) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (mode === 'auth') {
+        closeAuth();
+        return;
+      }
+      if (mode === 'sub') {
+        backToNav();
+        return;
+      }
+      if (mode === 'sidebar-nav' || STATE.sidebarOpen) {
+        closeSidebar();
+        return;
+      }
+      if (mode === 'slideshow-menu' || STATE.menuVisible) {
+        hideMenu();
+        return;
+      }
+      if (STATE.page === 'slideshow') {
+        quitSlideshow();
+        return;
+      }
+      if (STATE.page === 'gallery') {
+        var now = Date.now();
+        var curFocus = q('.dpad-focused');
+        var launchBtn = q('#btn-launch');
+
+        if (curFocus && curFocus !== launchBtn && curFocus.classList.contains('gb-item')) {
+          clearFocus();
+          if (launchBtn) {
+            launchBtn.classList.add('dpad-focused');
+            launchBtn.focus();
+            if (launchBtn.scrollIntoViewIfNeeded) launchBtn.scrollIntoViewIfNeeded(false);
+          }
+          _lastBackPressTime = now;
+          return;
+        }
+
+        if (now - _lastBackPressTime < 2200) {
+          if (window.navigator && window.navigator.app && window.navigator.app.exitApp) {
+            window.navigator.app.exitApp();
+          } else if (window.history && window.history.length > 1) {
+            window.history.back();
+          }
+        } else {
+          _lastBackPressTime = now;
+          showExitToast();
+        }
+        return;
+      }
+      return;
+    }
+
+    // --- SLIDESHOW ART MODE ---
+    if (STATE.page === 'slideshow' && !STATE.menuVisible && !STATE.sidebarOpen) {
+      if (isLeft || isRight) {
+        e.preventDefault();
+        var list = getActiveArtworks();
+        if (list.length === 0) return;
+        var dir = isRight ? 1 : -1;
+        STATE.currentArtIdx = (STATE.currentArtIdx + dir + list.length) % list.length;
+        renderArtwork(true);
+        renderTimerIndicator();
+        resetTimer();
+        updateCountBadge();
+        return;
+      }
+      if (isUp || isDown || isEnter) {
+        e.preventDefault();
+        showMenu();
+        return;
+      }
+      return;
+    }
+
+    // --- SLIDESHOW MENU MODE ---
+    if (mode === 'slideshow-menu') {
+      menuItems = getMenuItems();
+      if (isLeft || isRight) {
+        e.preventDefault();
+        var dir = isRight ? 1 : -1;
+        STATE.dpIdx = (STATE.dpIdx + dir + menuItems.length) % menuItems.length;
+        focusEl(STATE.dpIdx, menuItems);
+        return;
+      }
+      if (isDown) {
+        e.preventDefault();
+        hideMenu();
+        return;
+      }
+      if (isEnter) {
+        e.preventDefault();
+        var mi = menuItems[STATE.dpIdx];
+        if (mi) mi.click();
+        return;
+      }
+      return;
+    }
+
+    // --- SIDEBAR NAV MODE ---
+    if (mode === 'sidebar-nav') {
+      var sn = getSidebarNavItems();
+      if (isUp) { e.preventDefault(); STATE.dpIdx = Math.max(0, STATE.dpIdx - 1); focusEl(STATE.dpIdx, sn); return; }
+      if (isDown) { e.preventDefault(); STATE.dpIdx = Math.min(sn.length - 1, STATE.dpIdx + 1); focusEl(STATE.dpIdx, sn); return; }
+      if (isRight || isEnter) {
+        e.preventDefault();
+        var ni = sn[STATE.dpIdx];
+        if (!ni) return;
+        if (ni.dataset.sub === 'google') { openAuth(); return; }
+        if (ni.dataset.sub) { openSubScreen(ni.dataset.sub); return; }
+        return;
+      }
+      if (isLeft) { e.preventDefault(); closeSidebar(); return; }
+      return;
+    }
+
+    // --- SUB SCREEN MODE (SMART 2D SPATIAL NAVIGATION) ---
+    if (mode === 'sub') {
+      var subContainer = document.getElementById('sub-' + STATE.currentSub);
+      var subItems = getSubItems();
+      if (!subItems || subItems.length === 0) return;
+
+      if (STATE.dpIdx < 0 || STATE.dpIdx >= subItems.length) STATE.dpIdx = 0;
+      var curItem = subItems[STATE.dpIdx];
+
+      if (isEnter) {
+        e.preventDefault();
+        if (curItem) {
+          if (curItem.type === 'range') curItem.focus();
+          else {
+            curItem.click();
+            if (curItem.dataset.back !== undefined) backToNav();
+            syncSidebarValues();
+          }
+        }
+        return;
+      }
+
+      if (isLeft || isRight) {
+        e.preventDefault();
+        if (!curItem) return;
+
+        // Sliders: value adjust
+        if (curItem.type === 'range') {
+          var step = isRight ? 5 : -5;
+          curItem.value = Math.max(parseInt(curItem.min), Math.min(parseInt(curItem.max), parseInt(curItem.value) + step));
+          curItem.dispatchEvent(new Event('input', { bubbles: true }));
+          syncSidebarValues();
+          return;
+        }
+
+        // Frame options grid (2D horizontal navigation)
+        if (curItem.classList.contains('frame-option')) {
+          var fList = Array.prototype.slice.call(subContainer.querySelectorAll('.frame-option'));
+          var fIdx = fList.indexOf(curItem);
+          if (fIdx !== -1) {
+            var targetF = null;
+            if (isLeft && fIdx > 0) targetF = fList[fIdx - 1];
+            if (isRight && fIdx < fList.length - 1) targetF = fList[fIdx + 1];
+            if (targetF) {
+              STATE.dpIdx = subItems.indexOf(targetF);
+              focusEl(STATE.dpIdx, subItems);
+            }
+          }
+          return;
+        }
+
+        // Option chips (Discret / Moyen / Large or 10s / 30s / 1m)
+        if (curItem.classList.contains('option-chip')) {
+          var rowChips = Array.prototype.slice.call(curItem.parentElement.querySelectorAll('.option-chip'));
+          var cIdx = rowChips.indexOf(curItem);
+          if (cIdx !== -1) {
+            var targetC = null;
+            if (isLeft && cIdx > 0) targetC = rowChips[cIdx - 1];
+            if (isRight && cIdx < rowChips.length - 1) targetC = rowChips[cIdx + 1];
+            if (targetC) {
+              STATE.dpIdx = subItems.indexOf(targetC);
+              focusEl(STATE.dpIdx, subItems);
+            }
+          }
+          return;
+        }
+
+        // Toggle switches
+        if (curItem.classList.contains('toggle-switch')) {
+          curItem.click();
+          syncSidebarValues();
+          return;
+        }
+
+        // Back button
+        if (curItem.dataset.back !== undefined) {
+          if (isLeft) backToNav();
+          return;
+        }
+        return;
+      }
+
+      if (isUp || isDown) {
+        e.preventDefault();
+        if (!curItem) return;
+
+        // Frame grid (5 columns x 2 rows) 2D vertical navigation
+        if (curItem.classList.contains('frame-option')) {
+          var fList2 = Array.prototype.slice.call(subContainer.querySelectorAll('.frame-option'));
+          var fIdx2 = fList2.indexOf(curItem);
+          if (fIdx2 !== -1) {
+            var targetF2 = null;
+            if (isUp) {
+              if (fIdx2 >= 5) targetF2 = fList2[fIdx2 - 5];
+              else targetF2 = subContainer.querySelector('[data-back]') || subItems[0];
+            } else if (isDown) {
+              if (fIdx2 < 5 && fIdx2 + 5 < fList2.length) targetF2 = fList2[fIdx2 + 5];
+              else targetF2 = subContainer.querySelector('.option-chip') || subItems[STATE.dpIdx + 1];
+            }
+            if (targetF2) {
+              STATE.dpIdx = subItems.indexOf(targetF2);
+              focusEl(STATE.dpIdx, subItems);
+              return;
+            }
+          }
+        }
+
+        // Standard up/down step through sections
+        if (isUp) {
+          STATE.dpIdx = Math.max(0, STATE.dpIdx - 1);
+        } else if (isDown) {
+          STATE.dpIdx = Math.min(subItems.length - 1, STATE.dpIdx + 1);
+        }
+        focusEl(STATE.dpIdx, subItems);
+        return;
+      }
+
+      return;
+    }
+
+    // --- GALLERY BROWSER MODE ---
     if (STATE.page === 'gallery') {
       var headerButtons = [q('#btn-all'), q('#btn-none'), q('#btn-launch')].filter(Boolean);
       var chips = Array.prototype.slice.call(qa('.filter-chip'));
       var items = Array.prototype.slice.call(qa('.gb-item'));
       var cur = q('.dpad-focused');
 
-      // If nothing is focused, focus the launch button or first item
       if (!cur) {
         clearFocus();
         var target = q('#btn-launch') || items[0];
@@ -1180,20 +1582,16 @@
 
       if (cur.classList.contains('gb-item')) {
         var idx = items.indexOf(cur);
-        // Calculate columns dynamically
         var cols = 1;
         if (items.length > 1) {
           var firstTop = items[0].offsetTop;
           for (var i = 1; i < items.length; i++) {
-            if (items[i].offsetTop === firstTop) {
-              cols++;
-            } else {
-              break;
-            }
+            if (items[i].offsetTop === firstTop) cols++;
+            else break;
           }
         }
 
-        if (key === 'ArrowLeft') {
+        if (isLeft) {
           e.preventDefault();
           if (idx > 0) {
             clearFocus();
@@ -1203,7 +1601,7 @@
           }
           return;
         }
-        if (key === 'ArrowRight') {
+        if (isRight) {
           e.preventDefault();
           if (idx < items.length - 1) {
             clearFocus();
@@ -1213,7 +1611,7 @@
           }
           return;
         }
-        if (key === 'ArrowUp') {
+        if (isUp) {
           e.preventDefault();
           if (idx - cols >= 0) {
             clearFocus();
@@ -1221,7 +1619,6 @@
             items[idx - cols].focus();
             if (items[idx - cols].scrollIntoViewIfNeeded) items[idx - cols].scrollIntoViewIfNeeded(false);
           } else {
-            // Move up to filter chips
             if (chips.length > 0) {
               clearFocus();
               var chipTarget = chips[Math.min(chips.length - 1, Math.floor((idx / cols) * chips.length))];
@@ -1229,7 +1626,6 @@
               chipTarget.focus();
               if (chipTarget.scrollIntoViewIfNeeded) chipTarget.scrollIntoViewIfNeeded(false);
             } else {
-              // No chips, go to header
               clearFocus();
               var btnTarget = q('#btn-launch') || headerButtons[0];
               if (btnTarget) {
@@ -1240,7 +1636,7 @@
           }
           return;
         }
-        if (key === 'ArrowDown') {
+        if (isDown) {
           e.preventDefault();
           if (idx + cols < items.length) {
             clearFocus();
@@ -1250,7 +1646,7 @@
           }
           return;
         }
-        if (key === 'Enter' || key === ' ') {
+        if (isEnter) {
           e.preventDefault();
           cur.click();
           return;
@@ -1259,7 +1655,7 @@
 
       if (cur.classList.contains('filter-chip')) {
         var idx = chips.indexOf(cur);
-        if (key === 'ArrowLeft') {
+        if (isLeft) {
           e.preventDefault();
           if (idx > 0) {
             clearFocus();
@@ -1269,7 +1665,7 @@
           }
           return;
         }
-        if (key === 'ArrowRight') {
+        if (isRight) {
           e.preventDefault();
           if (idx < chips.length - 1) {
             clearFocus();
@@ -1279,7 +1675,7 @@
           }
           return;
         }
-        if (key === 'ArrowUp') {
+        if (isUp) {
           e.preventDefault();
           clearFocus();
           var btnTarget = q('#btn-launch') || headerButtons[0];
@@ -1289,7 +1685,7 @@
           }
           return;
         }
-        if (key === 'ArrowDown') {
+        if (isDown) {
           e.preventDefault();
           if (items.length > 0) {
             clearFocus();
@@ -1299,7 +1695,7 @@
           }
           return;
         }
-        if (key === 'Enter' || key === ' ') {
+        if (isEnter) {
           e.preventDefault();
           cur.click();
           return;
@@ -1308,7 +1704,7 @@
 
       if (headerButtons.indexOf(cur) !== -1) {
         var idx = headerButtons.indexOf(cur);
-        if (key === 'ArrowLeft') {
+        if (isLeft) {
           e.preventDefault();
           if (idx > 0) {
             clearFocus();
@@ -1317,7 +1713,7 @@
           }
           return;
         }
-        if (key === 'ArrowRight') {
+        if (isRight) {
           e.preventDefault();
           if (idx < headerButtons.length - 1) {
             clearFocus();
@@ -1326,7 +1722,7 @@
           }
           return;
         }
-        if (key === 'ArrowDown') {
+        if (isDown) {
           e.preventDefault();
           if (chips.length > 0) {
             clearFocus();
@@ -1341,71 +1737,12 @@
           }
           return;
         }
-        if (key === 'Enter' || key === ' ') {
+        if (isEnter) {
           e.preventDefault();
           cur.click();
           return;
         }
       }
-    }
-
-    // AUTH mode
-    if (mode === 'auth') {
-      var authItems = Array.prototype.slice.call(qa('#auth-overlay .auth-btn, #auth-overlay .auth-code-display'));
-      if(key==='ArrowUp'||key==='ArrowLeft'){e.preventDefault();STATE.dpIdx=Math.max(0,STATE.dpIdx-1);focusEl(STATE.dpIdx,authItems);return;}
-      if(key==='ArrowDown'||key==='ArrowRight'){e.preventDefault();STATE.dpIdx=Math.min(authItems.length-1,STATE.dpIdx+1);focusEl(STATE.dpIdx,authItems);return;}
-      if(key==='Enter'||key===' '){e.preventDefault();if(authItems[STATE.dpIdx])authItems[STATE.dpIdx].click();return;}
-      if(key==='Escape'||key==='Backspace'){e.preventDefault();closeAuth();return;}
-      return;
-    }
-
-    // SUB mode
-    if (mode === 'sub') {
-      var subItems = getSubItems();
-      if(key==='ArrowUp'){e.preventDefault();STATE.dpIdx=Math.max(0,STATE.dpIdx-1);focusEl(STATE.dpIdx,subItems);return;}
-      if(key==='ArrowDown'){e.preventDefault();STATE.dpIdx=Math.min(subItems.length-1,STATE.dpIdx+1);focusEl(STATE.dpIdx,subItems);return;}
-      if(key==='Enter'||key===' '){e.preventDefault();var fel=subItems[STATE.dpIdx];if(!fel)return;if(fel.type==='range')fel.focus();else{fel.click();if(fel.dataset.back!==undefined)backToNav();syncSidebarValues();}return;}
-      if(key==='ArrowLeft'||key==='ArrowRight'){e.preventDefault();var fel2=subItems[STATE.dpIdx];if(fel2&&fel2.type==='range'){var step=key==='ArrowRight'?5:-5;fel2.value=Math.max(parseInt(fel2.min),Math.min(parseInt(fel2.max),parseInt(fel2.value)+step));fel2.dispatchEvent(new Event('input',{bubbles:true}));syncSidebarValues();}return;}
-      if(key==='Escape'||key==='Backspace'){e.preventDefault();backToNav();return;}
-      return;
-    }
-
-    // SIDEBAR NAV mode
-    if (mode === 'sidebar-nav') {
-      var sn = getSidebarNavItems();
-      if(key==='ArrowUp'){e.preventDefault();STATE.dpIdx=Math.max(0,STATE.dpIdx-1);focusEl(STATE.dpIdx,sn);return;}
-      if(key==='ArrowDown'){e.preventDefault();STATE.dpIdx=Math.min(sn.length-1,STATE.dpIdx+1);focusEl(STATE.dpIdx,sn);return;}
-      if(key==='ArrowRight'||key==='Enter'||key===' '){e.preventDefault();var ni=sn[STATE.dpIdx];if(!ni)return;if(ni.dataset.sub==='google'){openAuth();return;}if(ni.dataset.sub){openSubScreen(ni.dataset.sub);return;}return;}
-      if(key==='ArrowLeft'||key==='Escape'||key==='Backspace'){e.preventDefault();closeSidebar();return;}
-      return;
-    }
-
-    // SLIDESHOW MENU mode
-    if (mode === 'slideshow-menu') {
-      menuItems = getMenuItems();
-      if(key==='ArrowLeft'||key==='ArrowRight'){e.preventDefault();var dir=key==='ArrowRight'?1:-1;STATE.dpIdx=(STATE.dpIdx+dir+menuItems.length)%menuItems.length;focusEl(STATE.dpIdx,menuItems);return;}
-      if(key==='ArrowDown'||key==='Escape'||key==='Backspace'){e.preventDefault();hideMenu();return;}
-      if(key==='Enter'||key===' '){e.preventDefault();var mi=menuItems[STATE.dpIdx];if(mi)mi.click();return;}
-      return;
-    }
-
-    // SLIDESHOW ART mode (default)
-    if (mode === 'slideshow-art') {
-      if(key==='ArrowUp'||key==='Enter'||key===' '){e.preventDefault();showMenu();return;}
-      if(key==='ArrowLeft'||key==='ArrowRight'){
-        e.preventDefault();
-        var list = getActiveArtworks();
-        if (list.length === 0) return;
-        var dir2 = key === 'ArrowRight' ? 1 : -1;
-        STATE.currentArtIdx = (STATE.currentArtIdx + dir2 + list.length) % list.length;
-        renderArtwork(true);
-        renderTimerIndicator();
-        resetTimer();
-        updateCountBadge();
-        return;
-      }
-      if (key === 'Escape') { e.preventDefault(); quitSlideshow(); return; }
-      return;
     }
   });
 
@@ -1464,7 +1801,7 @@
   // Lance automatiquement le diaporama si l'utilisateur n'appuie sur aucune
   // touche pendant AUTO_LAUNCH_DELAY secondes (depuis la galerie uniquement).
   // Ne coupe PAS l'audio en cours (Spotify, etc.) — l'app est purement visuelle.
-  var AUTO_LAUNCH_DELAY = 5 * 60; // 5 minutes en secondes
+  var AUTO_LAUNCH_DELAY = 60; // 1 minute en secondes
   var AUTO_LAUNCH_COUNTDOWN = 10;  // Secondes de compte à rebours visible
   var _autoLaunchTimer = null;
   var _countdownTimer = null;

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ArtFrame</string>
+    <string name="title_activity_main">ArtFrame</string>
+    <string name="package_name">com.artframe.tv</string>
+    <string name="custom_url_scheme">com.artframe.tv</string>
+</resources>

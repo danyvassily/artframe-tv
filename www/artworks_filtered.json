@@ -1,0 +1,2084 @@
+{
+  "artworks": [
+    {
+      "title": "Left Hand of Moses",
+      "artist": "Michelangelo Buonarroti",
+      "year": "1725/30",
+      "image_url": "https://www.artic.edu/iiif/2/f838d528-6eb6-a158-9692-7fae1dfc2a2c/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Drunkenness of Noah",
+      "artist": "Michelangelo Buonarroti",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/0b31dfb0-34e8-4985-a91f-cf5abfa2fbbd/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Conversion of Saint Paul",
+      "artist": "Raphael",
+      "year": "18th century",
+      "image_url": "https://www.artic.edu/iiif/2/dc346a0d-a4b2-33c9-7264-6d57bda97dc7/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Last Supper",
+      "artist": "Raphael",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/5fe77541-a679-d338-c323-c7449d202d84/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Submersion of Pharaoh's Army in the Red Sea",
+      "artist": "Titian",
+      "year": "c. 1515, printed 1549",
+      "image_url": "https://www.artic.edu/iiif/2/f08c7b99-9439-582e-ceb1-cfa9d1c1df04/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Kitchen Scene",
+      "artist": "Diego Velázquez",
+      "year": "1618–20",
+      "image_url": "https://www.artic.edu/iiif/2/68452725-eba5-06e3-46d2-50c678a5d672/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "Alcibiades and Two Philosophers",
+      "artist": "Raphael",
+      "year": "18th century",
+      "image_url": "https://www.artic.edu/iiif/2/448fbeea-8e85-cfb4-208b-e869d99cc927/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "The Wedding of Peleus and Thetis",
+      "artist": "Peter Paul Rubens",
+      "year": "1636",
+      "image_url": "https://www.artic.edu/iiif/2/5ee19981-a8f5-1306-3ec5-eb79c14ac1a6/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "The Capture of Samson",
+      "artist": "Peter Paul Rubens",
+      "year": "1609–10",
+      "image_url": "https://www.artic.edu/iiif/2/a8fd8a92-d5fd-bb98-5d70-f970ab1788b8/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "St. Albert of Louvain",
+      "artist": "Peter Paul Rubens",
+      "year": "1620",
+      "image_url": "https://www.artic.edu/iiif/2/58f58363-f567-0e49-7956-d49400721b1c/full/1686,/0/default.jpg",
+      "gallery": "baroque",
+      "source": "artic"
+    },
+    {
+      "title": "Friar Pedro Shoots El Maragato as His Horse Runs Off",
+      "artist": "Francisco José de Goya y Lucientes",
+      "year": "c. 1806",
+      "image_url": "https://www.artic.edu/iiif/2/622998f1-73f9-4c96-08cf-60bda7c9ce4b/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "El Maragato Threatens Friar Pedro de Zaldivia with His Gun",
+      "artist": "Francisco José de Goya y Lucientes",
+      "year": "c. 1806",
+      "image_url": "https://www.artic.edu/iiif/2/0de694b1-0faf-f35f-440a-4de463e068b5/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "The Combat of the Giaour and Hassan",
+      "artist": "Eugène Delacroix",
+      "year": "1826",
+      "image_url": "https://www.artic.edu/iiif/2/ae0793ac-8ace-6c4a-84d4-a33162ae6832/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Fête champêtre (Pastoral Gathering)",
+      "artist": "Jean Antoine Watteau",
+      "year": "1718–21",
+      "image_url": "https://www.artic.edu/iiif/2/f6eddea6-5789-b6f9-315c-50a08a7c4adc/full/1686,/0/default.jpg",
+      "gallery": "rococo",
+      "source": "artic"
+    },
+    {
+      "title": "Lion Hunt",
+      "artist": "Eugène Delacroix",
+      "year": "1860–61",
+      "image_url": "https://www.artic.edu/iiif/2/1299b0e5-6a3d-8039-087b-35bf03caea1a/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Stoke-by-Nayland",
+      "artist": "John Constable",
+      "year": "1836",
+      "image_url": "https://www.artic.edu/iiif/2/400ce9e8-2f67-44e2-dd68-e6c98880d27f/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Valley of Aosta: Snowstorm, Avalanche, and Thunderstorm",
+      "artist": "Joseph Mallord William Turner",
+      "year": "1836–37",
+      "image_url": "https://www.artic.edu/iiif/2/564e2e3f-eb93-88a7-d265-8fea006facff/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape (The Lock)",
+      "artist": "John Constable",
+      "year": "c. 1820–25",
+      "image_url": "https://www.artic.edu/iiif/2/ff3b5c8a-5b14-5c35-8775-3d021e92a381/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Fishing Boats with Hucksters Bargaining for Fish",
+      "artist": "Joseph Mallord William Turner",
+      "year": "1837–38",
+      "image_url": "https://www.artic.edu/iiif/2/8641479e-c93e-f1a8-9925-19be061706da/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Typus Cosmographicus Universalis, Sim. Grynaeus, Novus Orbis, Basileae 1532",
+      "artist": "Hans Holbein, the younger",
+      "year": "1532, reprinted 1889",
+      "image_url": "https://www.artic.edu/iiif/2/ef9a5c4f-0424-8db6-cb12-0536022e003f/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape with Cottages",
+      "artist": "John Constable",
+      "year": "1809–10",
+      "image_url": "https://www.artic.edu/iiif/2/a414da01-a3bf-85e0-53a6-9dd1918bf4c2/full/1686,/0/default.jpg",
+      "gallery": "romanticism",
+      "source": "artic"
+    },
+    {
+      "title": "Arrival of the Normandy Train, Gare Saint-Lazare",
+      "artist": "Claude Monet",
+      "year": "1877",
+      "image_url": "https://www.artic.edu/iiif/2/0f1cc0e0-e42e-be16-3f71-2022da38cb93/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Stacks of Wheat (End of Summer)",
+      "artist": "Claude Monet",
+      "year": "1890–91",
+      "image_url": "https://www.artic.edu/iiif/2/a38e2828-ec6f-ece1-a30f-70243449197b/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Races at Longchamp",
+      "artist": "Édouard Manet",
+      "year": "1866",
+      "image_url": "https://www.artic.edu/iiif/2/e9ce5aca-4c34-c8dd-b8a1-91b3e3197211/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Cliff Walk at Pourville",
+      "artist": "Claude Monet",
+      "year": "1882",
+      "image_url": "https://www.artic.edu/iiif/2/b0effb1c-ff23-bbaa-f809-9fd94e31c1a0/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "On the Bank of the Seine, Bennecourt",
+      "artist": "Claude Monet",
+      "year": "1868",
+      "image_url": "https://www.artic.edu/iiif/2/66f95ea3-a11a-1cf4-6599-d0a49bb25744/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Bordighera",
+      "artist": "Claude Monet",
+      "year": "1884",
+      "image_url": "https://www.artic.edu/iiif/2/4d1b3ad0-14db-0d21-ad9f-17abb8bdfbb5/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Fish (Still Life)",
+      "artist": "Édouard Manet",
+      "year": "1864",
+      "image_url": "https://www.artic.edu/iiif/2/0cbe27e8-2fec-3445-bc48-ce40a8f2dc25/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Stacks of Wheat (End of Day, Autumn)",
+      "artist": "Claude Monet",
+      "year": "1890–91",
+      "image_url": "https://www.artic.edu/iiif/2/4c364c64-2108-4e19-5fc5-1ab26ba924a7/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Beach at Sainte-Adresse",
+      "artist": "Claude Monet",
+      "year": "1867",
+      "image_url": "https://www.artic.edu/iiif/2/95be2572-b53d-8e7b-abc9-10eb48d4fa5d/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Bullfight",
+      "artist": "Édouard Manet",
+      "year": "1865–66",
+      "image_url": "https://www.artic.edu/iiif/2/38636be8-f1bc-c451-ae65-c441919bd0c3/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Near the Lake",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1879–80",
+      "image_url": "https://www.artic.edu/iiif/2/26e1c560-acca-3148-46dc-c144ac22bd3e/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Seascape",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1879",
+      "image_url": "https://www.artic.edu/iiif/2/caf4fa39-e2e8-344a-542c-2d9a03ec9d4b/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Lunch at the Restaurant Fournaise (The Rowers' Lunch)",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1875",
+      "image_url": "https://www.artic.edu/iiif/2/1a1b74fe-ff2a-8991-0581-5d420f0b840e/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Chrysanthemums",
+      "artist": "Pierre-Auguste Renoir",
+      "year": "1881–82",
+      "image_url": "https://www.artic.edu/iiif/2/479aff61-784e-e833-fd82-50ba8c819514/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Henri Degas and His Niece Lucie Degas (The Artist's Uncle and Cousin)",
+      "artist": "Hilaire Germain Edgar Degas",
+      "year": "1875–76",
+      "image_url": "https://www.artic.edu/iiif/2/ba4d7ead-bd10-e02d-6f5f-613050d7062e/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Young Spartan Girls Challenging Boys",
+      "artist": "Hilaire Germain Edgar Degas",
+      "year": "c. 1860",
+      "image_url": "https://www.artic.edu/iiif/2/ca2932b4-6c0c-5482-2ae5-8b74926d7b73/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Auvers, Panoramic View",
+      "artist": "Paul Cezanne",
+      "year": "1873–75",
+      "image_url": "https://www.artic.edu/iiif/2/90bc0cec-0d4e-9af5-3912-52a082a428e5/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Bay of Marseille, Seen from L'Estaque",
+      "artist": "Paul Cezanne",
+      "year": "c. 1885",
+      "image_url": "https://www.artic.edu/iiif/2/d4ca6321-8656-3d3f-a362-2ee297b2b813/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Basket of Apples",
+      "artist": "Paul Cezanne",
+      "year": "c. 1893",
+      "image_url": "https://www.artic.edu/iiif/2/52ac8996-3460-cf71-cb42-5c4d0aa29b74/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Plate of Apples",
+      "artist": "Paul Cezanne",
+      "year": "c. 1877",
+      "image_url": "https://www.artic.edu/iiif/2/2e6d6a89-61bd-5098-59d3-b41d14bf7973/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Bathers",
+      "artist": "Paul Cezanne",
+      "year": "1899-1904",
+      "image_url": "https://www.artic.edu/iiif/2/2e166f7c-a959-d686-eeb0-a63a52a4d368/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Mahana no atua (Day of the God)",
+      "artist": "Paul Gauguin",
+      "year": "1894",
+      "image_url": "https://www.artic.edu/iiif/2/a4bef587-48a4-d186-813d-f297441b1ab3/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Bathers",
+      "artist": "Paul Cezanne",
+      "year": "1890–94",
+      "image_url": "https://www.artic.edu/iiif/2/5ec2faea-0636-15d9-9c95-2fd89f85196c/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Arlésiennes (Mistral)",
+      "artist": "Paul Gauguin",
+      "year": "1888",
+      "image_url": "https://www.artic.edu/iiif/2/ae6ac285-6887-dd76-4570-d379c786dfae/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "No te aha oe riri (Why Are You Angry?)",
+      "artist": "Paul Gauguin",
+      "year": "1896",
+      "image_url": "https://www.artic.edu/iiif/2/2adb35ce-8e94-cda5-210e-b04d488bbdc8/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Te raau rahi (The Big Tree)",
+      "artist": "Paul Gauguin",
+      "year": "1891",
+      "image_url": "https://www.artic.edu/iiif/2/916405d1-1407-d90e-1be8-f8c77f26f546/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Bedroom",
+      "artist": "Vincent van Gogh",
+      "year": "1889",
+      "image_url": "https://www.artic.edu/iiif/2/6644829f-f292-c5c4-a73c-0356a6fdbf0d/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Still Life: Wood Tankard and Metal Pitcher",
+      "artist": "Paul Gauguin",
+      "year": "1880",
+      "image_url": "https://www.artic.edu/iiif/2/9964135a-b3df-8af6-5af9-9e6eac7a041d/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Poet's Garden",
+      "artist": "Vincent van Gogh",
+      "year": "1888",
+      "image_url": "https://www.artic.edu/iiif/2/d4bc1723-7cbc-d36d-a9cb-f84553f2a6f6/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Te burao (The Hibiscus Tree)",
+      "artist": "Paul Gauguin",
+      "year": "1892",
+      "image_url": "https://www.artic.edu/iiif/2/604fe021-6008-f666-bce8-456b2fdc9bd4/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Drinkers",
+      "artist": "Vincent van Gogh",
+      "year": "1890",
+      "image_url": "https://www.artic.edu/iiif/2/d0ff5b36-bb38-b156-6042-5c8545352c2f/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Fishing in Spring, the Pont de Clichy (Asnières)",
+      "artist": "Vincent van Gogh",
+      "year": "1887",
+      "image_url": "https://www.artic.edu/iiif/2/5512cee9-6d00-d01b-b0be-ac7843cc8f76/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman Bathing Her Feet in a Brook",
+      "artist": "Camille Pissarro",
+      "year": "1895",
+      "image_url": "https://www.artic.edu/iiif/2/5ccaee46-a1a0-5035-821c-0547aa35c070/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Grapes, Lemons, Pears, and Apples",
+      "artist": "Vincent van Gogh",
+      "year": "1887",
+      "image_url": "https://www.artic.edu/iiif/2/f11bd233-6cc3-4221-59eb-f7363be4119e/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Final Study for \"Bathers at Asnières\"",
+      "artist": "Georges Seurat",
+      "year": "1883",
+      "image_url": "https://www.artic.edu/iiif/2/1db67905-d421-95bf-1e91-4b60dd776886/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "A Sunday on La Grande Jatte — 1884",
+      "artist": "Georges Seurat",
+      "year": "1884–86, border added 1888–89",
+      "image_url": "https://www.artic.edu/iiif/2/2d484387-2509-5e8e-2c43-22f9981972eb/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "A Peasant Woman Digging in Front of Her Cottage",
+      "artist": "Vincent van Gogh",
+      "year": "c. 1885",
+      "image_url": "https://www.artic.edu/iiif/2/1d3a275d-45dd-6026-b6ed-d7d8df417a3d/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Oil Sketch for \"A Sunday on La Grande Jatte — 1884\"",
+      "artist": "Georges Seurat",
+      "year": "1884",
+      "image_url": "https://www.artic.edu/iiif/2/081be15c-8812-c174-eeb2-cf318a2e67cf/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Place du Havre, Paris",
+      "artist": "Camille Pissarro",
+      "year": "1893",
+      "image_url": "https://www.artic.edu/iiif/2/0ff20364-c795-c2ca-c1e8-e5a848f09554/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Crystal Palace",
+      "artist": "Camille Pissarro",
+      "year": "1871",
+      "image_url": "https://www.artic.edu/iiif/2/4eb368b5-3b66-ae2c-bd4a-2643015e05fc/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Rabbit Warren at Pontoise, Snow",
+      "artist": "Camille Pissarro",
+      "year": "1879",
+      "image_url": "https://www.artic.edu/iiif/2/053f9be8-3617-c4ef-36cd-1deb5e13b288/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Haymaking at Éragny",
+      "artist": "Camille Pissarro",
+      "year": "1892",
+      "image_url": "https://www.artic.edu/iiif/2/b84a9755-ca8d-8bd5-5a59-e910b20e3ba5/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Banks of the Marne in Winter",
+      "artist": "Camille Pissarro",
+      "year": "1866",
+      "image_url": "https://www.artic.edu/iiif/2/3d950ecc-73f4-c28a-f216-0940b23fa5e8/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Snow at Louveciennes",
+      "artist": "Camille Pissarro",
+      "year": "c. 1870",
+      "image_url": "https://www.artic.edu/iiif/2/d4e43d76-594b-ce65-c1a3-45c865624f70/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Seine at Port-Marly, Piles of Sand",
+      "artist": "Alfred Sisley",
+      "year": "1875",
+      "image_url": "https://www.artic.edu/iiif/2/c4425cb6-d8b5-6390-603d-7f802406d05d/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Street in Moret",
+      "artist": "Alfred Sisley",
+      "year": "c. 1890",
+      "image_url": "https://www.artic.edu/iiif/2/c233d88b-fe56-6b9e-d5c2-47b9a7386756/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "A Turn in the Road",
+      "artist": "Alfred Sisley",
+      "year": "1873",
+      "image_url": "https://www.artic.edu/iiif/2/0f076222-52b2-9bb4-4409-72fdf485d895/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "The Loire",
+      "artist": "Alfred Sisley",
+      "year": "1896",
+      "image_url": "https://www.artic.edu/iiif/2/bcc9c3a7-f5b0-41af-210a-bd17797d77d9/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape along the Seine with the Institut de France and the Pont des Arts",
+      "artist": "Alfred Sisley",
+      "year": "c. 1875",
+      "image_url": "https://www.artic.edu/iiif/2/2bcffdac-951e-569f-8f05-f4c8e4228302/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Watering Place at Marly",
+      "artist": "Alfred Sisley",
+      "year": "1875",
+      "image_url": "https://www.artic.edu/iiif/2/ed7aa098-e5c9-04dd-b09c-3416d1c56854/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman at Her Toilette",
+      "artist": "Berthe Morisot",
+      "year": "1875–80",
+      "image_url": "https://www.artic.edu/iiif/2/78c80988-6524-cec7-c661-a4c0a706d06f/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Forêt de Compiègne",
+      "artist": "Berthe Morisot",
+      "year": "1885",
+      "image_url": "https://www.artic.edu/iiif/2/bfc9b17a-cc18-7bd3-4d78-e925bb1a8b27/full/1686,/0/default.jpg",
+      "gallery": "impressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Reclining Girl",
+      "artist": "Gustav Klimt",
+      "year": "1912/1914",
+      "image_url": "https://www.artic.edu/iiif/2/86d41a4e-fc40-c597-3ac9-79053cca0b87/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Bathers by a River",
+      "artist": "Henri Matisse",
+      "year": "1909–10, 1913, and 1916–17",
+      "image_url": "https://www.artic.edu/iiif/2/419ddce3-c90b-3d0c-43b3-73683a87bf98/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Woman before an Aquarium",
+      "artist": "Henri Matisse",
+      "year": "1921–23",
+      "image_url": "https://www.artic.edu/iiif/2/d0e36029-27fc-bf4e-357a-55cfbaf7bdfd/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Apples",
+      "artist": "Henri Matisse",
+      "year": "1916",
+      "image_url": "https://www.artic.edu/iiif/2/b2bc0fc2-8d17-1fcd-8cae-8626421c11ef/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Lemons on a Pewter Plate",
+      "artist": "Henri Matisse",
+      "year": "1926",
+      "image_url": "https://www.artic.edu/iiif/2/79f1c666-1e19-af39-f7e0-f22989835eb2/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Laurette with a Cup of Coffee",
+      "artist": "Henri Matisse",
+      "year": "1916–17",
+      "image_url": "https://www.artic.edu/iiif/2/72d28816-c42f-af88-63fc-d12426db240e/full/1686,/0/default.jpg",
+      "gallery": "fauvism",
+      "source": "artic"
+    },
+    {
+      "title": "Nude under a Pine Tree",
+      "artist": "Pablo Picasso",
+      "year": "January 20, 1959",
+      "image_url": "https://www.artic.edu/iiif/2/b7b7ecd0-5a50-b89a-c72a-d435a1957c73/full/1686,/0/default.jpg",
+      "gallery": "cubism",
+      "source": "artic"
+    },
+    {
+      "title": "The Hare Hunters",
+      "artist": "Pieter Bruegel, the elder",
+      "year": "1566",
+      "image_url": "https://www.artic.edu/iiif/2/329b85e4-2865-1281-feeb-5c0ab47e500e/full/1686,/0/default.jpg",
+      "gallery": "renaissance",
+      "source": "artic"
+    },
+    {
+      "title": "Nighthawks",
+      "artist": "Edward Hopper",
+      "year": "1942",
+      "image_url": "https://www.artic.edu/iiif/2/831a05de-d3f6-f4fa-a460-23008dd58dda/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Equestrienne (At the Cirque Fernando)",
+      "artist": "Henri de Toulouse-Lautrec",
+      "year": "1887–88",
+      "image_url": "https://www.artic.edu/iiif/2/65db9e21-83c3-1cc6-7240-1e1996d87f52/full/1686,/0/default.jpg",
+      "gallery": "postimpressionism",
+      "source": "artic"
+    },
+    {
+      "title": "Earthly Paradise",
+      "artist": "Pierre Bonnard",
+      "year": "1916–20",
+      "image_url": "https://www.artic.edu/iiif/2/8b4abeed-c22b-1477-1e76-b303ac1415d1/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Flowers: Poppies and Daisies",
+      "artist": "Odilon Redon",
+      "year": "c. 1867",
+      "image_url": "https://www.artic.edu/iiif/2/d424c734-f5c1-5f89-3bb8-d83e4e0287e3/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape: Window Overlooking the Woods",
+      "artist": "Édouard Jean Vuillard",
+      "year": "1899",
+      "image_url": "https://www.artic.edu/iiif/2/a1dc6109-6e0c-7801-ebe8-8c95fec2c4e4/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Child Playing: Annette Roussel in Front of a Wooden Chair",
+      "artist": "Édouard Jean Vuillard",
+      "year": "c. 1900",
+      "image_url": "https://www.artic.edu/iiif/2/ba63170f-ebfb-d39c-82b5-64c9b2b2643b/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Foliage—Oak Tree and Fruit Seller",
+      "artist": "Édouard Jean Vuillard",
+      "year": "1918",
+      "image_url": "https://www.artic.edu/iiif/2/e170725f-cc12-cb0f-841e-8b1ea918933e/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Dressing Room, Madame Hessel Reading at Amfreville",
+      "artist": "Édouard Jean Vuillard",
+      "year": "1906",
+      "image_url": "https://www.artic.edu/iiif/2/c0230fcf-364c-a11e-85e7-f9ed106bd4cc/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Vuillard's Room at the Château des Clayes",
+      "artist": "Édouard Jean Vuillard",
+      "year": "c. 1932",
+      "image_url": "https://www.artic.edu/iiif/2/d6d442e8-4c4c-75d1-4e1a-06e536fabd4d/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Venetian Glass Workers",
+      "artist": "John Singer Sargent",
+      "year": "1880–82",
+      "image_url": "https://www.artic.edu/iiif/2/8cdc812d-5db0-63a1-8579-eb64fc6884ca/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Thistles",
+      "artist": "John Singer Sargent",
+      "year": "1883–89",
+      "image_url": "https://www.artic.edu/iiif/2/79b94ddd-e208-1993-01ab-98f75174fe88/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Nocturne: Blue and Gold—Southampton Water",
+      "artist": "James McNeill Whistler",
+      "year": "1872",
+      "image_url": "https://www.artic.edu/iiif/2/50034c7f-ce51-00f1-430e-a6f7efc233fc/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Coast Scene, Bathers",
+      "artist": "James McNeill Whistler",
+      "year": "1884–85",
+      "image_url": "https://www.artic.edu/iiif/2/5888c23a-635f-396a-117b-2223032c0201/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "Grey and Silver: Old Battersea Reach",
+      "artist": "James McNeill Whistler",
+      "year": "1863",
+      "image_url": "https://www.artic.edu/iiif/2/f0b3ff64-d68e-3fd2-ffc9-5470eb9fea6e/full/1686,/0/default.jpg",
+      "gallery": "modern",
+      "source": "artic"
+    },
+    {
+      "title": "An Alpine Scene",
+      "artist": "Gustave Courbet",
+      "year": "1874",
+      "image_url": "https://www.artic.edu/iiif/2/54b7fd5e-3467-f777-45e7-0719400ecfc0/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Keeper of the Flock",
+      "artist": "Jean François Millet",
+      "year": "1871–74",
+      "image_url": "https://www.artic.edu/iiif/2/0ace29f2-7bc1-714a-c364-12b57bcf8a93/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Cliffs on the Sea Coast: Small Beach, Sunrise (Falaise au bord de la mer, vu Petite Plage, soleil levant)",
+      "artist": "Gustave Courbet",
+      "year": "1865",
+      "image_url": "https://www.artic.edu/iiif/2/29d3c6bc-7b53-d13f-a625-0490141c6f10/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Rock of Hautepierre",
+      "artist": "Gustave Courbet",
+      "year": "c. 1869",
+      "image_url": "https://www.artic.edu/iiif/2/e0f47937-a1ee-76b4-6505-35a33119a634/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Valley of Les Puits-Noir",
+      "artist": "Gustave Courbet",
+      "year": "1868",
+      "image_url": "https://www.artic.edu/iiif/2/2a2163db-9351-018a-0d65-47be9c84dce8/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Rêverie (Portrait of Gabrielle Borreau)",
+      "artist": "Gustave Courbet",
+      "year": "1862",
+      "image_url": "https://www.artic.edu/iiif/2/40d69445-feb4-d6d5-bcad-bb142856f0a6/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Peasants Bringing Home a Calf Born in the Fields",
+      "artist": "Jean François Millet",
+      "year": "1864",
+      "image_url": "https://www.artic.edu/iiif/2/7b0ea6ca-9424-050e-7e0e-3b67d2289480/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The Brook of Les Puits-Noir",
+      "artist": "Gustave Courbet",
+      "year": "c. 1855",
+      "image_url": "https://www.artic.edu/iiif/2/6575c354-8a4f-60d3-ad6f-06fa8d7f9ded/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "In the Auvergne",
+      "artist": "Jean François Millet",
+      "year": "c. 1866–69",
+      "image_url": "https://www.artic.edu/iiif/2/7a313db7-2369-1c7b-b4f7-a1d29218f778/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1865/70",
+      "image_url": "https://www.artic.edu/iiif/2/1501b057-0441-f1fa-e949-298b06ec6270/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Arleux-Palluel, The Bridge of Trysts",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1871–72",
+      "image_url": "https://www.artic.edu/iiif/2/2661329a-3c67-6216-82eb-90c755bb42b8/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Souvenir of the Environs of Lake Nemi",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1865",
+      "image_url": "https://www.artic.edu/iiif/2/25cae01d-82c7-7060-0070-643727437126/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Bathing Nymphs and Child",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1855–60",
+      "image_url": "https://www.artic.edu/iiif/2/4f5ea323-3f98-2487-26d3-f55ee1274de5/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "The White Tablecloth",
+      "artist": "Jean Siméon Chardin",
+      "year": "c. 1731–32",
+      "image_url": "https://www.artic.edu/iiif/2/7085f5ee-b5da-bd9f-e8f9-b692be466ea0/full/1686,/0/default.jpg",
+      "gallery": "rococo",
+      "source": "artic"
+    },
+    {
+      "title": "View of Genoa",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1834",
+      "image_url": "https://www.artic.edu/iiif/2/bd8432e6-65f7-a32a-4e1a-85593633fa8f/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Monte Pincio, Rome",
+      "artist": "Jean Baptiste Camille Corot",
+      "year": "1840–50",
+      "image_url": "https://www.artic.edu/iiif/2/0aff6ae5-99ae-d92c-1239-0bc9bb0ad9ae/full/1686,/0/default.jpg",
+      "gallery": "classic",
+      "source": "artic"
+    },
+    {
+      "title": "Landscapes with poems",
+      "artist": "Gong Xian",
+      "year": "1688",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/1981_4_1a.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "A Brazilian Landscape",
+      "artist": "Frans Post",
+      "year": "1650",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP145952.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Landscape",
+      "artist": "Jean Pillement",
+      "year": "1800–1830",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/ap46.67.83.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Landscapes painted for Yuweng",
+      "artist": "Fan Qi",
+      "year": "dated 1673",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP160552.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "A Forest at Dawn with a Deer Hunt",
+      "artist": "Peter Paul Rubens",
+      "year": "ca. 1635",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP-25739-001.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Landscape",
+      "artist": "Hu Yuan",
+      "year": "n.d.",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP161404.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Seascape Fantasy",
+      "artist": "Unknown Artist",
+      "year": "1770–1800",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/ap1972.263.2.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Near Land's End, Cornwall",
+      "artist": "William Trost Richards",
+      "year": "1879",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/ap50.9.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "A Storm off the Normandy Coast",
+      "artist": "Eugène Isabey",
+      "year": "probably 1850s",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP169472.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Seascape—Fishing Boats by the Shore",
+      "artist": "Henry Pember Smith",
+      "year": "1875",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/ap1980.261.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "The Fishing Boat",
+      "artist": "Gustave Courbet",
+      "year": "1865",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP-14936-031.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "The Calm Sea",
+      "artist": "Gustave Courbet",
+      "year": "1869",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DT1973.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Whalers",
+      "artist": "Joseph Mallord William Turner",
+      "year": "ca. 1845",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP-13360-001.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "An Incident of Whaling",
+      "artist": "William Bradford",
+      "year": "1880s",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/DT6474.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Pastoral Landscape: The Roman Campagna",
+      "artist": "Claude Lorrain (Claude Gellée)",
+      "year": "ca. 1639",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP-17628-001.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "The Gardener",
+      "artist": "Georges Seurat",
+      "year": "1882–83",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DT1499.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Ship by Moonlight",
+      "artist": "Ivan Konstantinovich Aivazovsky (Hovhannes Aivazian)",
+      "year": "n.d.",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP-23290-001.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Under a Cloud",
+      "artist": "Albert Pinkham Ryder",
+      "year": "ca. 1900",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/DT6007.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "The Sea",
+      "artist": "John Frederick Kensett",
+      "year": "1872",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/ap74.35.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "New Jersey Beach",
+      "artist": "William Trost Richards",
+      "year": "1901",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/ap32.73.1.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "The Trees, Early Afternoon, France",
+      "artist": "William A. Harper",
+      "year": "ca. 1905",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/DP701344.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Diana and Cupid",
+      "artist": "Pompeo Batoni",
+      "year": "1761",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP-24221-001.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Hotei",
+      "artist": "Ogata Kōrin",
+      "year": "after 1704",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP-12232-076.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "An Evening beside Lake Arresø",
+      "artist": "Johan Thomas Lundbye",
+      "year": "ca. 1837",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP169473.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "The Seine at Bougival",
+      "artist": "Alfred Sisley",
+      "year": "1876",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP323410.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Village Among the Trees",
+      "artist": "Unknown artist",
+      "year": "c. 1560",
+      "image_url": "https://www.artic.edu/iiif/2/1e452e34-3a2b-0dca-35c3-c7236c612985/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Jalais Hill, Pontoise",
+      "artist": "Camille Pissarro",
+      "year": "1867",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DT1859.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "The Red Bridge",
+      "artist": "Julian Alden Weir",
+      "year": "1895",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/DT202891.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Landscape",
+      "artist": "Jean Charles Cazin (French, 1841–1901)",
+      "year": "c. 1895",
+      "image_url": "https://www.artic.edu/iiif/2/3a34f988-f779-2e96-1786-8945b6b9c87d/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Distant View of Niagara Falls",
+      "artist": "Thomas Cole (American, born England, 1801–1848)",
+      "year": "1830",
+      "image_url": "https://www.artic.edu/iiif/2/18092196-50ae-3ff1-9205-1b3110e966c3/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "A Sunday on La Grande Jatte — 1884",
+      "artist": "Georges Seurat (French, 1859–1891)",
+      "year": "1884–86, border added 1888–89",
+      "image_url": "https://www.artic.edu/iiif/2/2d484387-2509-5e8e-2c43-22f9981972eb/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "A Marine",
+      "artist": "George Inness (American, 1825–1894)",
+      "year": "c. 1874–75",
+      "image_url": "https://www.artic.edu/iiif/2/3d2d0842-312e-8d48-708b-d6adde0777bf/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "River landscape",
+      "artist": "Zhuang Jiongsheng",
+      "year": "n.d.",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP153851.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Flower Girl in Holland",
+      "artist": "George Hitchcock",
+      "year": "1887",
+      "image_url": "https://www.artic.edu/iiif/2/e72305c9-1a1c-8a36-7450-582619366338/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Near Penshurst, Kent",
+      "artist": "Patrick Nasmyth",
+      "year": "1828",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP164787.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "A Woman Seated beside a Vase of Flowers (Madame Paul Valpinçon?)",
+      "artist": "Edgar Degas",
+      "year": "1865",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP-25460-001.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Pastoral Landscape with Ruins",
+      "artist": "Adriaen van de Velde (Dutch, 1636–1672)",
+      "year": "1664",
+      "image_url": "https://www.artic.edu/iiif/2/a34d9d72-c4ec-0750-389e-a01215c9aab0/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Sunrise",
+      "artist": "Claude Lorrain (Claude Gellée)",
+      "year": "possibly 1646–47",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP-14936-013.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Hagar in the Wilderness",
+      "artist": "Camille Corot",
+      "year": "1835",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DT2013.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Capture of the Tripoli by the Enterprise",
+      "artist": "Thomas Birch",
+      "year": "1806–12",
+      "image_url": "https://www.artic.edu/iiif/2/2b219d21-c128-ea2e-cb0b-69d2e9e98e5e/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Haystacks, Morning, Eragny",
+      "artist": "Camille Pissarro",
+      "year": "1899",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP-20613-001.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "After a Summer Shower",
+      "artist": "George Inness (American, 1825–1894)",
+      "year": "1894",
+      "image_url": "https://www.artic.edu/iiif/2/a9546ba5-6191-4e04-e209-d22a10e7d0d7/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Pasture Scene",
+      "artist": "James M. Hart",
+      "year": "1876",
+      "image_url": "https://images.metmuseum.org/CRDImages/ad/original/ap21.115.2.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "Shower Below the Summit (Sanka hakuu), from the series \"Thirty-Six Views of Mount Fuji (Fugaku sanjurokkei)\"",
+      "artist": "Katsushika Hokusai 葛飾 北斎 ",
+      "year": "c. 1830/33",
+      "image_url": "https://www.artic.edu/iiif/2/bbb6d024-f931-2e2f-eb95-750991834b1c/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape",
+      "artist": "Théodore Rousseau (French, 1812–1867)",
+      "year": "c. 1850",
+      "image_url": "https://www.artic.edu/iiif/2/3527f037-a9b2-9253-1a92-dcd281b54340/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Old Sarum",
+      "artist": "David Lucas (English, 1802-1881)",
+      "year": "1832",
+      "image_url": "https://www.artic.edu/iiif/2/ebae7cd9-6813-d733-2e1c-1cf481266f91/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Catskill Mountains",
+      "artist": "George Inness (American, 1825–1894)",
+      "year": "1870",
+      "image_url": "https://www.artic.edu/iiif/2/842d212c-c755-f372-d73f-7d0581051c46/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "River Stour, Suffolk",
+      "artist": "David Lucas (English, 1802-1881)",
+      "year": "1830, published 1831",
+      "image_url": "https://www.artic.edu/iiif/2/6e0b42d7-da32-bdca-7853-516ccd96d57c/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "The Old Mill",
+      "artist": "George Inness (American, 1825–1894)",
+      "year": "1849",
+      "image_url": "https://www.artic.edu/iiif/2/9c2e39ad-fc3f-356e-cd98-db0038cfe8da/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "View of Delphi with a Procession",
+      "artist": "Claude Lorrain (Claude Gellée; French, 1600-1682)",
+      "year": "1673",
+      "image_url": "https://www.artic.edu/iiif/2/2e7e28aa-a77b-c7f8-852b-708c1171f928/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Salisbury Cathedral from the Meadows: the Rainbow",
+      "artist": "David Lucas (English, 1802-1881)",
+      "year": "1834",
+      "image_url": "https://www.artic.edu/iiif/2/54c8b002-99a8-a416-f4e7-a0126e1e5c98/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape",
+      "artist": "Jean-Baptiste-Camille Corot (French, 1796–1875)",
+      "year": "1865/70",
+      "image_url": "https://www.artic.edu/iiif/2/1501b057-0441-f1fa-e949-298b06ec6270/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Shirasuka: Shiomi Slope,no. 33 from the series Fifty-Three Stations of the Tokaido (Tōkaidō gojūsan tsugi)",
+      "artist": "Utagawa Hiroshige 歌川 広重",
+      "year": "1847-52",
+      "image_url": "https://www.artic.edu/iiif/2/b0416125-7910-a0a3-75bb-b01f935c2af3/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "First View of the Yosemite Valley from the Mariposa Trail",
+      "artist": "Carleton E. Watkins",
+      "year": "1865/66",
+      "image_url": "https://www.artic.edu/iiif/2/09b6a369-8934-7a4d-0370-90509dde6607/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Painting with Troika",
+      "artist": "Vasily Kandinsky",
+      "year": "January 18, 1911",
+      "image_url": "https://www.artic.edu/iiif/2/a45e5f55-d02b-ce98-8bab-3af549684f58/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Seascape",
+      "artist": "Pierre-Auguste Renoir (French, 1841–1919)",
+      "year": "1879",
+      "image_url": "https://www.artic.edu/iiif/2/caf4fa39-e2e8-344a-542c-2d9a03ec9d4b/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Flamborough Head, England",
+      "artist": "Winslow Homer",
+      "year": "1882",
+      "image_url": "https://www.artic.edu/iiif/2/680d3efd-2cf9-36f4-6454-806af8b79d98/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "The Water Fan",
+      "artist": "Winslow Homer",
+      "year": "1898/99",
+      "image_url": "https://www.artic.edu/iiif/2/1de73bb7-52d6-e099-f4e1-763e201e78fa/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "The Gulf Stream",
+      "artist": "Winslow Homer",
+      "year": "probably 1899, dated by the artist \"1889\"",
+      "image_url": "https://www.artic.edu/iiif/2/4a076002-dffe-54e9-5256-0691c3a65c3b/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "After the Hurricane, Bahamas",
+      "artist": "Winslow Homer",
+      "year": "1899",
+      "image_url": "https://www.artic.edu/iiif/2/b34de958-1cbe-065f-4941-c34f64d2b366/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Seascape with Boats",
+      "artist": "Eugène Louis Boudin",
+      "year": "1898",
+      "image_url": "https://www.artic.edu/iiif/2/7da4f71b-2c4f-1bc3-dd44-10b2ee7ee30f/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Stowing Sail",
+      "artist": "Winslow Homer",
+      "year": "1903",
+      "image_url": "https://www.artic.edu/iiif/2/7daaf950-882c-d8cb-4bc3-b8b5aa77b988/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Breaking Storm, Coast of Maine",
+      "artist": "Winslow Homer",
+      "year": "1894",
+      "image_url": "https://www.artic.edu/iiif/2/6794f986-98db-4e2e-9b38-8d13b7201d10/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Boy in Boat, Gloucester",
+      "artist": "Winslow Homer",
+      "year": "1880/81",
+      "image_url": "https://www.artic.edu/iiif/2/2ba29e23-e11f-1346-971f-a8c63f94bc54/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Sunshine and Shadow, Prout's Neck",
+      "artist": "Winslow Homer",
+      "year": "1894",
+      "image_url": "https://www.artic.edu/iiif/2/5ca8e39e-8cf3-b0e1-a4a2-b54444954de3/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Prout's Neck, Evening",
+      "artist": "Winslow Homer",
+      "year": "c. 1894",
+      "image_url": "https://www.artic.edu/iiif/2/32106368-7e47-4c41-b05b-8df4c415cc79/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Prout's Neck, Breaking Wave",
+      "artist": "Winslow Homer",
+      "year": "1887",
+      "image_url": "https://www.artic.edu/iiif/2/69dbbcad-e538-e72b-5dca-5f7ba0819d52/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "The Watcher, Tynemouth",
+      "artist": "Winslow Homer",
+      "year": "1882",
+      "image_url": "https://www.artic.edu/iiif/2/a6808add-86d2-bd2a-0c0d-adec7ca85025/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Seascape, Normandy",
+      "artist": "Gustave Le Gray",
+      "year": "1856/57",
+      "image_url": "https://www.artic.edu/iiif/2/f901a0c3-bca4-46fb-6c4d-4d91dbd8a29e/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "River Landscape",
+      "artist": "Xiang Yuanbian",
+      "year": "dated 1578",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP205466_CRD.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "A River Landscape",
+      "artist": "Théodore Rousseau",
+      "year": "ca. 1845–50",
+      "image_url": "https://images.metmuseum.org/CRDImages/ep/original/DP274261.jpg",
+      "gallery": "landscape",
+      "source": "met"
+    },
+    {
+      "title": "The Gulf of Salerno",
+      "artist": "Joseph Wright of Derby (English, 1734-1797)",
+      "year": "1783–85",
+      "image_url": "https://www.artic.edu/iiif/2/67b46720-1589-0d13-3597-f03c7b618094/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "The Outlook, Maine Coast",
+      "artist": "Winslow Homer",
+      "year": "1894",
+      "image_url": "https://www.artic.edu/iiif/2/89b873dc-2118-7705-ca4b-5d9ac7b2eb3b/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "The Departure of the Boats, Étretat",
+      "artist": "Claude Monet (French, 1840–1926)",
+      "year": "1885",
+      "image_url": "https://www.artic.edu/iiif/2/6ca224d1-c3dc-a223-a127-0492301a2ebb/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Prout's Neck, Breakers",
+      "artist": "Winslow Homer",
+      "year": "1883",
+      "image_url": "https://www.artic.edu/iiif/2/1f68e1a0-567a-e829-3e2f-ff9857942f9e/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Arctic Seascape",
+      "artist": "William Bradford",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/a8b14cbd-62ee-45be-79e1-88951442d065/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Douarnenez in Sunshine",
+      "artist": "Maxime Maufra (French, 1861–1918)",
+      "year": "1897",
+      "image_url": "https://www.artic.edu/iiif/2/5d1261c0-11bd-eb2c-91c5-653aa98c2b5a/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Seascape",
+      "artist": "Jacob Cornelis Ploos van Amstel (Dutch, 1726-1798)",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/47912a76-3e92-2bdf-a17f-c2fdcb50a066/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "The Painter of Seascapes",
+      "artist": "Félix Hilaire Buhot",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/b421739c-f91b-e457-e995-03b7e207e6ec/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Big River, from the Rancherie, Mendocino, California",
+      "artist": "Carleton E. Watkins",
+      "year": "1863",
+      "image_url": "https://www.artic.edu/iiif/2/0ac9663b-e17e-471d-e4e3-6c60fc800704/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Seascape",
+      "artist": "After Claude Lorrain",
+      "year": "n.d.",
+      "image_url": "https://www.artic.edu/iiif/2/20aedad0-795c-dda3-0805-bb92ab27056d/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Wounded Lioness",
+      "artist": "Pierre Andrieu (French, 1821-1892)",
+      "year": "c. 1850",
+      "image_url": "https://www.artic.edu/iiif/2/565dd29f-6c02-3f31-3db2-46902059f047/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Yang Pu Moving His Family",
+      "artist": "Artist Unknown",
+      "year": "Yuan dynasty (1279–1368) 元朝",
+      "image_url": "https://www.artic.edu/iiif/2/f78addab-4d3a-f87c-4c83-7eae824c7504/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "The Watermill with the Great Red Roof",
+      "artist": "Meindert Hobbema (Dutch, 1638–1709)",
+      "year": "c. 1665",
+      "image_url": "https://www.artic.edu/iiif/2/237c25a2-6051-a8e7-1610-a01938d4deab/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "The Petite Creuse River",
+      "artist": "Claude Monet (French, 1840–1926)",
+      "year": "1889",
+      "image_url": "https://www.artic.edu/iiif/2/ec1f6262-09c2-8f7e-baa9-9c0b267337ff/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "A View of Vianen with a Herdsman and Cattle by a River",
+      "artist": "Aelbert Cuyp (Dutch, 1621–1691)",
+      "year": "c. 1643–c. 1645",
+      "image_url": "https://www.artic.edu/iiif/2/571dac0d-3f2e-3463-814a-e56951bbe722/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "The Grand Canal, Venice",
+      "artist": "Francesco Guardi (Italian, 1712–1793)",
+      "year": "c. 1760",
+      "image_url": "https://www.artic.edu/iiif/2/f23f8a3b-66b8-9061-811c-c65dd0a32ebd/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "On the Nile",
+      "artist": "Eugène Fromentin (French, 1820-1876)",
+      "year": "1871",
+      "image_url": "https://www.artic.edu/iiif/2/0eb5b4c2-517a-cd17-bca8-ff290e90059c/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Landscape with the Ruins of the Castle of Egmond",
+      "artist": "Jacob van Ruisdael (Dutch, 1628/29-1682)",
+      "year": "1650–55",
+      "image_url": "https://www.artic.edu/iiif/2/12086520-2e48-cc75-df86-916bb801e61f/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Final Study for \"Bathers at Asnières\"",
+      "artist": "Georges Seurat (French, 1859-1891)",
+      "year": "1883",
+      "image_url": "https://www.artic.edu/iiif/2/1db67905-d421-95bf-1e91-4b60dd776886/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Model of a River Boat",
+      "artist": "Egyptian; Meir, Egypt",
+      "year": "Middle Kingdom, mid-Dynasty 12, about 1875 BCE",
+      "image_url": "https://www.artic.edu/iiif/2/f16a5e00-31c5-1e61-a953-15c5abb42ca3/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Lunch at the Restaurant Fournaise (The Rowers' Lunch)",
+      "artist": "Pierre-Auguste Renoir (French, 1841–1919)",
+      "year": "1875",
+      "image_url": "https://www.artic.edu/iiif/2/1a1b74fe-ff2a-8991-0581-5d420f0b840e/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Woman Bathing Her Feet in a Brook",
+      "artist": "Camille Pissarro (French, 1830–1903)",
+      "year": "1895",
+      "image_url": "https://www.artic.edu/iiif/2/5ccaee46-a1a0-5035-821c-0547aa35c070/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Waterloo Bridge, Sunlight Effect",
+      "artist": "Claude Monet (French, 1840–1926)",
+      "year": "1903",
+      "image_url": "https://www.artic.edu/iiif/2/827d02ef-6765-9728-c07e-52ad22b73fd3/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Charing Cross Bridge, London",
+      "artist": "Claude Monet (French, 1840–1926)",
+      "year": "1901",
+      "image_url": "https://www.artic.edu/iiif/2/e9179922-f68d-34c5-481d-abf49e046863/full/1920,/0/default.jpg",
+      "gallery": "landscape",
+      "source": "artic"
+    },
+    {
+      "title": "Francesco Guardi - Regatta op het Canal Grande bij de Rialtobrug te Venetië",
+      "artist": "Dutch Master",
+      "year": "1780",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Francesco_Guardi_-_Regatta_op_het_Canal_Grande_bij_de_Rialtobrug_te_Veneti%C3%AB.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Caneletto - Het Canal Grande met de Ponte Rialto en de Fondaco dei Tedeschi",
+      "artist": "Dutch Master",
+      "year": "1730",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Caneletto_-_Het_Canal_Grande_met_de_Ponte_Rialto_en_de_Fondaco_dei_Tedeschi.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Francesco Guardi - De brand in de wijk van San Marcuola",
+      "artist": "Dutch Master",
+      "year": "1500",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Francesco_Guardi_-_De_brand_in_de_wijk_van_San_Marcuola.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Heuvellandschap bij Wageningen Rijksmuseum SK-A-4924",
+      "artist": "Dutch Master",
+      "year": "1838",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Heuvellandschap_bij_Wageningen_Rijksmuseum_SK-A-4924.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Gerrit van Santen - Het beleg van Schenckenschans door prins Frederik Hendrik, april 1636",
+      "artist": "Dutch Master",
+      "year": "1650",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gerrit_van_Santen_-_Het_beleg_van_Schenckenschans_door_prins_Frederik_Hendrik%2C_april_1636.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Lodewijk XIV trekt bij Lobith Nederland binnen Rijksmuseum SK-A-3753",
+      "artist": "Dutch Master",
+      "year": "1690",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Lodewijk_XIV_trekt_bij_Lobith_Nederland_binnen_Rijksmuseum_SK-A-3753.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Zomer Rijksmuseum SK-A-3945",
+      "artist": "Dutch Master",
+      "year": "1625",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Zomer_Rijksmuseum_SK-A-3945.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Aelbert Cuyp - Landschap met koeien en herdersjongen",
+      "artist": "Dutch Master",
+      "year": "1650",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Aelbert_Cuyp_-_Landschap_met_koeien_en_herdersjongen.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Canaletto - De ingang van het Canal Grande bij de Punta della Dogana en de Santa Maria della Salute",
+      "artist": "Dutch Master",
+      "year": "1730",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Canaletto_-_De_ingang_van_het_Canal_Grande_bij_de_Punta_della_Dogana_en_de_Santa_Maria_della_Salute.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Bartholomeus Spranger - Venus en Adonis - SK-A-3888 - Rijksmuseum",
+      "artist": "Dutch Master",
+      "year": "1587",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bartholomeus_Spranger_-_Venus_en_Adonis_-_SK-A-3888_-_Rijksmuseum.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "George Hendrik Breitner - Gezicht op het Oosterpark te Amsterdam in de sneeuw",
+      "artist": "Dutch Master",
+      "year": "1892",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/George_Hendrik_Breitner_-_Gezicht_op_het_Oosterpark_te_Amsterdam_in_de_sneeuw.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Het onweer Rijksmuseum SK-A-4926",
+      "artist": "Dutch Master",
+      "year": "1843",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Het_onweer_Rijksmuseum_SK-A-4926.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Gezicht op de Nieuwe Gracht bij het Bolwerk te Haarlem Rijksmuseum SK-A-3943",
+      "artist": "Dutch Master",
+      "year": "1815",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gezicht_op_de_Nieuwe_Gracht_bij_het_Bolwerk_te_Haarlem_Rijksmuseum_SK-A-3943.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Abraham Bloemaert - Landschap met groenten en vruchten op de voorgrond",
+      "artist": "Dutch Master",
+      "year": "1657",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Abraham_Bloemaert_-_Landschap_met_groenten_en_vruchten_op_de_voorgrond.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "The View from the Batavian Embassy in Paris, Josephus Augustus Knip, 1801",
+      "artist": "Dutch Master",
+      "year": "1801",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/The_View_from_the_Batavian_Embassy_in_Paris%2C_Josephus_Augustus_Knip%2C_1801.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Souvenir du Rhin by Johannes Franciscus Hoppenbrouwers Rijksdienst voor het Cultureel Erfgoed B2255",
+      "artist": "Dutch Master",
+      "year": "1853",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Souvenir_du_Rhin_by_Johannes_Franciscus_Hoppenbrouwers_Rijksdienst_voor_het_Cultureel_Erfgoed_B2255.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Watermolen in een bosachtig landschap Rijksmuseum SK-A-3844",
+      "artist": "Dutch Master",
+      "year": "1854",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Watermolen_in_een_bosachtig_landschap_Rijksmuseum_SK-A-3844.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Bartholomäus Breenbergh (Groenewegen, P. A.) (1599-1659) - Landschaft mit Ruinen und Staffage - 2053 - Führermuseum",
+      "artist": "Dutch Master",
+      "year": "1650",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bartholom%C3%A4us_Breenbergh_(Groenewegen%2C_P._A.)_(1599-1659)_-_Landschaft_mit_Ruinen_und_Staffage_-_2053_-_F%C3%BChrermuseum.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Riviergezicht met een waltoren geïnspireerd op de Camperveerse toren te Veere Rijksmuseum SK-A-3850",
+      "artist": "Dutch Master",
+      "year": "1855",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Riviergezicht_met_een_waltoren_ge%C3%AFnspireerd_op_de_Camperveerse_toren_te_Veere_Rijksmuseum_SK-A-3850.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Winter Landscape by Johannes Franciscus Hoppenbrouwers Rijksdienst voor het Cultureel Erfgoed B264",
+      "artist": "Dutch Master",
+      "year": "1865",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Winter_Landscape_by_Johannes_Franciscus_Hoppenbrouwers_Rijksdienst_voor_het_Cultureel_Erfgoed_B264.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Wybrand Hendriks - Gezicht op de Nieuwe Gracht bij het Bolwerk te Haarlem - BR2093 - Rijksmuseum Twenthe",
+      "artist": "Dutch Master",
+      "year": "1815",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Wybrand_Hendriks_-_Gezicht_op_de_Nieuwe_Gracht_bij_het_Bolwerk_te_Haarlem_-_BR2093_-_Rijksmuseum_Twenthe.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Duinlandschap Rijksmuseum SK-A-3847",
+      "artist": "Dutch Master",
+      "year": "1855",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Duinlandschap_Rijksmuseum_SK-A-3847.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Adriaen van Ostade 041",
+      "artist": "Dutch Master",
+      "year": "1650",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Adriaen_van_Ostade_041.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Bergachtig landschap met visser Rijksmuseum SK-A-4218",
+      "artist": "Dutch Master",
+      "year": "1650",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bergachtig_landschap_met_visser_Rijksmuseum_SK-A-4218.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Gezicht op Ambon Rijksmuseum SK-A-4482",
+      "artist": "Dutch Master",
+      "year": "1617",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gezicht_op_Ambon_Rijksmuseum_SK-A-4482.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Italianiserend landschap met een oudtestamentisch onderwerp Rijksmuseum SK-A-4825",
+      "artist": "Dutch Master",
+      "year": "1620",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Italianiserend_landschap_met_een_oudtestamentisch_onderwerp_Rijksmuseum_SK-A-4825.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Winter op het IJ voor Amsterdam Rijksmuseum SK-A-3922",
+      "artist": "Dutch Master",
+      "year": "1850",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Winter_op_het_IJ_voor_Amsterdam_Rijksmuseum_SK-A-3922.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Landschap met de bekering van Saul Rijksmuseum SK-A-4919",
+      "artist": "Dutch Master",
+      "year": "1612",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Landschap_met_de_bekering_van_Saul_Rijksmuseum_SK-A-4919.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Boslandschap met rivier Rijksmuseum SK-A-4873",
+      "artist": "Dutch Master",
+      "year": "1650",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Boslandschap_met_rivier_Rijksmuseum_SK-A-4873.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Gezicht op een gefantaseerde stad aan een rivier met de toren van Saint Pol uit Vianen Rijksmuseum SK-A-4879",
+      "artist": "Dutch Master",
+      "year": "1649",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gezicht_op_een_gefantaseerde_stad_aan_een_rivier_met_de_toren_van_Saint_Pol_uit_Vianen_Rijksmuseum_SK-A-4879.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Jacob van Geel 001",
+      "artist": "Dutch Master",
+      "year": "1633",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jacob_van_Geel_001.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "De Engels-Nederlandse vloot onder Lord Exmouth en vice-admiraal Jonkheer Theodorus Frederik van Capellen stelt de Algerijnse fortificaties buiten gevecht, 27 augustus 1816. Rijksmuseum SK-A-1380",
+      "artist": "Dutch Master",
+      "year": "1818",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/De_Engels-Nederlandse_vloot_onder_Lord_Exmouth_en_vice-admiraal_Jonkheer_Theodorus_Frederik_van_Capellen_stelt_de_Algerijnse_fortificaties_buiten_gevecht%2C_27_augustus_1816._Rijksmuseum_SK-A-1380.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Landschap met de doop van de Kamerling Rijksmuseum SK-A-4713",
+      "artist": "Dutch Master",
+      "year": "1630",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Landschap_met_de_doop_van_de_Kamerling_Rijksmuseum_SK-A-4713.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Nachtelijk gevecht tussen Cornelis Tromp op de 'Gouden Leeuw' en Sir Edward Spragg op de 'Royal Prince' tijdens de zeeslag bij Kijkduin, 21 augustus 1673; episode uit de Derde Engelse Rijksmuseum SK-A-2393",
+      "artist": "Dutch Master",
+      "year": "1675",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Nachtelijk_gevecht_tussen_Cornelis_Tromp_op_de_'Gouden_Leeuw'_en_Sir_Edward_Spragg_op_de_'Royal_Prince'_tijdens_de_zeeslag_bij_Kijkduin%2C_21_augustus_1673%3B_episode_uit_de_Derde_Engelse_Rijksmuseum_SK-A-2393.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Een opperkoopman van de VOC, vermoedelijk Jacob Mathieusen en zijn vrouw ; op de achtergrond de retourvloot op de rede van Batavia Rijksmuseum SK-A-2350",
+      "artist": "Dutch Master",
+      "year": "1650",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Een_opperkoopman_van_de_VOC%2C_vermoedelijk_Jacob_Mathieusen_en_zijn_vrouw_%3B_op_de_achtergrond_de_retourvloot_op_de_rede_van_Batavia_Rijksmuseum_SK-A-2350.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Braziliaans dorp Rijksmuseum SK-A-4272",
+      "artist": "Dutch Master",
+      "year": "1677",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Braziliaans_dorp_Rijksmuseum_SK-A-4272.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "De slag op het Slaak tussen de Nederlandse en Spaanse vloten in de nacht van 12 op 13 september 1631 Rijksmuseum SK-A-454",
+      "artist": "Dutch Master",
+      "year": "1633",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/De_slag_op_het_Slaak_tussen_de_Nederlandse_en_Spaanse_vloten_in_de_nacht_van_12_op_13_september_1631_Rijksmuseum_SK-A-454.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Landschap met Tobias en de Engel Rijksmuseum SK-A-4872",
+      "artist": "Dutch Master",
+      "year": "1620",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Landschap_met_Tobias_en_de_Engel_Rijksmuseum_SK-A-4872.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Vroom Hendrick Cornelisz Dutch Ships Ramming Spanish Galleys off the Flemish Coast in October 1602",
+      "artist": "Dutch Master",
+      "year": "1617",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vroom_Hendrick_Cornelisz_Dutch_Ships_Ramming_Spanish_Galleys_off_the_Flemish_Coast_in_October_1602.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "De Engels-Nederlandse vloot in de Baai van Algiers ter ondersteuning van het ultimatum tot vrijlating van blanke slaven, 26 augustus 1816. Rijksmuseum SK-A-1377",
+      "artist": "Dutch Master",
+      "year": "1818",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/De_Engels-Nederlandse_vloot_in_de_Baai_van_Algiers_ter_ondersteuning_van_het_ultimatum_tot_vrijlating_van_blanke_slaven%2C_26_augustus_1816._Rijksmuseum_SK-A-1377.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Havengezicht Rijksmuseum SK-A-437",
+      "artist": "Dutch Master",
+      "year": "1678",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Havengezicht_Rijksmuseum_SK-A-437.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Het kielhalen van de scheepschirurgijn van admiraal Jan van Nes Rijksmuseum SK-A-449",
+      "artist": "Dutch Master",
+      "year": "1673",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Het_kielhalen_van_de_scheepschirurgijn_van_admiraal_Jan_van_Nes_Rijksmuseum_SK-A-449.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Jeronymus van Diest - Gezicht op Dordrecht - 1453 - Amsterdam Museum",
+      "artist": "Dutch Master",
+      "year": "1660",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jeronymus_van_Diest_-_Gezicht_op_Dordrecht_-_1453_-_Amsterdam_Museum.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Slag op de Zuiderzee, 6 oktober 1573 (Abraham de Verwer, 1621)",
+      "artist": "Dutch Master",
+      "year": "1621",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Slag_op_de_Zuiderzee%2C_6_oktober_1573_(Abraham_de_Verwer%2C_1621).jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "De aankomst van koning Karel II van Engeland te Rotterdam, 24 mei 1660, SK-A-448",
+      "artist": "Dutch Master",
+      "year": "1660",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/De_aankomst_van_koning_Karel_II_van_Engeland_te_Rotterdam%2C_24_mei_1660%2C_SK-A-448.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Battle of Gibraltar 1607",
+      "artist": "Dutch Master",
+      "year": "1621",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Battle_of_Gibraltar_1607.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Het verbranden van de Engelse vloot voor Chatham, 20 juni 1667 Rijksmuseum SK-A-307",
+      "artist": "Dutch Master",
+      "year": "1670",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Het_verbranden_van_de_Engelse_vloot_voor_Chatham%2C_20_juni_1667_Rijksmuseum_SK-A-307.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Jan van de Cappelle 001",
+      "artist": "Dutch Master",
+      "year": "1650",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jan_van_de_Cappelle_001.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Schepen voor de kust Rijksmuseum SK-A-440",
+      "artist": "Dutch Master",
+      "year": "1660",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Schepen_voor_de_kust_Rijksmuseum_SK-A-440.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Slag bij Livorno Rijksmuseum SK-A-294",
+      "artist": "Dutch Master",
+      "year": "1658",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Slag_bij_Livorno_Rijksmuseum_SK-A-294.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Jan van Goyen 001",
+      "artist": "Dutch Master",
+      "year": "1660",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jan_van_Goyen_001.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "De verovering van de Royal Prince Rijksmuseum SK-A-438",
+      "artist": "Dutch Master",
+      "year": "1670",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/De_verovering_van_de_Royal_Prince_Rijksmuseum_SK-A-438.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "Vroom Hendrick Cornelisz Battle of Haarlemmermeer",
+      "artist": "Dutch Master",
+      "year": "1629",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vroom_Hendrick_Cornelisz_Battle_of_Haarlemmermeer.jpg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    },
+    {
+      "title": "'s Lands oorlogsschip 'Amsterdam' voor de Westerlaag op het IJ voor Amsterdam. Rijksmuseum SK-A-1005",
+      "artist": "Dutch Master",
+      "year": "1807",
+      "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/'s_Lands_oorlogsschip_'Amsterdam'_voor_de_Westerlaag_op_het_IJ_voor_Amsterdam._Rijksmuseum_SK-A-1005.jpeg?width=1920",
+      "gallery": "landscape",
+      "source": "rijks"
+    }
+  ]
+}

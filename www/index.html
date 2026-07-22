@@ -1,0 +1,1875 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <!-- Prevents ArtFrame from stealing audio focus from Spotify/music apps -->
+  <meta name="media-playback-requires-user-gesture" content="true" />
+  <title>ArtFrame — Galerie d'Art</title>
+  <script src="artworks_data.js"></script>
+  <script src="frames_data.js"></script>
+  <style>
+    :root {
+      --bg: oklch(8% 0.003 95);
+      --surface: oklch(14% 0.005 95);
+      --surface2: oklch(18% 0.006 95);
+      --fg: oklch(92% 0.003 95);
+      --muted: oklch(55% 0.012 95);
+      --border: oklch(22% 0.008 95);
+      --accent: oklch(70% 0.13 85);
+      --accent-dim: oklch(55% 0.08 85);
+      --font-display: 'Georgia', 'Iowan Old Style', serif;
+      --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width:100%; height:100%; overflow:hidden; background:#000; font-family:var(--font-body); color:var(--fg); -webkit-font-smoothing:antialiased; user-select:none; }
+    /* TV fullscreen: body fills entire screen */
+    body { display:block; }
+
+    /* .tv-frame fills entire viewport — no scale trick, native 100% */
+    .tv-frame {
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      background:var(--bg);
+      overflow:hidden;
+    }
+
+    /* ====== SPLASH SCREEN ====== */
+    @keyframes splash-logo-in { 0%{opacity:0;transform:scale(0.8) translateY(20px)} 100%{opacity:1;transform:scale(1) translateY(0)} }
+    @keyframes splash-text-in { 0%{opacity:0;transform:translateY(18px)} 100%{opacity:1;transform:translateY(0)} }
+    @keyframes splash-sub-in  { 0%{opacity:0;transform:translateY(10px)} 100%{opacity:1;transform:translateY(0)} }
+    @keyframes splash-bar     { 0%{width:0} 100%{width:60%} }
+    @keyframes glow-pulse     { 0%,100%{opacity:0.4;filter:blur(32px)} 50%{opacity:0.7;filter:blur(40px)} }
+
+    .splash-screen {
+      position:fixed; inset:0; z-index:200;
+      background:radial-gradient(ellipse at 50% 35%, oklch(12% 0.025 85) 0%, oklch(5% 0.008 95) 100%);
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0;
+      transition:opacity 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .splash-screen.done { opacity:0; pointer-events:none; }
+    .splash-glow {
+      position:absolute; width:500px; height:300px;
+      background:radial-gradient(ellipse, oklch(65% 0.15 85) 0%, transparent 70%);
+      animation:glow-pulse 3s ease-in-out infinite;
+      pointer-events:none;
+    }
+    .splash-logo-wrap {
+      animation:splash-logo-in 0.9s cubic-bezier(0.22,1,0.36,1) 0.2s both;
+      margin-bottom:32px;
+      position:relative; z-index:1;
+    }
+    .splash-logo-svg {
+      width:120px; height:120px;
+      filter:drop-shadow(0 0 24px oklch(65% 0.15 85));
+    }
+    .splash-title {
+      font-family:'Georgia','Iowan Old Style',serif;
+      font-size:clamp(52px, 6vw, 80px);
+      font-weight:400;
+      letter-spacing:-0.02em;
+      color:#fff;
+      animation:splash-text-in 0.9s cubic-bezier(0.22,1,0.36,1) 0.5s both;
+      position:relative; z-index:1;
+      background:linear-gradient(180deg, #ffffff 0%, oklch(85% 0.12 85) 50%, #ffffff 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .splash-divider {
+      width:80px; height:1px;
+      background:linear-gradient(90deg, transparent, oklch(70% 0.13 85), transparent);
+      margin:20px auto;
+      animation:splash-sub-in 0.8s cubic-bezier(0.22,1,0.36,1) 0.8s both;
+      position:relative; z-index:1;
+    }
+    .splash-by {
+      font-size:clamp(14px, 1.5vw, 20px);
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      color:oklch(55% 0.012 95);
+      animation:splash-sub-in 0.8s cubic-bezier(0.22,1,0.36,1) 1.0s both;
+      position:relative; z-index:1;
+    }
+    .splash-author {
+      font-size:clamp(16px, 1.8vw, 22px);
+      letter-spacing:0.06em;
+      color:oklch(75% 0.08 85);
+      margin-top:6px;
+      font-style:italic;
+      animation:splash-sub-in 0.8s cubic-bezier(0.22,1,0.36,1) 1.1s both;
+      position:relative; z-index:1;
+    }
+    .splash-progress {
+      position:absolute; bottom:0; left:0; right:0; height:2px;
+      background:oklch(18% 0.006 95);
+    }
+    .splash-progress-bar {
+      height:100%;
+      background:linear-gradient(90deg, oklch(55% 0.08 85), oklch(70% 0.13 85), oklch(55% 0.08 85));
+      animation:splash-bar 2.5s cubic-bezier(0.4,0,0.2,1) 0.3s both;
+    }
+
+    /* ============ ART MODE ============ */
+    .art-mode { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#000; z-index:1; }
+    /* artwork is inset dynamically via JS to fit inside frame */
+    .artwork { position:absolute; transition:opacity 0.9s cubic-bezier(0.4,0,0.2,1); background:#000; }
+    .artwork.fading { opacity:0; }
+    .art-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1s ease; display:block; }
+    .art-img.loaded { opacity:1; }
+    /* frame-overlay: CSS-only frame drawn on top of the artwork inset zone */
+    .frame-overlay { position:absolute; inset:0; pointer-events:none; z-index:5; transition:all 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .vignette-overlay { display:none; }
+    .canvas-texture { position:absolute; inset:0; pointer-events:none; z-index:3; opacity:0; transition:opacity 0.6s;
+      background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(180,160,130,0.03) 2px,rgba(180,160,130,0.03) 3px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(160,140,110,0.02) 3px,rgba(160,140,110,0.02) 4px); }
+    .canvas-texture.on { opacity:1; }
+    .ambient-filter { position:absolute; inset:0; pointer-events:none; z-index:4; transition:opacity 0.5s; }
+    .artwork-info { position:absolute; bottom:28px; right:28px; z-index:6; text-align:right; opacity:0; transition:opacity 0.5s; }
+    .artwork-info.visible { opacity:1; }
+    .artwork-info .art-title { font-family:var(--font-display); font-size:18px; letter-spacing:0.02em; color:var(--fg); text-shadow:0 2px 12px rgba(0,0,0,0.6); }
+    .artwork-info .art-artist { font-size:14px; letter-spacing:0.04em; color:var(--muted); text-shadow:0 2px 8px rgba(0,0,0,0.4); }
+    .timer-indicator { position:absolute; bottom:28px; left:28px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; color:oklch(35% 0.006 95); z-index:6; opacity:0; transition:opacity 0.5s; }
+    .timer-indicator.visible { opacity:1; }
+    .count-badge { position:absolute; top:20px; left:20px; z-index:6; font-family:var(--font-mono); font-size:12px; color:var(--muted); opacity:0; transition:opacity 0.5s; background:rgba(0,0,0,0.5); padding:6px 14px; border-radius:8px; }
+    .count-badge.visible { opacity:1; }
+
+    /* ============ GALLERY BROWSER ============ */
+    .gallery-browser { position:absolute; inset:0; z-index:10; background:var(--bg); display:flex; flex-direction:column; overflow:hidden; }
+    .gallery-browser.hidden { display:none; }
+
+    .gb-header { padding:28px 40px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .gb-header h1 { font-family:var(--font-display); font-size:32px; letter-spacing:-0.01em; font-weight:400; }
+    .gb-header .gb-count { font-size:14px; color:var(--muted); font-family:var(--font-mono); }
+    .gb-header-actions { display:flex; gap:16px; align-items:center; }
+    .btn-primary {
+      padding:12px 36px; border-radius:10px; border:1.5px solid var(--accent); background:var(--accent); color:var(--bg);
+      font-family:var(--font-body); font-size:16px; letter-spacing:0.04em; cursor:pointer; transition:all 0.2s;
+    }
+    .btn-primary:hover,.btn-primary.dpad-focused { background:transparent; color:var(--accent); }
+    .btn-secondary {
+      padding:10px 24px; border-radius:8px; border:1.5px solid var(--border); background:transparent; color:var(--fg);
+      font-family:var(--font-body); font-size:14px; cursor:pointer; transition:all 0.2s;
+    }
+    .btn-secondary:hover,.btn-secondary.dpad-focused { border-color:var(--accent); color:var(--accent); }
+
+    .gb-filters { display:flex; gap:8px; padding:16px 40px; flex-wrap:wrap; border-bottom:1px solid var(--border); flex-shrink:0; overflow-x:auto; }
+    .filter-chip {
+      padding:8px 18px; border-radius:20px; border:1.5px solid var(--border); background:transparent; color:var(--muted);
+      font-family:var(--font-body); font-size:13px; cursor:pointer; transition:all 0.2s; white-space:nowrap;
+    }
+    .filter-chip:hover,.filter-chip.dpad-focused { border-color:var(--accent); color:var(--fg); }
+    .filter-chip.active { border-color:var(--accent); color:var(--accent); background:rgba(255,255,255,0.04); }
+
+    .gb-grid { flex:1; overflow-y:auto; padding:20px 40px 40px; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+    .gb-item {
+      border-radius:10px; overflow:hidden; cursor:pointer; border:2px solid var(--border); transition:all 0.25s;
+      background:var(--surface); position:relative; aspect-ratio:16/10; display:flex; flex-direction:column;
+    }
+    .gb-item:hover,.gb-item.dpad-focused { border-color:var(--accent); transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.4); }
+    .gb-item.active { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+    .gb-item .gb-thumb { flex:1; background-size:cover; background-position:center; min-height:0; transition:transform 0.4s; }
+    .gb-item:hover .gb-thumb { transform:scale(1.03); }
+    .gb-item .gb-label { padding:10px 12px; font-size:13px; line-height:1.3; background:var(--surface2); }
+    .gb-item .gb-label .gb-title { font-weight:600; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; }
+    .gb-item .gb-label .gb-artist { color:var(--muted); font-size:11px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:2px; }
+    .gb-item .gb-check {
+      position:absolute; top:8px; right:8px; width:26px; height:26px; border-radius:50%; border:2px solid rgba(255,255,255,0.5);
+      background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; font-size:14px; color:transparent;
+      transition:all 0.2s; backdrop-filter:blur(4px);
+    }
+    .gb-item.active .gb-check { border-color:var(--accent); background:var(--accent); color:var(--bg); }
+
+
+    /* ============ SETTINGS BAR ============ */
+    .settings-bar {
+      position:absolute; bottom:0; left:0; right:0; height:140px; background:linear-gradient(to top, rgba(8,7,5,0.97), transparent);
+      z-index:20; display:flex; align-items:flex-end; justify-content:center; padding-bottom:28px; gap:60px;
+      transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+    .settings-bar.visible { transform:translateY(0); }
+    .settings-bar .sb-item {
+      display:flex; flex-direction:column; align-items:center; gap:10px; cursor:pointer; padding:8px 16px; border-radius:10px;
+      border:2px solid transparent; background:none; color:var(--fg); font-family:var(--font-body); font-size:13px; transition:all 0.2s; min-width:100px;
+    }
+    .settings-bar .sb-item:hover,.settings-bar .sb-item.dpad-focused { border-color:var(--accent); background:rgba(255,255,255,0.04); }
+    .settings-bar .sb-item .sb-icon { width:36px;height:36px;display:grid;place-items:center; border-radius:50%; background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.08); }
+    .settings-bar .sb-item.dpad-focused .sb-icon { background:rgba(255,255,255,0.10); border-color:var(--accent); }
+    .settings-bar .sb-item svg { width:18px;height:18px;stroke:var(--fg);stroke-width:1.6;fill:none; }
+    .settings-bar .sb-item.dpad-focused svg { stroke:var(--accent); }
+    .settings-bar .sb-item span { opacity:0.7; }
+    .settings-bar .sb-item.dpad-focused span { opacity:1; color:var(--accent); }
+
+    /* ============ SIDEBAR ============ */
+    .sidebar-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.5); z-index:30; opacity:0; pointer-events:none; transition:opacity 0.35s; }
+    .sidebar-overlay.open { opacity:1; pointer-events:auto; }
+    .sidebar { position:absolute; top:0; right:0; bottom:0; width:520px; background:var(--surface); border-left:1px solid var(--border); z-index:31;
+      transform:translateX(100%); transition:transform 0.4s cubic-bezier(0.22,1,0.36,1); display:flex; flex-direction:column; overflow:hidden; }
+    .sidebar.open { transform:translateX(0); }
+    .sidebar-header { padding:28px 32px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .sidebar-header h2 { font-family:var(--font-display); font-size:24px; font-weight:400; }
+    .sidebar-close { width:36px;height:36px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:50%; color:var(--muted); font-size:18px; cursor:pointer; display:grid;place-items:center; }
+    .sidebar-close:hover,.sidebar-close.dpad-focused { border-color:var(--accent); color:var(--accent); }
+    .sidebar-nav { padding:12px 32px; display:flex; flex-direction:column; gap:2px; }
+    .sidebar-nav-item { display:flex;align-items:center;gap:14px;padding:14px 20px;border-radius:8px;cursor:pointer;background:none;border:1.5px solid transparent;color:var(--fg);font-size:15px;transition:all 0.2s;text-align:left;width:100%; }
+    .sidebar-nav-item:hover,.sidebar-nav-item.dpad-focused { background:rgba(255,255,255,0.04); border-color:var(--border); }
+    .sidebar-nav-item .nav-label { flex:1;font-weight:450; }
+    .sidebar-nav-item .nav-value { font-family:var(--font-mono);font-size:12px;color:var(--muted); }
+    .sidebar-nav-item .nav-arrow { color:var(--muted);font-size:12px; }
+    .sidebar-content { flex:1; overflow-y:auto; padding:0 32px 32px; }
+    .sub-screen { display:none; flex-direction:column; gap:24px; padding-top:16px; }
+    .sub-screen.active { display:flex; }
+    .sub-screen h3 { font-family:var(--font-mono); font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted); }
+    .option-group { display:flex; flex-direction:column; gap:10px; }
+    .option-group label { font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--font-mono); }
+    .option-row { display:flex; gap:10px; }
+    .option-chip { flex:1;padding:12px 16px;border-radius:8px;border:1.5px solid var(--border);background:rgba(255,255,255,0.02);color:var(--fg);font-size:14px;cursor:pointer;text-align:center;transition:all 0.2s;display:flex;flex-direction:column;gap:4px;align-items:center; }
+    .option-chip small { font-size:10px;color:var(--muted); }
+    .option-chip:hover,.option-chip.dpad-focused { border-color:var(--accent);background:rgba(255,255,255,0.04); }
+    .option-chip.selected { border-color:var(--accent);background:rgba(255,255,255,0.06); }
+    .color-swatch-row { display:flex; gap:14px; }
+    .color-swatch { width:44px;height:44px;border-radius:8px;border:2px solid transparent;cursor:pointer;transition:all 0.2s; }
+    .color-swatch:hover,.color-swatch.dpad-focused { border-color:var(--accent); transform:scale(1.08); }
+    .color-swatch.selected { border-color:var(--fg); }
+    .slider-row { display:flex;flex-direction:column;gap:8px; }
+    .slider-row .slider-label { display:flex;justify-content:space-between; }
+    .slider-row .slider-label span:last-child { font-family:var(--font-mono);font-size:11px;color:var(--muted); }
+    input[type="range"] { -webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;background:var(--border);outline:none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);border:2px solid var(--surface);cursor:pointer;box-shadow:0 0 10px rgba(0,0,0,0.4); }
+    .toggle-switch { width:44px;height:26px;border-radius:13px;background:var(--border);cursor:pointer;position:relative;transition:background 0.2s;border:none; flex-shrink:0; }
+    .toggle-switch.on { background:var(--accent-dim); }
+    .toggle-switch::after { content:''; position:absolute; top:3px; left:3px; width:20px;height:20px; border-radius:50%; background:#fff; transition:transform 0.2s; }
+    .toggle-switch.on::after { transform:translateX(18px); }
+
+    /* ============ FRAME OPTIONS ============ */
+    .frame-option { width:72px; height:54px; border-radius:6px; border:2.5px solid var(--border); cursor:pointer; transition:all 0.25s; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:0; padding-bottom:4px; font-size:9px; color:rgba(255,255,255,0.6); font-family:var(--font-body); }
+    .frame-option .fo-preview { flex:1; width:100%; position:relative; }
+    .frame-option.dpad-focused { border-color:var(--accent); transform:scale(1.06); box-shadow:0 0 0 2px var(--accent-dim); }
+    .frame-option.selected { border-color:var(--fg); box-shadow:0 0 0 3px rgba(255,255,255,0.25); }
+    .frame-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+
+    /* ============ AUTO-LAUNCH COUNTDOWN ============ */
+    .auto-launch-overlay {
+      position:absolute; inset:0; z-index:50;
+      display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+      padding-bottom:60px; pointer-events:none;
+      opacity:0; transition:opacity 0.5s;
+    }
+    .auto-launch-overlay.visible { opacity:1; }
+    .auto-launch-pill {
+      display:flex; align-items:center; gap:16px;
+      background:rgba(0,0,0,0.72); backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,0.12); border-radius:40px;
+      padding:12px 28px; font-size:14px; color:rgba(255,255,255,0.7);
+    }
+    .auto-launch-countdown {
+      font-family:var(--font-mono); font-size:18px; color:var(--accent); min-width:28px; text-align:center;
+    }
+    .auto-launch-bar {
+      position:absolute; bottom:0; left:0; height:3px;
+      background:var(--accent); border-radius:0 0 0 0;
+      transition:width 1s linear;
+    }
+
+    .toggle-row { display:flex;align-items:center;justify-content:space-between;padding:12px 0; }
+    .toggle-row span { font-size:14px; }
+    .gb-item .gallery-badge { position:absolute;top:6px;left:6px;padding:2px 8px;border-radius:4px;font-size:9px;background:rgba(0,0,0,0.6);color:var(--muted); }
+
+    /* ============ AUTH ============ */
+    .auth-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.85); z-index:40; display:flex;align-items:center;justify-content:center; opacity:0;pointer-events:none;transition:opacity 0.4s; }
+    .auth-overlay.open { opacity:1;pointer-events:auto; }
+    .auth-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:48px 64px; text-align:center; max-width:560px; display:flex;flex-direction:column;align-items:center; gap:24px; }
+    .auth-card h2 { font-family:var(--font-display);font-size:28px;font-weight:400; }
+    .auth-card p { font-size:14px;line-height:1.6;color:var(--muted);max-width:400px; }
+    .auth-code-display { font-family:var(--font-mono);font-size:36px;letter-spacing:0.12em;color:var(--accent);background:rgba(255,255,255,0.03);border:1.5px solid var(--border);border-radius:10px;padding:12px 32px; }
+    .auth-url { font-family:var(--font-mono);font-size:13px;color:var(--muted); }
+    .auth-btn { padding:14px 40px;border-radius:8px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:15px;cursor:pointer; }
+    .auth-btn:hover,.auth-btn.dpad-focused { background:var(--accent);color:var(--bg); }
+    .auth-btn.secondary { border-color:var(--border);color:var(--muted); }
+
+    /* ============ FOCUS TV ============ */
+    :focus-visible { box-shadow:0 0 0 3.5px var(--accent),0 0 20px 4px var(--accent-dim); outline:none; }
+    .dpad-focused { border-color:var(--accent)!important; box-shadow:0 0 0 3.5px var(--accent),0 0 22px 5px var(--accent-dim); outline:none; }
+    .frame-option.dpad-focused { border-color:var(--accent)!important; transform:scale(1.10)!important; box-shadow:0 0 0 3.5px var(--accent),0 0 20px rgba(212,175,55,0.7)!important; z-index:10; }
+    .option-chip.dpad-focused { border-color:var(--accent)!important; background:rgba(255,255,255,0.12)!important; color:var(--accent)!important; transform:scale(1.06)!important; box-shadow:0 0 0 3px var(--accent); }
+    .sidebar-nav-item.dpad-focused { border-color:var(--accent)!important; background:rgba(255,255,255,0.08)!important; box-shadow:0 0 0 2.5px var(--accent); }
+    .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
+
+    /* Legacy loading screen (hidden, splash replaces it) */
+    .loading-screen { display:none; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* Animations */
+    @keyframes art-appear { 0%{filter:brightness(0.4)saturate(0.3);transform:scale(1.04)} 100%{filter:brightness(1)saturate(1);transform:scale(1)} }
+    .artwork.launching { animation:art-appear 2.2s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+    @media (prefers-reduced-motion:reduce) {
+      .artwork,.frame-overlay,.bottom-menu,.sidebar,.sidebar-overlay,.auth-overlay,.canvas-texture,.ambient-filter,
+      .timer-indicator,.menu-item,.sidebar-nav-item,.option-chip,.color-swatch,.toggle-switch,.auth-btn,
+      .gallery-card,.sidebar-close,.gb-item { transition:none!important; }
+      .toggle-switch::after { transition:none; }
+      .color-swatch:hover,.color-swatch.dpad-focused { transform:none; }
+      .artwork.launching { animation:none; }
+    }
+    /* Exit Toast Notification */
+    .exit-toast {
+      position: fixed;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: rgba(18, 16, 14, 0.94);
+      color: #fff;
+      border: 1.5px solid var(--accent);
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      font-family: var(--font-body);
+    }
+    .exit-toast.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+<!-- Splash Screen -->
+<div class="splash-screen" id="splash">
+  <div class="splash-glow"></div>
+  <div class="splash-logo-wrap">
+    <!-- ArtFrame Logo SVG -->
+    <svg class="splash-logo-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="goldfg" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f5e4a3"/>
+          <stop offset="40%" stop-color="#d4af37"/>
+          <stop offset="70%" stop-color="#f0c040"/>
+          <stop offset="100%" stop-color="#9e7807"/>
+        </linearGradient>
+        <linearGradient id="goldinner" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#9e7807"/>
+          <stop offset="50%" stop-color="#d4af37"/>
+          <stop offset="100%" stop-color="#f5e4a3"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+      </defs>
+      <!-- Outer ornate frame -->
+      <rect x="8" y="8" width="104" height="104" rx="4" stroke="url(#goldfg)" stroke-width="5" fill="none"/>
+      <!-- Corner ornaments -->
+      <circle cx="8" cy="8" r="5" fill="url(#goldfg)"/>
+      <circle cx="112" cy="8" r="5" fill="url(#goldfg)"/>
+      <circle cx="8" cy="112" r="5" fill="url(#goldfg)"/>
+      <circle cx="112" cy="112" r="5" fill="url(#goldfg)"/>
+      <!-- Inner frame line -->
+      <rect x="16" y="16" width="88" height="88" rx="2" stroke="url(#goldinner)" stroke-width="1.5" fill="none" opacity="0.6"/>
+      <!-- Canvas area -->
+      <rect x="22" y="22" width="76" height="76" rx="1" fill="oklch(8% 0.003 95)"/>
+      <!-- Abstract painting suggestion -->
+      <rect x="22" y="22" width="76" height="76" rx="1" fill="url(#paintfill)" opacity="0.85"/>
+      <defs>
+        <radialGradient id="paintfill" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#8ab4c8" stop-opacity="0.9"/>
+          <stop offset="35%" stop-color="#c8a460" stop-opacity="0.7"/>
+          <stop offset="70%" stop-color="#4a7a5a" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#2a2a3a" stop-opacity="1"/>
+        </radialGradient>
+      </defs>
+      <!-- Brush stroke hints -->
+      <ellipse cx="50" cy="48" rx="18" ry="10" fill="#d4af60" opacity="0.25" transform="rotate(-15 50 48)"/>
+      <ellipse cx="72" cy="62" rx="12" ry="8" fill="#7ab8d8" opacity="0.2" transform="rotate(20 72 62)"/>
+      <!-- Top center ornament -->
+      <path d="M55 8 L60 3 L65 8" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Bottom center ornament -->
+      <path d="M55 112 L60 117 L65 112" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Left center ornament -->
+      <path d="M8 55 L3 60 L8 65" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Right center ornament -->
+      <path d="M112 55 L117 60 L112 65" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="splash-title">ArtFrame</div>
+  <div class="splash-divider"></div>
+  <div class="splash-by">by</div>
+  <div class="splash-author">Dany Vassiliakos</div>
+  <div class="splash-progress"><div class="splash-progress-bar"></div></div>
+</div>
+<!-- Legacy loading (hidden) -->
+<div class="loading-screen" id="loading"></div>
+
+<div class="tv-frame" id="tv-frame">
+
+  <!-- ART MODE -->
+  <section class="art-mode" id="art-mode">
+    <div class="artwork" id="artwork-current"></div>
+    <div class="frame-overlay" id="frame-overlay"></div>
+    <div class="canvas-texture" id="canvas-texture"></div>
+    <div class="ambient-filter" id="ambient-filter"></div>
+    <div class="artwork-info" id="artwork-info">
+      <div class="art-title" id="art-title"></div>
+      <div class="art-artist" id="art-artist"></div>
+    </div>
+    <div class="timer-indicator" id="timer-indicator"></div>
+    <div class="count-badge" id="count-badge"></div>
+    <!-- Auto-launch countdown (gallery page only) -->
+    <div class="auto-launch-overlay" id="auto-launch-overlay">
+      <div class="auto-launch-pill">
+        <span>🖼️ Lancement automatique dans</span>
+        <span class="auto-launch-countdown" id="auto-launch-count">10</span>
+        <span>sec — appuyez sur une touche pour annuler</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY BROWSER -->
+  <div class="gallery-browser" id="gallery-browser">
+    <div class="gb-header">
+      <div>
+        <h1>ArtFrame</h1>
+        <div class="gb-count" id="gb-count">Chargement...</div>
+      </div>
+      <div class="gb-header-actions">
+        <button class="btn-secondary" id="btn-all">Tout sélectionner</button>
+        <button class="btn-secondary" id="btn-none">Tout désélectionner</button>
+        <button class="btn-primary" id="btn-launch">🚀 Démarrer le diaporama</button>
+      </div>
+    </div>
+    <div class="gb-filters" id="gb-filters"></div>
+    <div class="gb-grid" id="gb-grid"></div>
+  </div>
+
+  <!-- SETTINGS BAR (slideshow mode) -->
+  <nav class="settings-bar" id="settings-bar">
+    <button class="sb-item" data-action="gallery">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+      <span>Galeries</span>
+    </button>
+    <button class="sb-item" data-action="frame">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="0"/><rect x="4" y="6" width="16" height="12" rx="0"/></svg></div>
+      <span>Cadre</span>
+    </button>
+    <button class="sb-item" data-action="timer">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><polyline points="12,9 12,13 15,15"/></svg></div>
+      <span>Minuterie</span>
+    </button>
+    <button class="sb-item" data-action="display">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v3m0 16v3m-9.9-11.1h3m13.8 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1m11.4-11.4 2.1-2.1"/></svg></div>
+      <span>Affichage</span>
+    </button>
+    <button class="sb-item" data-action="quit-slideshow">
+      <div class="sb-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <span>Quitter</span>
+    </button>
+  </nav>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2 id="sidebar-title">Paramètres</h2>
+      <button class="sidebar-close" id="sidebar-close">&times;</button>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <button class="sidebar-nav-item" data-sub="frame"><span class="nav-label">Cadre</span><span class="nav-value" id="nav-frame-val">Chêne clair</span><span class="nav-arrow">›</span></button>
+      <button class="sidebar-nav-item" data-sub="timer"><span class="nav-label">Minuterie</span><span class="nav-value" id="nav-timer-val">15 min</span><span class="nav-arrow">›</span></button>
+      <button class="sidebar-nav-item" data-sub="ambient"><span class="nav-label">Tonalité ambiante</span><span class="nav-value" id="nav-ambient-val">Auto</span><span class="nav-arrow">›</span></button>
+      <button class="sidebar-nav-item" data-sub="google"><span class="nav-label">Google Photos</span><span class="nav-value" id="nav-google-val">Non connecté</span><span class="nav-arrow">›</span></button>
+    </nav>
+    <div class="sidebar-content" id="sidebar-content">
+      <div class="sub-screen" id="sub-frame">
+        <h3>Style de cadre</h3>
+        <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
+        <div class="frame-grid" id="frame-selector">
+
+          <!-- 1. Chêne Clair -->
+          <button class="frame-option selected" data-frame="oak" title="Chêne Clair">
+            <div class="fo-preview" style="background:repeating-linear-gradient(10deg,#c8a05a 0px,#b8903a 2px,#d4b470 4px,#c0963e 7px,#dac080 10px,#c8a05a 13px);"></div>
+            <span>Chêne</span>
+          </button>
+
+          <!-- 2. Noyer Foncé -->
+          <button class="frame-option" data-frame="walnut" title="Noyer Foncé">
+            <div class="fo-preview" style="background:repeating-linear-gradient(8deg,#3a2415 0px,#2a1608 2px,#4a2e1a 4px,#201005 6px,#3e2818 10px,#2c1a0c 13px);"></div>
+            <span>Noyer</span>
+          </button>
+
+          <!-- 3. Ébène Noir Chic -->
+          <button class="frame-option" data-frame="ebony" title="Ébène Noir Chic">
+            <div class="fo-preview" style="background:linear-gradient(160deg,#2a2a2a 0%,#0a0a0a 40%,#1a1a1a 60%,#050505 100%);box-shadow:inset 0 1px 0 rgba(200,170,80,0.4),inset 0 -1px 0 rgba(200,170,80,0.2);"></div>
+            <span>Ébène</span>
+          </button>
+
+          <!-- 4. Dorure Baroque -->
+          <button class="frame-option" data-frame="gold" title="Dorure Baroque">
+            <div class="fo-preview" style="background:repeating-linear-gradient(45deg,#d4a017 0px,#f0c040 3px,#b8860b 6px,#e8b020 9px,#c89010 12px,#f5d060 15px,#d4a017 18px);"></div>
+            <span>Baroque</span>
+          </button>
+
+          <!-- 5. Filet Doré -->
+          <button class="frame-option" data-frame="gold_slim" title="Filet Doré Mat">
+            <div class="fo-preview" style="background:linear-gradient(180deg,#c8a830 0%,#a07820 30%,#d4b840 50%,#906010 70%,#b89028 100%);"></div>
+            <span>Filet Or</span>
+          </button>
+
+          <!-- 6. Argent Brossé -->
+          <button class="frame-option" data-frame="silver" title="Argent Brossé">
+            <div class="fo-preview" style="background:repeating-linear-gradient(90deg,#b8b8b8 0px,#e0e0e0 1px,#c8c8c8 2px,#d8d8d8 3px,#a0a0a0 4px,#d0d0d0 5px,#b8b8b8 7px);"></div>
+            <span>Argent</span>
+          </button>
+
+          <!-- 7. Cerisier Rouge -->
+          <button class="frame-option" data-frame="cherry" title="Cerisier Rouge">
+            <div class="fo-preview" style="background:repeating-linear-gradient(12deg,#8b2018 0px,#6a1510 2px,#a02820 4px,#701810 6px,#952215 9px,#5a1008 12px,#8b2018 15px);"></div>
+            <span>Cerisier</span>
+          </button>
+
+          <!-- 8. Rustique Vieilli -->
+          <button class="frame-option" data-frame="rustic" title="Rustique Vieilli">
+            <div class="fo-preview" style="background:repeating-linear-gradient(5deg,#c8bca0 0px,#b0a480 3px,#d8ccb0 6px,#a09070 8px,#bbb090 11px,#c8bca0 14px);filter:saturate(0.6);"></div>
+            <span>Rustique</span>
+          </button>
+
+          <!-- 9. Baroque Sculpté -->
+          <button class="frame-option" data-frame="ornate" title="Baroque Sculpté">
+            <div class="fo-preview" style="background:repeating-linear-gradient(30deg,#c8900a 0px,#f0c040 2px,#a07010 4px,#e0b030 6px,#c8900a 8px);box-shadow:inset 0 2px 3px rgba(0,0,0,0.5),inset 0 -2px 3px rgba(255,220,80,0.3);"></div>
+            <span>Sculpté</span>
+          </button>
+
+          <!-- 10. Flottant Moderne -->
+          <button class="frame-option" data-frame="floating" title="Flottant Moderne">
+            <div class="fo-preview" style="background:transparent;border:1px dashed rgba(255,255,255,0.2);"></div>
+            <span>Flottant</span>
+          </button>
+
+        </div>
+        <div class="option-group"><label>Taille du cadre</label><div class="option-row">
+          <button class="option-chip" data-frame-size="thin">Discret<small>10px</small></button>
+          <button class="option-chip selected" data-frame-size="medium">Moyen<small>20px</small></button>
+          <button class="option-chip" data-frame-size="thick">Large<small>36px</small></button>
+        </div></div>
+        <div class="option-group"><label>Ombre 3D</label><div class="slider-row"><div class="slider-label"><span>Intensité</span><span id="shadow-val">50%</span></div><input type="range" min="0" max="100" value="50" id="shadow-slider"></div></div>
+        <div class="option-group"><div class="toggle-row"><span>Texture de toile</span><button class="toggle-switch" id="canvas-toggle"></button></div></div>
+      </div>
+      <div class="sub-screen" id="sub-timer">
+        <h3>Défilement automatique</h3>
+        <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
+        <div class="option-group"><label>Intervalle entre les peintures</label><div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="option-chip" data-timer="10">10 secondes<small>Défilement rapide</small></button>
+          <button class="option-chip selected" data-timer="30">30 secondes<small>Recommandé</small></button>
+          <button class="option-chip" data-timer="60">1 minute<small>Contemplation</small></button>
+          <button class="option-chip" data-timer="static">Manuel<small>Télécommande uniquement</small></button>
+        </div></div>
+      </div>
+      <div class="sub-screen" id="sub-ambient">
+        <h3>Tonalité & Cadrage</h3>
+        <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
+        <div class="slider-row"><div class="slider-label"><span>Luminosité</span><span id="brightness-val">100%</span></div><input type="range" min="30" max="100" value="100" id="brightness-slider"></div>
+        <div class="slider-row"><div class="slider-label"><span>Température</span><span id="temperature-val">Neutre</span></div><input type="range" min="0" max="100" value="50" id="temperature-slider"></div>
+        <div class="option-group" style="margin-top:10px;">
+          <label>Cadrage de l'image</label>
+          <div class="option-row">
+            <button class="option-chip" data-image-fit="contain">Ajuster<small>Bandes noires</small></button>
+            <button class="option-chip selected" data-image-fit="cover">Remplir<small>Plein écran</small></button>
+          </div>
+        </div>
+      </div>
+      <div class="sub-screen" id="sub-google">
+        <h3>Google Photos</h3>
+        <button class="sidebar-nav-item" data-back style="margin-left:-16px;width:auto;padding:10px 16px;font-size:13px;"><span class="nav-arrow" style="transform:rotate(180deg);display:inline-block;">›</span><span class="nav-label">Retour</span></button>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <button class="auth-btn" id="google-connect-btn">Se connecter avec Google</button>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;">Connectez-vous pour synchroniser vos albums Google Photos.</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- AUTH OVERLAY -->
+  <div class="auth-overlay" id="auth-overlay">
+    <div class="auth-card">
+      <h2>Connexion Google</h2>
+      <p>Scannez le QR code ou saisissez le code sur <strong>google.com/device</strong></p>
+      <div class="auth-code-display" id="auth-code">---</div>
+      <div class="auth-url">google.com/device</div>
+      <button class="auth-btn secondary" data-back id="auth-back">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<div class="exit-toast" id="exit-toast">Appuyez à nouveau sur Retour pour quitter</div>
+
+<script>
+(function(){
+  'use strict';
+  window._splashStart = Date.now();
+
+  var STATE = {
+    page: 'gallery',          // 'gallery' | 'slideshow'
+    currentArtIdx: 0,
+    menuVisible: false,
+    menuFocusIdx: 0,
+    sidebarOpen: false,
+    currentSub: null,
+    dpMode: 'gallery',        // gallery | slideshow-art | slideshow-menu | sidebar-nav | sub | auth
+    dpIdx: 0,
+    frameStyle: 'oak',
+    frameWidth: 20,
+    shadowIntensity: 50,
+    canvasTexture: false,
+    timerInterval: 30,
+    brightness: 100,
+    temperature: 50,
+    googleConnected: false,
+    slideshowActive: true,
+    activeGalleries: {},
+    imageFit: 'cover',
+  };
+
+  var artworks = [];
+  var filteredArtworks = [];
+  var galleryKeys = [];
+  var els = {};
+
+  function q(s) { return document.querySelector(s); }
+  function qa(s) { return document.querySelectorAll(s); }
+
+  // ==================== LOAD ARTWORKS ====================
+  // Ratio minimum pour considérer une image comme "paysage" (largeur/hauteur)
+  var LANDSCAPE_RATIO_MIN = 1.15;
+
+  function isLandscapeArtwork(a) {
+    // Si on a les dimensions vérifiées, on les utilise
+    if (a.width && a.height) {
+      return (a.width / a.height) >= LANDSCAPE_RATIO_MIN;
+    }
+    // Si ratio stocké
+    if (a.ratio) {
+      return a.ratio >= LANDSCAPE_RATIO_MIN;
+    }
+    // Pas de dimensions : on accepte (sera vérifié au chargement de l'image)
+    return true;
+  }
+
+  var GALLERY_NAMES = {
+    landscape: 'Paysages',
+    impressionism: 'Impressionnisme',
+    postimpressionism: 'Post-impressionnisme',
+    renaissance: 'Renaissance',
+    baroque: 'Baroque',
+    romanticism: 'Romantisme',
+    classic: 'Art Classique',
+    modern: 'Art Moderne',
+    rococo: 'Rococo',
+    fauvism: 'Fauvisme',
+    cubism: 'Cubisme'
+  };
+
+  function loadArtworks() {
+    function processData(data) {
+      var raw = data.artworks || [];
+      artworks = raw.filter(isLandscapeArtwork);
+      console.log('🖼️ ' + raw.length + ' œuvres chargées, ' + artworks.length + ' tableaux conservés');
+
+      var splashEl = document.getElementById('splash');
+      var splashStart = window._splashStart || Date.now();
+      var elapsed = Date.now() - splashStart;
+      var delay = Math.max(0, 2800 - elapsed);
+      setTimeout(function() {
+        if (splashEl) { splashEl.classList.add('done'); setTimeout(function(){ splashEl.style.display='none'; }, 1200); }
+      }, delay);
+      initGallery();
+    }
+
+    if (window.ARTWORKS_DATA && window.ARTWORKS_DATA.artworks && window.ARTWORKS_DATA.artworks.length > 2) {
+      processData(window.ARTWORKS_DATA);
+      return;
+    }
+
+    fetch('artworks.json?v=' + Date.now())
+      .then(function(r) { return r.json(); })
+      .then(function(data) { processData(data); })
+      .catch(function(err) {
+        console.error('Failed to load artworks.json via fetch:', err);
+        if (window.ARTWORKS_DATA) {
+          processData(window.ARTWORKS_DATA);
+        }
+      });
+  }
+
+  // ==================== GALLERY ====================
+  function initGallery() {
+    // Build gallery keys
+    var galleryMap = {};
+    artworks.forEach(function(a) {
+      if (!galleryMap[a.gallery]) galleryMap[a.gallery] = { count: 0, artists: {} };
+      galleryMap[a.gallery].count++;
+      galleryMap[a.gallery].artists[a.artist] = true;
+    });
+    galleryKeys = Object.keys(galleryMap).sort();
+
+    // Initialize all as active
+    galleryKeys.forEach(function(g) { STATE.activeGalleries[g] = true; });
+
+    updateGallery();
+    renderFilters();
+
+    // Auto-launch slideshow on start
+    launchSlideshow();
+  }
+
+  function updateGallery() {
+    // Mettre à jour filteredArtworks pour le diaporama
+    filteredArtworks = artworks.filter(function(a) {
+      return STATE.activeGalleries[a.gallery] === true;
+    });
+
+    var activeCount = 0;
+    galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) activeCount++; });
+
+    document.getElementById('gb-count').textContent =
+      artworks.length + ' tableaux · ' + activeCount + '/' + galleryKeys.length + ' galeries';
+
+    // UNE CARTE PAR GALERIE
+    var grid = document.getElementById('gb-grid');
+    grid.innerHTML = '';
+
+    galleryKeys.forEach(function(g) {
+      var isActive = STATE.activeGalleries[g] === true;
+      var galleryArts = artworks.filter(function(a) { return a.gallery === g; });
+      var rep = galleryArts.find(function(a) { return a.width && a.height && (a.width/a.height) >= 1.3; })
+             || galleryArts[0];
+      if (!rep) return;
+
+      var item = document.createElement('div');
+      item.className = 'gb-item' + (isActive ? ' active' : '');
+      item.tabIndex = -1;
+      item.dataset.gallery = g;
+
+      var galleryLabel = GALLERY_NAMES[g] || (g.charAt(0).toUpperCase() + g.slice(1).replace(/_/g, ' '));
+      item.innerHTML =
+        '<div class="gb-thumb" style="background-image:url(' + rep.image_url + ')"></div>' +
+        '<div class="gb-label">' +
+          '<span class="gb-title">' + galleryLabel + '</span>' +
+          '<span class="gb-artist">' + galleryArts.length + ' tableau(x)</span>' +
+        '</div>' +
+        '<div class="gb-check">✓</div>';
+
+      item.addEventListener('click', function() {
+        var gallery = this.dataset.gallery;
+        STATE.activeGalleries[gallery] = !STATE.activeGalleries[gallery];
+        var nowActive = STATE.activeGalleries[gallery];
+        this.classList.toggle('active', nowActive);
+
+        // Mettre à jour filteredArtworks et le compteur sans re-renderer toute la grille
+        filteredArtworks = artworks.filter(function(a) { return STATE.activeGalleries[a.gallery]; });
+        var ac = 0;
+        galleryKeys.forEach(function(g) { if (STATE.activeGalleries[g]) ac++; });
+        document.getElementById('gb-count').textContent =
+          artworks.length + ' tableaux · ' + ac + '/' + galleryKeys.length + ' galeries';
+
+        renderFilters(); // Synchroniser les chips de filtres
+      });
+
+      grid.appendChild(item);
+    });
+  }
+
+  function renderFilters() {
+    var container = document.getElementById('gb-filters');
+    container.innerHTML = '';
+    galleryKeys.forEach(function(g) {
+      var chip = document.createElement('button');
+      chip.className = 'filter-chip' + (STATE.activeGalleries[g] ? ' active' : '');
+      chip.textContent = GALLERY_NAMES[g] || (g.charAt(0).toUpperCase() + g.slice(1));
+      chip.addEventListener('click', function() {
+        STATE.activeGalleries[g] = !STATE.activeGalleries[g];
+        renderFilters();
+        updateGallery();
+      });
+      container.appendChild(chip);
+    });
+  }
+
+  // ==================== LAUNCH SLIDESHOW ====================
+  function launchSlideshow() {
+    var list = getActiveArtworks();
+    if (list.length === 0) {
+      console.log('⚠ Aucune œuvre paysage disponible');
+      // Affiche un message à l'utilisateur
+      var grid = document.getElementById('gb-grid');
+      if (grid) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);font-size:16px;">Aucune œuvre paysage sélectionnée.<br>Veuillez activer au moins une galerie.</div>';
+      }
+      return;
+    }
+
+    STATE.page = 'slideshow';
+    STATE.currentArtIdx = 0;
+    STATE.dpMode = 'slideshow-art';
+
+    document.getElementById('gallery-browser').classList.add('hidden');
+    document.getElementById('art-mode').style.display = 'flex';
+
+    renderArtwork(false);
+    renderFrame();
+    renderAmbient();
+    renderTimerIndicator();
+    resetTimer();
+    syncSidebarValues();
+
+    // Launch animation
+    els.artwork = document.getElementById('artwork-current');
+    els.artwork.classList.add('launching');
+    setTimeout(function() { els.artwork.classList.remove('launching'); }, 2300);
+
+    updateCountBadge();
+
+    // Enter fullscreen (avec gestion d'erreur améliorée)
+    var el = document.documentElement;
+    try {
+      if (el.requestFullscreen) {
+        var fsPromise = el.requestFullscreen();
+        if (fsPromise && fsPromise.catch) fsPromise.catch(function(){});
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      } else if (el.mozRequestFullScreen) {
+        el.mozRequestFullScreen();
+      }
+    } catch(e) { /* Fullscreen non disponible */ }
+
+    // Focus body for D-Pad
+    document.body.setAttribute('tabindex', '-1');
+    document.body.focus({ preventScroll: true });
+  }
+
+  function quitSlideshow() {
+    STATE.page = 'gallery';
+    STATE.dpMode = 'gallery';
+    STATE.menuVisible = false;
+    STATE.sidebarOpen = false;
+    if (STATE.dpMode === 'auth') closeAuth();
+    if (STATE.sidebarOpen) closeSidebar();
+    if (STATE.menuVisible) hideMenu();
+
+    document.getElementById('settings-bar').classList.remove('visible');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+    document.getElementById('sidebar').classList.remove('open');
+
+    document.getElementById('art-mode').style.display = 'none';
+    document.getElementById('gallery-browser').classList.remove('hidden');
+
+    // Update gallery to reflect any changes
+    updateGallery();
+
+    document.body.focus({ preventScroll: true });
+    // Focus first item
+    setTimeout(function() {
+      var items = qa('.gb-item');
+      if (items.length > 0) { items[0].classList.add('dpad-focused'); items[0].focus(); }
+    }, 100);
+  }
+
+  // ==================== ART RENDERING ====================
+  function getActiveArtworks() {
+    if (!filteredArtworks || filteredArtworks.length === 0) return artworks;
+    return filteredArtworks;
+  }
+
+  function renderArtwork(crossfade) {
+    var list = getActiveArtworks();
+    if (list.length === 0) {
+      console.log('⚠ renderArtwork: aucune œuvre');
+      return;
+    }
+    var art = list[STATE.currentArtIdx % list.length];
+
+    var artworkEl = document.getElementById('artwork-current');
+    if (crossfade) {
+      artworkEl.classList.add('fading');
+      setTimeout(function() {
+        applyArt(artworkEl, art);
+        artworkEl.classList.remove('fading');
+        updateArtInfo(art);
+      }, 450);
+    } else {
+      applyArt(artworkEl, art);
+      updateArtInfo(art);
+    }
+  }
+
+  function applyArt(el, art) {
+    // Supprimer l'image précédente
+    var prev = el.querySelector('.art-img');
+    if (prev) prev.remove();
+
+    // Placeholder gradient immédiat (couleur unique par tableau)
+    var hue = 30 + Math.abs(art.title.length * 7 + art.artist.length * 13) % 260;
+    el.style.background = 'radial-gradient(ellipse at 40% 40%, oklch(45% 0.10 ' + hue + '), oklch(12% 0.04 ' + ((hue + 100) % 360) + '))';
+
+    // Élément <img> réel — bien plus fiable que CSS background-image dans les WebViews
+    var imgEl = document.createElement('img');
+    imgEl.className = 'art-img';
+    imgEl.alt = art.title;
+    imgEl.decoding = 'async';
+    imgEl.style.objectFit = STATE.imageFit || 'cover';
+
+    imgEl.onload = function() {
+      // Vérification ratio paysage au chargement (fallback de sécurité)
+      if (this.naturalWidth && this.naturalHeight) {
+        var ratio = this.naturalWidth / this.naturalHeight;
+        if (ratio < LANDSCAPE_RATIO_MIN) {
+          console.log('⚠ Image non-paysage détectée (' + ratio.toFixed(2) + ') : ' + art.title);
+          // Marque pour exclusion future mais affiche quand même (fallback)
+        }
+      }
+      el.style.background = 'none';
+      imgEl.classList.add('loaded');
+    };
+
+    imgEl.onerror = function() {
+      console.warn('⚠️ Image indisponible : ' + art.title + ', chargement du secours...');
+      if (!this._retried) {
+        this._retried = true;
+        this.src = 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1920&q=85';
+      }
+    };
+
+    imgEl.src = art.image_url;
+    el.appendChild(imgEl);
+  }
+
+  function updateArtInfo(art) {
+    document.getElementById('art-title').textContent = art.title;
+    document.getElementById('art-artist').textContent = art.artist + (art.year ? ' · ' + art.year : '');
+    var info = document.getElementById('artwork-info');
+    info.classList.add('visible');
+    clearTimeout(window._infoTimer);
+    window._infoTimer = setTimeout(function() { info.classList.remove('visible'); }, 12000);
+  }
+
+  function updateCountBadge() {
+    var list = getActiveArtworks();
+    var badge = document.getElementById('count-badge');
+    badge.textContent = (STATE.currentArtIdx % list.length + 1) + ' / ' + list.length;
+    badge.classList.add('visible');
+  }
+
+  // ==================== FRAMES ====================
+  // Ultra-realistic museum frames rendered from real photo textures
+  function renderFrame() {
+    var fw = STATE.frameWidth; // 10px, 20px, 36px
+    var i = STATE.shadowIntensity / 100;
+    var el = document.getElementById('frame-overlay');
+    var artworkEl = document.getElementById('artwork-current');
+
+    // Inset artwork so it sits physically INSIDE the real frame border
+    var inset = (STATE.frameStyle === 'floating') ? 0 : fw;
+    artworkEl.style.inset = inset + 'px';
+
+    el.style.cssText = '';
+    el.style.position = 'absolute';
+    el.style.inset = '0';
+    el.style.pointerEvents = 'none';
+    el.style.zIndex = '5';
+    el.style.transition = 'all 0.4s cubic-bezier(0.4,0,0.2,1)';
+
+    if (STATE.frameStyle === 'floating') {
+      el.style.background = 'transparent';
+      el.style.boxShadow = 'inset 0 0 ' + (35 * i) + 'px rgba(0,0,0,' + (0.6 * i) + ')';
+      return;
+    }
+
+    var b64 = window.FRAME_BASE64 || {};
+    var frameTextures = {
+      oak: b64.oak || 'frames/oak.png',
+      walnut: b64.walnut || 'frames/walnut.png',
+      ebony: b64.ebony || 'frames/ebony.png',
+      gold: b64.gold_baroque || 'frames/gold_baroque.png',
+      gold_slim: b64.gold_baroque || 'frames/gold_baroque.png',
+      silver: b64.silver || 'frames/silver.png',
+      cherry: b64.walnut || 'frames/walnut.png',
+      rustic: b64.oak || 'frames/oak.png',
+      ornate: b64.gold_baroque || 'frames/gold_baroque.png'
+    };
+
+    var texUrl = frameTextures[STATE.frameStyle] || frameTextures.oak;
+
+    el.style.border = fw + 'px solid transparent';
+    el.style.borderImageSource = 'url("' + texUrl + '")';
+    el.style.borderImageSlice = '512';
+    el.style.borderImageRepeat = 'stretch';
+    el.style.boxShadow = [
+      'inset 0 0 ' + (fw * 0.4) + 'px rgba(0,0,0,0.55)',
+      '0 ' + (15 * i) + 'px ' + (45 * i) + 'px rgba(0,0,0,' + (0.75 * i) + ')'
+    ].join(',');
+  }
+
+  function renderCanvasTexture() {
+    document.getElementById('canvas-texture').classList.toggle('on', STATE.canvasTexture);
+  }
+
+  function renderAmbient() {
+    var b = STATE.brightness / 100;
+    var t = STATE.temperature / 100;
+    var w = 1 + (t-0.5)*0.4, c2 = 1 - (t-0.5)*0.3;
+    document.getElementById('ambient-filter').style.background =
+      'linear-gradient(rgba(255,'+Math.round(240*w)+','+Math.round(210*c2)+',0.08),rgba(0,0,0,'+(1-b)*0.6+'))';
+  }
+
+  function renderTimerIndicator() {
+    var el = document.getElementById('timer-indicator');
+    if (STATE.timerInterval === 'static') { el.classList.remove('visible'); return; }
+    el.classList.add('visible');
+    var secs = parseInt(STATE.timerInterval);
+    var now = new Date();
+    now.setSeconds(now.getSeconds() + secs);
+    var label = secs < 60 ? secs + 's' : (secs / 60) + ' min';
+    el.textContent = 'Prochain changement dans ' + label;
+  }
+
+  function rotateArt() {
+    if (STATE.timerInterval === 'static' && !STATE.slideshowActive) return;
+    var list = getActiveArtworks();
+    if (list.length === 0) {
+      console.log('⚠ rotateArt: aucune œuvre disponible');
+      return;
+    }
+    STATE.currentArtIdx = (STATE.currentArtIdx + 1) % list.length;
+    renderArtwork(true);
+    renderTimerIndicator();
+    updateCountBadge();
+  }
+
+  function resetTimer() {
+    clearInterval(window._artTimer);
+    if (STATE.timerInterval !== 'static') {
+      // timerInterval is now in SECONDS
+      window._artTimer = setInterval(rotateArt, parseInt(STATE.timerInterval) * 1000);
+    }
+  }
+
+  // ==================== UI CONTROLS ====================
+  var menuItems, sidebarNavItems;
+
+  function getMenuItems() { return qa('.sb-item'); }
+  function getSidebarNavItems() { return qa('#sidebar-nav .sidebar-nav-item'); }
+
+  function clearFocus() { qa('.dpad-focused').forEach(function(e){e.classList.remove('dpad-focused');}); }
+
+  function focusEl(idx, list) {
+    clearFocus();
+    if (list && list[idx]) {
+      list[idx].classList.add('dpad-focused');
+      list[idx].focus({ preventScroll: false });
+      if (list[idx].scrollIntoViewIfNeeded) list[idx].scrollIntoViewIfNeeded(false);
+    }
+  }
+
+  function getSubItems() {
+    var sub = document.getElementById('sub-' + STATE.currentSub);
+    if (!sub) return [];
+    return Array.prototype.slice.call(sub.querySelectorAll('.option-chip:not([data-back]),.color-swatch,.toggle-switch,.auth-btn,.frame-option,.sidebar-nav-item[data-back],input[type="range"]'));
+  }
+
+  function showMenu() {
+    STATE.menuVisible = true;
+    STATE.dpMode = 'slideshow-menu';
+    STATE.dpIdx = 0;
+    document.getElementById('settings-bar').classList.add('visible');
+    menuItems = getMenuItems();
+    focusEl(0, menuItems);
+  }
+
+  function hideMenu() {
+    STATE.menuVisible = false;
+    STATE.dpMode = 'slideshow-art';
+    document.getElementById('settings-bar').classList.remove('visible');
+    clearFocus();
+  }
+
+  function toggleSidebar() {
+    if (STATE.sidebarOpen) { closeSidebar(); return; }
+    STATE.sidebarOpen = true;
+    STATE.dpMode = 'sidebar-nav';
+    STATE.dpIdx = 0;
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebar-overlay').classList.add('open');
+    focusEl(0, getSidebarNavItems());
+    syncSidebarValues();
+  }
+
+  function closeSidebar() {
+    STATE.sidebarOpen = false;
+    STATE.currentSub = null;
+    STATE.dpMode = 'slideshow-art';
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+    qa('.sub-screen.active').forEach(function(s){s.classList.remove('active');});
+    clearFocus();
+  }
+
+  function openSubScreen(sub) {
+    STATE.currentSub = sub;
+    STATE.dpMode = 'sub';
+    STATE.dpIdx = 0;
+    qa('.sub-screen.active').forEach(function(s){s.classList.remove('active');});
+    var t = document.getElementById('sub-'+sub);
+    if (t) t.classList.add('active');
+    requestAnimationFrame(function(){ focusEl(0, getSubItems()); });
+  }
+
+  function backToNav() {
+    STATE.currentSub = null;
+    STATE.dpMode = 'sidebar-nav';
+    STATE.dpIdx = 0;
+    qa('.sub-screen.active').forEach(function(s){s.classList.remove('active');});
+    focusEl(0, getSidebarNavItems());
+    syncSidebarValues();
+  }
+
+  function openAuth() {
+    STATE.dpMode = 'auth'; STATE.dpIdx = 0;
+    document.getElementById('auth-overlay').classList.add('open');
+    var items = Array.prototype.slice.call(qa('#auth-overlay .auth-btn, #auth-overlay .auth-code-display'));
+    focusEl(0, items);
+  }
+
+  function closeAuth() {
+    STATE.dpMode = STATE.sidebarOpen ? 'sidebar-nav' : 'slideshow-art';
+    document.getElementById('auth-overlay').classList.remove('open');
+    clearFocus();
+    if (STATE.sidebarOpen) focusEl(0, getSidebarNavItems());
+  }
+
+  function syncSidebarValues() {
+    var fl = {oak:'Chêne clair',walnut:'Noyer/ébène',gold:'Dorure baroque',aluminum:'Aluminium',white:'Blanc mat',black:'Noir satiné',matte:'Passe-partout',bevel:'Double biseau',loft:'Industriel',floating:'Flottant'};
+    var fl2 = {oak:'Chêne Clair',walnut:'Noyer Foncé',ebony:'Ébène Noir',gold:'Dorure Baroque',gold_slim:'Filet Doré',silver:'Argent Brossé',cherry:'Cerisier',rustic:'Rustique',ornate:'Sculpté',floating:'Flottant'};
+    document.getElementById('nav-frame-val').textContent = fl2[STATE.frameStyle]||'Chêne Clair';
+    var tl = {10:'10 sec',30:'30 sec',60:'1 minute','static':'Manuel'};
+    document.getElementById('nav-timer-val').textContent = tl[STATE.timerInterval] || STATE.timerInterval+'s';
+    document.getElementById('nav-ambient-val').textContent = STATE.brightness===100&&STATE.temperature===50?'Auto':STATE.brightness+'% · '+(STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre');
+    document.getElementById('nav-google-val').textContent = STATE.googleConnected?'Connecté':'Non connecté';
+    document.getElementById('shadow-val').textContent = STATE.shadowIntensity+'%';
+    document.getElementById('brightness-val').textContent = STATE.brightness+'%';
+    var tv = document.getElementById('temperature-val');
+    tv.textContent = STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre';
+    document.getElementById('canvas-toggle').classList.toggle('on', STATE.canvasTexture);
+    qa('[data-frame-size]').forEach(function(b){b.classList.toggle('selected',b.dataset.frameSize===(STATE.frameWidth<=12?'thin':STATE.frameWidth<=24?'medium':'thick'));});
+    qa('[data-timer]').forEach(function(b){b.classList.toggle('selected',String(b.dataset.timer)===String(STATE.timerInterval));});
+    qa('[data-image-fit]').forEach(function(b){b.classList.toggle('selected',b.dataset.imageFit===STATE.imageFit);});
+    document.getElementById('brightness-slider').value = STATE.brightness;
+    document.getElementById('temperature-slider').value = STATE.temperature;
+    document.getElementById('shadow-slider').value = STATE.shadowIntensity;
+  }
+
+  // ==================== CLICK HANDLER ====================
+  document.addEventListener('click', function(e) {
+    var t = e.target.closest('[data-action],[data-sub],[data-back],.toggle-switch,#sidebar-close,#google-connect-btn,#auth-back,[data-frame],[data-frame-size],[data-timer],.frame-option,.option-chip:not([data-back]),#btn-launch,#btn-all,#btn-none');
+
+    if (!t) {
+      if (e.target.closest('#art-mode') && STATE.page==='slideshow' && !STATE.menuVisible && !STATE.sidebarOpen) { showMenu(); }
+      if (e.target === document.getElementById('sidebar-overlay')) closeSidebar();
+      return;
+    }
+
+    // Gallery buttons
+    if (t.id === 'btn-launch') { launchSlideshow(); return; }
+    if (t.id === 'btn-all') {
+      galleryKeys.forEach(function(g){STATE.activeGalleries[g]=true;});
+      renderFilters(); updateGallery(); return;
+    }
+    if (t.id === 'btn-none') {
+      galleryKeys.forEach(function(g){STATE.activeGalleries[g]=false;});
+      renderFilters(); updateGallery(); return;
+    }
+
+    // Slideshow controls
+    if (t.closest('[data-action]')) {
+      var a = t.closest('[data-action]').dataset.action;
+      if (a === 'gallery') { hideMenu(); quitSlideshow(); return; }
+      if (a === 'quit-slideshow') { hideMenu(); quitSlideshow(); return; }
+      if (a === 'frame' || a === 'timer' || a === 'display') {
+        hideMenu();
+        var sub = {frame:'frame',timer:'timer',display:'ambient'}[a];
+        STATE.sidebarOpen = true;
+        STATE.dpMode = 'sidebar-nav';
+        STATE.dpIdx = 0;
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('open');
+        syncSidebarValues();
+        setTimeout(function(){ openSubScreen(sub); }, 300);
+        return;
+      }
+    }
+
+    if (t.closest('[data-frame]')) {
+      STATE.frameStyle = t.closest('[data-frame]').dataset.frame;
+      qa('.frame-option').forEach(function(f){f.classList.toggle('selected',f.dataset.frame===STATE.frameStyle);});
+      renderFrame(); syncSidebarValues(); return;
+    }
+    if (t.closest('[data-frame-size]')) {
+      STATE.frameWidth = {thin:10,medium:20,thick:36}[t.closest('[data-frame-size]').dataset.frameSize];
+      renderFrame(); syncSidebarValues(); return;
+    }
+    if (t.closest('[data-timer]')) {
+      var v = t.closest('[data-timer]').dataset.timer;
+      STATE.timerInterval = v==='static'?'static':parseInt(v);
+      renderTimerIndicator(); resetTimer(); syncSidebarValues(); return;
+    }
+    if (t.closest('[data-image-fit]')) {
+      STATE.imageFit = t.closest('[data-image-fit]').dataset.imageFit;
+      var img = document.querySelector('.art-img');
+      if (img) img.style.objectFit = STATE.imageFit;
+      syncSidebarValues(); return;
+    }
+    if (t.closest('.toggle-switch')) {
+      if (t.id==='canvas-toggle'){STATE.canvasTexture=!STATE.canvasTexture;renderCanvasTexture();}
+      syncSidebarValues(); return;
+    }
+    if (t.id==='sidebar-close'){closeSidebar();return;}
+    if (t.id==='auth-back'){closeAuth();return;}
+    if (t.id==='google-connect-btn'){openAuth();startGoogleAuth();return;}
+    if (t.closest('[data-back]')){backToNav();return;}
+    if (t.closest('.sidebar-nav-item')){
+      var ni=t.closest('.sidebar-nav-item');
+      if(ni.dataset.sub==='google'){openAuth();return;}
+      if(ni.dataset.sub){openSubScreen(ni.dataset.sub);return;}
+    }
+  });
+
+  // Sliders
+  document.getElementById('brightness-slider').addEventListener('input',function(){
+    STATE.brightness=parseInt(this.value);
+    document.getElementById('brightness-val').textContent=STATE.brightness+'%';
+    renderAmbient();
+  });
+  document.getElementById('temperature-slider').addEventListener('input',function(){
+    STATE.temperature=parseInt(this.value);
+    document.getElementById('temperature-val').textContent=STATE.temperature>60?'Chaud':STATE.temperature<40?'Froid':'Neutre';
+    renderAmbient();
+  });
+  document.getElementById('shadow-slider').addEventListener('input',function(){
+    STATE.shadowIntensity=parseInt(this.value);
+    document.getElementById('shadow-val').textContent=STATE.shadowIntensity+'%';
+    renderFrame();
+  });
+
+  // ==================== D-PAD & BACK NAVIGATION ====================
+  var _lastBackPressTime = 0;
+
+  function isBackKey(e) {
+    var k = e.key;
+    var code = e.keyCode || e.which;
+    return k === 'Escape' || k === 'Backspace' || k === 'GoBack' || k === 'Back' || code === 4 || code === 27 || code === 8 || code === 10009;
+  }
+
+  function isMenuKey(e) {
+    var k = e.key;
+    var code = e.keyCode || e.which;
+    return k === 'Menu' || k === 'Settings' || code === 82 || code === 176 || code === 188 || code === 224;
+  }
+
+  function showExitToast() {
+    var toast = document.getElementById('exit-toast');
+    if (!toast) return;
+    toast.classList.add('visible');
+    clearTimeout(window._exitToastTimer);
+    window._exitToastTimer = setTimeout(function() {
+      toast.classList.remove('visible');
+    }, 2200);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    var key = e.key;
+    var code = e.keyCode || e.which;
+
+    var isLeft = key === 'ArrowLeft' || key === 'Left' || code === 37 || code === 21;
+    var isRight = key === 'ArrowRight' || key === 'Right' || code === 39 || code === 22;
+    var isUp = key === 'ArrowUp' || key === 'Up' || code === 38 || code === 19;
+    var isDown = key === 'ArrowDown' || key === 'Down' || code === 40 || code === 20;
+    var isEnter = key === 'Enter' || key === 'Select' || key === ' ' || code === 13 || code === 32 || code === 23 || code === 66;
+    var isBack = isBackKey(e);
+    var isMenu = isMenuKey(e);
+
+    var mode = STATE.dpMode;
+
+    // --- DEDICATED MENU / SETTINGS BUTTON ---
+    if (isMenu) {
+      e.preventDefault();
+      if (STATE.sidebarOpen) { closeSidebar(); return; }
+      if (STATE.menuVisible) { hideMenu(); return; }
+      if (STATE.page === 'slideshow') showMenu();
+      else {
+        STATE.sidebarOpen = true;
+        STATE.dpMode = 'sidebar-nav';
+        STATE.dpIdx = 0;
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('open');
+        syncSidebarValues();
+        focusEl(0, getSidebarNavItems());
+      }
+      return;
+    }
+
+    // --- GLOBAL BACK BUTTON HANDLER ---
+    if (isBack) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (mode === 'auth') {
+        closeAuth();
+        return;
+      }
+      if (mode === 'sub') {
+        backToNav();
+        return;
+      }
+      if (mode === 'sidebar-nav' || STATE.sidebarOpen) {
+        closeSidebar();
+        return;
+      }
+      if (mode === 'slideshow-menu' || STATE.menuVisible) {
+        hideMenu();
+        return;
+      }
+      if (STATE.page === 'slideshow') {
+        quitSlideshow();
+        return;
+      }
+      if (STATE.page === 'gallery') {
+        var now = Date.now();
+        var curFocus = q('.dpad-focused');
+        var launchBtn = q('#btn-launch');
+
+        if (curFocus && curFocus !== launchBtn && curFocus.classList.contains('gb-item')) {
+          clearFocus();
+          if (launchBtn) {
+            launchBtn.classList.add('dpad-focused');
+            launchBtn.focus();
+            if (launchBtn.scrollIntoViewIfNeeded) launchBtn.scrollIntoViewIfNeeded(false);
+          }
+          _lastBackPressTime = now;
+          return;
+        }
+
+        if (now - _lastBackPressTime < 2200) {
+          if (window.navigator && window.navigator.app && window.navigator.app.exitApp) {
+            window.navigator.app.exitApp();
+          } else if (window.history && window.history.length > 1) {
+            window.history.back();
+          }
+        } else {
+          _lastBackPressTime = now;
+          showExitToast();
+        }
+        return;
+      }
+      return;
+    }
+
+    // --- SLIDESHOW ART MODE ---
+    if (STATE.page === 'slideshow' && !STATE.menuVisible && !STATE.sidebarOpen) {
+      if (isLeft || isRight) {
+        e.preventDefault();
+        var list = getActiveArtworks();
+        if (list.length === 0) return;
+        var dir = isRight ? 1 : -1;
+        STATE.currentArtIdx = (STATE.currentArtIdx + dir + list.length) % list.length;
+        renderArtwork(true);
+        renderTimerIndicator();
+        resetTimer();
+        updateCountBadge();
+        return;
+      }
+      if (isUp || isDown || isEnter) {
+        e.preventDefault();
+        showMenu();
+        return;
+      }
+      return;
+    }
+
+    // --- SLIDESHOW MENU MODE ---
+    if (mode === 'slideshow-menu') {
+      menuItems = getMenuItems();
+      if (isLeft || isRight) {
+        e.preventDefault();
+        var dir = isRight ? 1 : -1;
+        STATE.dpIdx = (STATE.dpIdx + dir + menuItems.length) % menuItems.length;
+        focusEl(STATE.dpIdx, menuItems);
+        return;
+      }
+      if (isDown) {
+        e.preventDefault();
+        hideMenu();
+        return;
+      }
+      if (isEnter) {
+        e.preventDefault();
+        var mi = menuItems[STATE.dpIdx];
+        if (mi) mi.click();
+        return;
+      }
+      return;
+    }
+
+    // --- SIDEBAR NAV MODE ---
+    if (mode === 'sidebar-nav') {
+      var sn = getSidebarNavItems();
+      if (isUp) { e.preventDefault(); STATE.dpIdx = Math.max(0, STATE.dpIdx - 1); focusEl(STATE.dpIdx, sn); return; }
+      if (isDown) { e.preventDefault(); STATE.dpIdx = Math.min(sn.length - 1, STATE.dpIdx + 1); focusEl(STATE.dpIdx, sn); return; }
+      if (isRight || isEnter) {
+        e.preventDefault();
+        var ni = sn[STATE.dpIdx];
+        if (!ni) return;
+        if (ni.dataset.sub === 'google') { openAuth(); return; }
+        if (ni.dataset.sub) { openSubScreen(ni.dataset.sub); return; }
+        return;
+      }
+      if (isLeft) { e.preventDefault(); closeSidebar(); return; }
+      return;
+    }
+
+    // --- SUB SCREEN MODE (SMART 2D SPATIAL NAVIGATION) ---
+    if (mode === 'sub') {
+      var subContainer = document.getElementById('sub-' + STATE.currentSub);
+      var subItems = getSubItems();
+      if (!subItems || subItems.length === 0) return;
+
+      if (STATE.dpIdx < 0 || STATE.dpIdx >= subItems.length) STATE.dpIdx = 0;
+      var curItem = subItems[STATE.dpIdx];
+
+      if (isEnter) {
+        e.preventDefault();
+        if (curItem) {
+          if (curItem.type === 'range') curItem.focus();
+          else {
+            curItem.click();
+            if (curItem.dataset.back !== undefined) backToNav();
+            syncSidebarValues();
+          }
+        }
+        return;
+      }
+
+      if (isLeft || isRight) {
+        e.preventDefault();
+        if (!curItem) return;
+
+        // Sliders: value adjust
+        if (curItem.type === 'range') {
+          var step = isRight ? 5 : -5;
+          curItem.value = Math.max(parseInt(curItem.min), Math.min(parseInt(curItem.max), parseInt(curItem.value) + step));
+          curItem.dispatchEvent(new Event('input', { bubbles: true }));
+          syncSidebarValues();
+          return;
+        }
+
+        // Frame options grid (2D horizontal navigation)
+        if (curItem.classList.contains('frame-option')) {
+          var fList = Array.prototype.slice.call(subContainer.querySelectorAll('.frame-option'));
+          var fIdx = fList.indexOf(curItem);
+          if (fIdx !== -1) {
+            var targetF = null;
+            if (isLeft && fIdx > 0) targetF = fList[fIdx - 1];
+            if (isRight && fIdx < fList.length - 1) targetF = fList[fIdx + 1];
+            if (targetF) {
+              STATE.dpIdx = subItems.indexOf(targetF);
+              focusEl(STATE.dpIdx, subItems);
+            }
+          }
+          return;
+        }
+
+        // Option chips (Discret / Moyen / Large or 10s / 30s / 1m)
+        if (curItem.classList.contains('option-chip')) {
+          var rowChips = Array.prototype.slice.call(curItem.parentElement.querySelectorAll('.option-chip'));
+          var cIdx = rowChips.indexOf(curItem);
+          if (cIdx !== -1) {
+            var targetC = null;
+            if (isLeft && cIdx > 0) targetC = rowChips[cIdx - 1];
+            if (isRight && cIdx < rowChips.length - 1) targetC = rowChips[cIdx + 1];
+            if (targetC) {
+              STATE.dpIdx = subItems.indexOf(targetC);
+              focusEl(STATE.dpIdx, subItems);
+            }
+          }
+          return;
+        }
+
+        // Toggle switches
+        if (curItem.classList.contains('toggle-switch')) {
+          curItem.click();
+          syncSidebarValues();
+          return;
+        }
+
+        // Back button
+        if (curItem.dataset.back !== undefined) {
+          if (isLeft) backToNav();
+          return;
+        }
+        return;
+      }
+
+      if (isUp || isDown) {
+        e.preventDefault();
+        if (!curItem) return;
+
+        // Frame grid (5 columns x 2 rows) 2D vertical navigation
+        if (curItem.classList.contains('frame-option')) {
+          var fList2 = Array.prototype.slice.call(subContainer.querySelectorAll('.frame-option'));
+          var fIdx2 = fList2.indexOf(curItem);
+          if (fIdx2 !== -1) {
+            var targetF2 = null;
+            if (isUp) {
+              if (fIdx2 >= 5) targetF2 = fList2[fIdx2 - 5];
+              else targetF2 = subContainer.querySelector('[data-back]') || subItems[0];
+            } else if (isDown) {
+              if (fIdx2 < 5 && fIdx2 + 5 < fList2.length) targetF2 = fList2[fIdx2 + 5];
+              else targetF2 = subContainer.querySelector('.option-chip') || subItems[STATE.dpIdx + 1];
+            }
+            if (targetF2) {
+              STATE.dpIdx = subItems.indexOf(targetF2);
+              focusEl(STATE.dpIdx, subItems);
+              return;
+            }
+          }
+        }
+
+        // Standard up/down step through sections
+        if (isUp) {
+          STATE.dpIdx = Math.max(0, STATE.dpIdx - 1);
+        } else if (isDown) {
+          STATE.dpIdx = Math.min(subItems.length - 1, STATE.dpIdx + 1);
+        }
+        focusEl(STATE.dpIdx, subItems);
+        return;
+      }
+
+      return;
+    }
+
+    // --- GALLERY BROWSER MODE ---
+    if (STATE.page === 'gallery') {
+      var headerButtons = [q('#btn-all'), q('#btn-none'), q('#btn-launch')].filter(Boolean);
+      var chips = Array.prototype.slice.call(qa('.filter-chip'));
+      var items = Array.prototype.slice.call(qa('.gb-item'));
+      var cur = q('.dpad-focused');
+
+      if (!cur) {
+        clearFocus();
+        var target = q('#btn-launch') || items[0];
+        if (target) {
+          target.classList.add('dpad-focused');
+          target.focus();
+        }
+        return;
+      }
+
+      if (cur.classList.contains('gb-item')) {
+        var idx = items.indexOf(cur);
+        var cols = 1;
+        if (items.length > 1) {
+          var firstTop = items[0].offsetTop;
+          for (var i = 1; i < items.length; i++) {
+            if (items[i].offsetTop === firstTop) cols++;
+            else break;
+          }
+        }
+
+        if (isLeft) {
+          e.preventDefault();
+          if (idx > 0) {
+            clearFocus();
+            items[idx - 1].classList.add('dpad-focused');
+            items[idx - 1].focus();
+            if (items[idx - 1].scrollIntoViewIfNeeded) items[idx - 1].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (isRight) {
+          e.preventDefault();
+          if (idx < items.length - 1) {
+            clearFocus();
+            items[idx + 1].classList.add('dpad-focused');
+            items[idx + 1].focus();
+            if (items[idx + 1].scrollIntoViewIfNeeded) items[idx + 1].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (isUp) {
+          e.preventDefault();
+          if (idx - cols >= 0) {
+            clearFocus();
+            items[idx - cols].classList.add('dpad-focused');
+            items[idx - cols].focus();
+            if (items[idx - cols].scrollIntoViewIfNeeded) items[idx - cols].scrollIntoViewIfNeeded(false);
+          } else {
+            if (chips.length > 0) {
+              clearFocus();
+              var chipTarget = chips[Math.min(chips.length - 1, Math.floor((idx / cols) * chips.length))];
+              chipTarget.classList.add('dpad-focused');
+              chipTarget.focus();
+              if (chipTarget.scrollIntoViewIfNeeded) chipTarget.scrollIntoViewIfNeeded(false);
+            } else {
+              clearFocus();
+              var btnTarget = q('#btn-launch') || headerButtons[0];
+              if (btnTarget) {
+                btnTarget.classList.add('dpad-focused');
+                btnTarget.focus();
+              }
+            }
+          }
+          return;
+        }
+        if (isDown) {
+          e.preventDefault();
+          if (idx + cols < items.length) {
+            clearFocus();
+            items[idx + cols].classList.add('dpad-focused');
+            items[idx + cols].focus();
+            if (items[idx + cols].scrollIntoViewIfNeeded) items[idx + cols].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (isEnter) {
+          e.preventDefault();
+          cur.click();
+          return;
+        }
+      }
+
+      if (cur.classList.contains('filter-chip')) {
+        var idx = chips.indexOf(cur);
+        if (isLeft) {
+          e.preventDefault();
+          if (idx > 0) {
+            clearFocus();
+            chips[idx - 1].classList.add('dpad-focused');
+            chips[idx - 1].focus();
+            if (chips[idx - 1].scrollIntoViewIfNeeded) chips[idx - 1].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (isRight) {
+          e.preventDefault();
+          if (idx < chips.length - 1) {
+            clearFocus();
+            chips[idx + 1].classList.add('dpad-focused');
+            chips[idx + 1].focus();
+            if (chips[idx + 1].scrollIntoViewIfNeeded) chips[idx + 1].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (isUp) {
+          e.preventDefault();
+          clearFocus();
+          var btnTarget = q('#btn-launch') || headerButtons[0];
+          if (btnTarget) {
+            btnTarget.classList.add('dpad-focused');
+            btnTarget.focus();
+          }
+          return;
+        }
+        if (isDown) {
+          e.preventDefault();
+          if (items.length > 0) {
+            clearFocus();
+            items[0].classList.add('dpad-focused');
+            items[0].focus();
+            if (items[0].scrollIntoViewIfNeeded) items[0].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (isEnter) {
+          e.preventDefault();
+          cur.click();
+          return;
+        }
+      }
+
+      if (headerButtons.indexOf(cur) !== -1) {
+        var idx = headerButtons.indexOf(cur);
+        if (isLeft) {
+          e.preventDefault();
+          if (idx > 0) {
+            clearFocus();
+            headerButtons[idx - 1].classList.add('dpad-focused');
+            headerButtons[idx - 1].focus();
+          }
+          return;
+        }
+        if (isRight) {
+          e.preventDefault();
+          if (idx < headerButtons.length - 1) {
+            clearFocus();
+            headerButtons[idx + 1].classList.add('dpad-focused');
+            headerButtons[idx + 1].focus();
+          }
+          return;
+        }
+        if (isDown) {
+          e.preventDefault();
+          if (chips.length > 0) {
+            clearFocus();
+            chips[0].classList.add('dpad-focused');
+            chips[0].focus();
+            if (chips[0].scrollIntoViewIfNeeded) chips[0].scrollIntoViewIfNeeded(false);
+          } else if (items.length > 0) {
+            clearFocus();
+            items[0].classList.add('dpad-focused');
+            items[0].focus();
+            if (items[0].scrollIntoViewIfNeeded) items[0].scrollIntoViewIfNeeded(false);
+          }
+          return;
+        }
+        if (isEnter) {
+          e.preventDefault();
+          cur.click();
+          return;
+        }
+      }
+    }
+  });
+
+  // ==================== GOOGLE AUTH ====================
+  var GOOGLE_CLIENT_ID = 'VOTRE_CLIENT_ID.apps.googleusercontent.com';
+
+  function startGoogleAuth() {
+    var btn = document.getElementById('google-connect-btn');
+    btn.textContent = 'Connexion...'; btn.disabled = true;
+    fetch('https://oauth2.googleapis.com/device/code', {
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'client_id='+GOOGLE_CLIENT_ID+'&scope='+encodeURIComponent('https://www.googleapis.com/auth/photoslibrary.readonly')
+    })
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.error){btn.textContent='Erreur';btn.disabled=false;return;}
+      document.getElementById('auth-code').textContent=d.user_code;
+      pollForToken(d.device_code,d.interval||5);
+      btn.textContent='Se connecter avec Google';btn.disabled=false;
+    })
+    .catch(function(err){console.error(err);btn.textContent='Erreur réseau';btn.disabled=false;});
+  }
+
+  function pollForToken(deviceCode,intervalSec) {
+    var poll = setInterval(function(){
+      fetch('https://oauth2.googleapis.com/token',{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:'client_id='+GOOGLE_CLIENT_ID+'&device_code='+encodeURIComponent(deviceCode)+'&grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Adevice_code'
+      })
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d.access_token){
+          clearInterval(poll);
+          STATE.googleConnected=true;
+          closeAuth();
+          document.getElementById('nav-google-val').textContent='Connecté';
+          syncSidebarValues();
+          console.log('✅ Google Photos connecté');
+        }else if(d.error==='authorization_pending'){/* wait */}
+        else{clearInterval(poll);console.error('Auth failed:',d);}
+      });
+    },(intervalSec||5)*1000);
+  }
+
+  // ==================== PIXEL SHIFT ====================
+  setInterval(function(){
+    var artworkEl = document.getElementById('artwork-current');
+    var x = (Math.random()>0.5?1:-1)*(Math.random()*3+2)%4;
+    var y = (Math.random()>0.5?1:-1)*(Math.random()*3+2)%4;
+    artworkEl.style.transform='translate('+x+'px,'+y+'px)';
+  },5*60*1000);
+
+  // ==================== AUTO-LAUNCH (5 min d'inactivité) ====================
+  // Lance automatiquement le diaporama si l'utilisateur n'appuie sur aucune
+  // touche pendant AUTO_LAUNCH_DELAY secondes (depuis la galerie uniquement).
+  // Ne coupe PAS l'audio en cours (Spotify, etc.) — l'app est purement visuelle.
+  var AUTO_LAUNCH_DELAY = 60; // 1 minute en secondes
+  var AUTO_LAUNCH_COUNTDOWN = 10;  // Secondes de compte à rebours visible
+  var _autoLaunchTimer = null;
+  var _countdownTimer = null;
+  var _countdownVal = AUTO_LAUNCH_COUNTDOWN;
+
+  function resetAutoLaunch() {
+    clearTimeout(_autoLaunchTimer);
+    clearInterval(_countdownTimer);
+    hideAutoLaunchCountdown();
+    if (STATE.page === 'gallery') {
+      _autoLaunchTimer = setTimeout(startAutoLaunchCountdown, (AUTO_LAUNCH_DELAY - AUTO_LAUNCH_COUNTDOWN) * 1000);
+    }
+  }
+
+  function startAutoLaunchCountdown() {
+    if (STATE.page !== 'gallery') return;
+    _countdownVal = AUTO_LAUNCH_COUNTDOWN;
+    showAutoLaunchCountdown();
+    _countdownTimer = setInterval(function() {
+      _countdownVal--;
+      var el = document.getElementById('auto-launch-count');
+      if (el) el.textContent = _countdownVal;
+      if (_countdownVal <= 0) {
+        clearInterval(_countdownTimer);
+        hideAutoLaunchCountdown();
+        launchSlideshow();
+      }
+    }, 1000);
+  }
+
+  function showAutoLaunchCountdown() {
+    var overlay = document.getElementById('auto-launch-overlay');
+    var countEl = document.getElementById('auto-launch-count');
+    if (overlay) { overlay.classList.add('visible'); }
+    if (countEl) countEl.textContent = _countdownVal;
+  }
+
+  function hideAutoLaunchCountdown() {
+    var overlay = document.getElementById('auto-launch-overlay');
+    if (overlay) overlay.classList.remove('visible');
+    clearInterval(_countdownTimer);
+  }
+
+  // Écoute toutes les interactions utilisateur pour réinitialiser le timer
+  var _activityEvents = ['keydown', 'mousemove', 'click', 'touchstart', 'pointerdown'];
+  _activityEvents.forEach(function(ev) {
+    document.addEventListener(ev, function() {
+      // Réinitialise seulement si on est sur la page galerie
+      if (STATE.page === 'gallery') resetAutoLaunch();
+    }, { passive: true });
+  });
+
+  // Démarre le timer d'auto-lancement après le chargement
+  function initAutoLaunch() {
+    resetAutoLaunch();
+  }
+
+  // Patch quitSlideshow pour redémarrer le timer quand on revient à la galerie
+  var _origQuitSlideshow = quitSlideshow;
+  quitSlideshow = function() {
+    _origQuitSlideshow();
+    resetAutoLaunch();
+  };
+
+  // ==================== INIT ====================
+  loadArtworks();
+  initAutoLaunch();
+})();
+</script>
+</body>
+</html>
