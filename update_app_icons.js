@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const LOGO_SRC = "/Users/danyvassily/.gemini/antigravity-ide/brain/43163057-67ac-467f-867b-2761cafc6871/artframe_app_logo_1784725714654.png";
-const BANNER_SRC = "/Users/danyvassily/.gemini/antigravity-ide/brain/43163057-67ac-467f-867b-2761cafc6871/artframe_tv_banner_1784725728350.png";
+const LOGO_SRC = "/Users/danyvassily/.gemini/antigravity-ide/brain/df593cf6-00c4-4788-82a3-10538c568c0d/media__1784879251469.jpg";
+const BANNER_SRC = "/Users/danyvassily/.gemini/antigravity-ide/brain/df593cf6-00c4-4788-82a3-10538c568c0d/media__1784879251469.jpg";
 
 const RES_DIR = path.join(__dirname, 'android', 'app', 'src', 'main', 'res');
 

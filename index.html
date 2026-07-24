@@ -27,7 +27,7 @@
       --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { width:100%; height:100%; overflow:hidden; background:#000; font-family:var(--font-body); color:var(--fg); -webkit-font-smoothing:antialiased; user-select:none; }
+    html, body { width:100%; height:100%; position:fixed; top:0; left:0; overflow:hidden; touch-action:none; background:#000; font-family:var(--font-body); color:var(--fg); -webkit-font-smoothing:antialiased; user-select:none; }
     /* TV fullscreen: body fills entire screen */
     body { display:block; }
 
@@ -126,6 +126,37 @@
     .art-img.loaded { opacity:1; }
     .art-bg-blur { position:absolute; inset:-12%; width:124%; height:124%; object-fit:cover; filter:blur(45px) brightness(0.65) contrast(1.05); opacity:0; transition:opacity 0.8s ease; z-index:1; pointer-events:none; }
     .art-bg-blur.loaded { opacity:0.6; }
+
+    /* ============ DUO PORTRAIT MODE (2 par 2) ============ */
+    .artwork.duo-mode {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 32px !important;
+      padding: 20px 40px !important;
+      background: radial-gradient(ellipse at 50% 50%, oklch(14% 0.01 95), #000) !important;
+    }
+    .art-duo-item {
+      flex: 1;
+      height: 100%;
+      max-height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 4px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.7), inset 0 0 1px rgba(255,255,255,0.1);
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .art-duo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: opacity 0.6s ease;
+    }
     /* frame-overlay: CSS-only frame drawn on top of the artwork inset zone */
     .frame-overlay { position:absolute; inset:0; pointer-events:none; z-index:5; transition:all 0.6s cubic-bezier(0.4,0,0.2,1); }
     .vignette-overlay { display:none; }
@@ -351,58 +382,7 @@
 <div class="splash-screen" id="splash">
   <div class="splash-glow"></div>
   <div class="splash-logo-wrap">
-    <!-- ArtFrame Logo SVG -->
-    <svg class="splash-logo-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="goldfg" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#f5e4a3"/>
-          <stop offset="40%" stop-color="#d4af37"/>
-          <stop offset="70%" stop-color="#f0c040"/>
-          <stop offset="100%" stop-color="#9e7807"/>
-        </linearGradient>
-        <linearGradient id="goldinner" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#9e7807"/>
-          <stop offset="50%" stop-color="#d4af37"/>
-          <stop offset="100%" stop-color="#f5e4a3"/>
-        </linearGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="3" result="blur"/>
-          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-        </filter>
-      </defs>
-      <!-- Outer ornate frame -->
-      <rect x="8" y="8" width="104" height="104" rx="4" stroke="url(#goldfg)" stroke-width="5" fill="none"/>
-      <!-- Corner ornaments -->
-      <circle cx="8" cy="8" r="5" fill="url(#goldfg)"/>
-      <circle cx="112" cy="8" r="5" fill="url(#goldfg)"/>
-      <circle cx="8" cy="112" r="5" fill="url(#goldfg)"/>
-      <circle cx="112" cy="112" r="5" fill="url(#goldfg)"/>
-      <!-- Inner frame line -->
-      <rect x="16" y="16" width="88" height="88" rx="2" stroke="url(#goldinner)" stroke-width="1.5" fill="none" opacity="0.6"/>
-      <!-- Canvas area -->
-      <rect x="22" y="22" width="76" height="76" rx="1" fill="oklch(8% 0.003 95)"/>
-      <!-- Abstract painting suggestion -->
-      <rect x="22" y="22" width="76" height="76" rx="1" fill="url(#paintfill)" opacity="0.85"/>
-      <defs>
-        <radialGradient id="paintfill" cx="40%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#8ab4c8" stop-opacity="0.9"/>
-          <stop offset="35%" stop-color="#c8a460" stop-opacity="0.7"/>
-          <stop offset="70%" stop-color="#4a7a5a" stop-opacity="0.8"/>
-          <stop offset="100%" stop-color="#2a2a3a" stop-opacity="1"/>
-        </radialGradient>
-      </defs>
-      <!-- Brush stroke hints -->
-      <ellipse cx="50" cy="48" rx="18" ry="10" fill="#d4af60" opacity="0.25" transform="rotate(-15 50 48)"/>
-      <ellipse cx="72" cy="62" rx="12" ry="8" fill="#7ab8d8" opacity="0.2" transform="rotate(20 72 62)"/>
-      <!-- Top center ornament -->
-      <path d="M55 8 L60 3 L65 8" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <!-- Bottom center ornament -->
-      <path d="M55 112 L60 117 L65 112" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <!-- Left center ornament -->
-      <path d="M8 55 L3 60 L8 65" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <!-- Right center ornament -->
-      <path d="M112 55 L117 60 L112 65" stroke="url(#goldfg)" stroke-width="2" fill="none" stroke-linecap="round"/>
-    </svg>
+    <img src="artframe_logo.png" style="width:140px;height:140px;object-fit:contain;filter:drop-shadow(0 0 28px rgba(212,175,55,0.7));border-radius:12px;" alt="ArtFrame Logo" />
   </div>
   <div class="splash-title">ArtFrame</div>
   <div class="splash-divider"></div>
@@ -883,6 +863,10 @@
       }
     } catch(e) { }
 
+    window.scrollTo(0, 0);
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+
     document.body.setAttribute('tabindex', '-1');
     document.body.focus({ preventScroll: true });
   }
@@ -905,11 +889,69 @@
 
     updateGallery();
 
+    window.scrollTo(0, 0);
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+
     document.body.focus({ preventScroll: true });
     setTimeout(function() {
       var items = qa('.gb-item');
-      if (items.length > 0) { items[0].classList.add('dpad-focused'); items[0].focus(); }
+      if (items.length > 0) { items[0].classList.add('dpad-focused'); items[0].focus({ preventScroll: true }); }
     }, 100);
+  }
+
+  // ==================== IMAGE PRELOADER & MEMORY CACHE ====================
+  var MAX_PRELOAD_CACHE = 8;
+  var preloadCache = new Map();
+
+  function preloadImage(url) {
+    if (!url || typeof url !== 'string') return null;
+    if (preloadCache.has(url)) {
+      return preloadCache.get(url);
+    }
+    if (preloadCache.size >= MAX_PRELOAD_CACHE) {
+      var oldestKey = preloadCache.keys().next().value;
+      var oldestImg = preloadCache.get(oldestKey);
+      if (oldestImg) {
+        oldestImg.onload = null;
+        oldestImg.onerror = null;
+        oldestImg.src = '';
+      }
+      preloadCache.delete(oldestKey);
+    }
+
+    var img = new Image();
+    img.decoding = 'async';
+    img.src = url;
+    preloadCache.set(url, img);
+    return img;
+  }
+
+  function preloadUpcomingArtworks() {
+    var list = getActiveArtworks();
+    if (!list || list.length === 0) return;
+    var total = list.length;
+
+    // Preload next 3 artworks & previous 1 artwork (for fast navigation)
+    var offsets = [1, 2, 3, -1];
+    offsets.forEach(function(offset) {
+      var idx = (STATE.currentArtIdx + offset + total) % total;
+      var art = list[idx];
+      if (!art || !art.image_url) return;
+
+      preloadImage(art.image_url);
+
+      var isPortrait = (art.ratio && art.ratio < 1.0) || art.orientation === 'portrait' || art.gallery === 'portrait';
+      if (isPortrait) {
+        for (var k = 1; k < total; k++) {
+          var candidate = list[(idx + k) % total];
+          if (candidate && ((candidate.ratio && candidate.ratio < 1.0) || candidate.orientation === 'portrait' || candidate.gallery === 'portrait')) {
+            preloadImage(candidate.image_url);
+            break;
+          }
+        }
+      }
+    });
   }
 
   // ==================== ART RENDERING ====================
@@ -925,76 +967,147 @@
       return;
     }
     var art = list[STATE.currentArtIdx % list.length];
-
     var artworkEl = document.getElementById('artwork-current');
+
+    // Immediately trigger preloading for current artwork if needed
+    preloadImage(art.image_url);
+
+    function doSwap() {
+      applyArt(artworkEl, art);
+      updateArtInfo(art);
+      preloadUpcomingArtworks();
+    }
+
     if (crossfade) {
       artworkEl.classList.add('fading');
       setTimeout(function() {
-        applyArt(artworkEl, art);
-        artworkEl.classList.remove('fading');
-        updateArtInfo(art);
+        doSwap();
+        requestAnimationFrame(function() {
+          artworkEl.classList.remove('fading');
+        });
       }, 450);
     } else {
-      applyArt(artworkEl, art);
-      updateArtInfo(art);
+      doSwap();
     }
   }
 
   function applyArt(el, art) {
-    var prevImg = el.querySelector('.art-img');
-    if (prevImg) prevImg.remove();
-    var prevBg = el.querySelector('.art-bg-blur');
-    if (prevBg) prevBg.remove();
+    var prevImgs = el.querySelectorAll('.art-img,.art-bg-blur,.art-duo-item');
+    prevImgs.forEach(function(i){ i.remove(); });
 
-    var hue = 30 + Math.abs(art.title.length * 7 + art.artist.length * 13) % 260;
-    el.style.background = 'radial-gradient(ellipse at 40% 40%, oklch(45% 0.10 ' + hue + '), oklch(12% 0.04 ' + ((hue + 100) % 360) + '))';
+    var list = getActiveArtworks();
+    var isPortrait = (art.ratio && art.ratio < 1.0) || art.orientation === 'portrait' || art.gallery === 'portrait';
 
-    var bgEl = document.createElement('img');
-    bgEl.className = 'art-bg-blur';
-    bgEl.alt = '';
-    bgEl.ariaHidden = 'true';
-    bgEl.src = art.image_url;
+    if (isPortrait) {
+      el.classList.add('duo-mode');
 
-    var imgEl = document.createElement('img');
-    imgEl.className = 'art-img';
-    imgEl.alt = art.title;
-    imgEl.decoding = 'async';
-
-    imgEl.onload = function() {
-      if (this.naturalWidth && this.naturalHeight) {
-        var ratio = this.naturalWidth / this.naturalHeight;
-
-        // Perfect 16:9 TV Framing: Fill frame edge-to-edge for 16:9 landscape paintings
-        if (ratio >= 1.30 && ratio <= 1.95) {
-          imgEl.style.objectFit = 'cover';
-          imgEl.style.objectPosition = 'center 35%';
-        } else {
-          // Ultra-wide panoramas: contain + ambient blur to preserve full painting
-          imgEl.style.objectFit = 'contain';
-          bgEl.classList.add('loaded');
+      // Find a second portrait artwork in the list
+      var art2 = null;
+      for (var k = 1; k < list.length; k++) {
+        var candidate = list[(STATE.currentArtIdx + k) % list.length];
+        if (candidate && (candidate.ratio < 1.0 || candidate.orientation === 'portrait' || candidate.gallery === 'portrait')) {
+          art2 = candidate;
+          break;
         }
       }
-      el.style.background = 'none';
-      imgEl.classList.add('loaded');
-    };
+      if (!art2) art2 = art;
 
-    imgEl.onerror = function() {
-      console.warn('⚠️ Image indisponible : ' + art.title + ', chargement du secours...');
-      if (!this._retried) {
-        this._retried = true;
-        this.src = 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1920&q=85';
-        bgEl.src = this.src;
+      STATE._currentDuoArt = { art1: art, art2: art2 };
+
+      preloadImage(art.image_url);
+      preloadImage(art2.image_url);
+
+      // Left Canvas
+      var item1 = document.createElement('div');
+      item1.className = 'art-duo-item';
+      var img1 = document.createElement('img');
+      img1.alt = art.title;
+      img1.decoding = 'async';
+      img1.src = art.image_url;
+      item1.appendChild(img1);
+
+      // Right Canvas
+      var item2 = document.createElement('div');
+      item2.className = 'art-duo-item';
+      var img2 = document.createElement('img');
+      img2.alt = art2.title;
+      img2.decoding = 'async';
+      img2.src = art2.image_url;
+      item2.appendChild(img2);
+
+      el.appendChild(item1);
+      el.appendChild(item2);
+    } else {
+      STATE._currentDuoArt = null;
+      el.classList.remove('duo-mode');
+
+      var cachedImg = preloadCache.get(art.image_url);
+      var isAlreadyLoaded = cachedImg && cachedImg.complete && cachedImg.naturalWidth > 0;
+
+      var hue = 30 + Math.abs(art.title.length * 7 + art.artist.length * 13) % 260;
+      el.style.background = 'radial-gradient(ellipse at 40% 40%, oklch(45% 0.10 ' + hue + '), oklch(12% 0.04 ' + ((hue + 100) % 360) + '))';
+
+      var bgEl = document.createElement('img');
+      bgEl.className = 'art-bg-blur';
+      bgEl.alt = '';
+      bgEl.ariaHidden = 'true';
+      bgEl.decoding = 'async';
+      bgEl.src = art.image_url;
+
+      var imgEl = document.createElement('img');
+      imgEl.className = 'art-img';
+      imgEl.alt = art.title;
+      imgEl.decoding = 'async';
+
+      var applyLoadedState = function() {
+        if (imgEl.naturalWidth && imgEl.naturalHeight) {
+          var ratio = imgEl.naturalWidth / imgEl.naturalHeight;
+          if (ratio >= 1.30 && ratio <= 1.95) {
+            imgEl.style.objectFit = 'cover';
+            imgEl.style.objectPosition = 'center 35%';
+          } else {
+            imgEl.style.objectFit = 'contain';
+            bgEl.classList.add('loaded');
+          }
+        }
+        el.style.background = 'none';
+        imgEl.classList.add('loaded');
+      };
+
+      imgEl.onload = applyLoadedState;
+
+      imgEl.onerror = function() {
+        if (!this._retried) {
+          this._retried = true;
+          this.src = 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1920&q=85';
+          bgEl.src = this.src;
+        }
+      };
+
+      imgEl.src = art.image_url;
+      el.appendChild(bgEl);
+      el.appendChild(imgEl);
+
+      if (isAlreadyLoaded) {
+        applyLoadedState();
       }
-    };
-
-    imgEl.src = art.image_url;
-    el.appendChild(bgEl);
-    el.appendChild(imgEl);
+    }
   }
 
   function updateArtInfo(art) {
-    document.getElementById('art-title').textContent = art.title;
-    document.getElementById('art-artist').textContent = art.artist + (art.year ? ' · ' + art.year : '');
+    var titleEl = document.getElementById('art-title');
+    var artistEl = document.getElementById('art-artist');
+
+    if (STATE._currentDuoArt && STATE._currentDuoArt.art2 && STATE._currentDuoArt.art1 !== STATE._currentDuoArt.art2) {
+      var a1 = STATE._currentDuoArt.art1;
+      var a2 = STATE._currentDuoArt.art2;
+      titleEl.textContent = '1. ' + a1.title + '   ✦   2. ' + a2.title;
+      artistEl.textContent = a1.artist + '   /   ' + a2.artist;
+    } else {
+      titleEl.textContent = art.title;
+      artistEl.textContent = art.artist + (art.year ? ' · ' + art.year : '');
+    }
+
     var list = getActiveArtworks();
     var badge = document.getElementById('count-badge');
     if (badge) {
@@ -1198,7 +1311,7 @@
     clearFocus();
     if (list && list[idx]) {
       list[idx].classList.add('dpad-focused');
-      list[idx].focus({ preventScroll: false });
+      list[idx].focus({ preventScroll: true });
       if (list[idx].scrollIntoViewIfNeeded) list[idx].scrollIntoViewIfNeeded(false);
     }
   }
@@ -1223,6 +1336,9 @@
     STATE.dpMode = 'slideshow-art';
     document.getElementById('settings-bar').classList.remove('visible');
     clearFocus();
+    window.scrollTo(0, 0);
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
   }
 
   function toggleSidebar() {
@@ -1244,6 +1360,9 @@
     document.getElementById('sidebar-overlay').classList.remove('open');
     qa('.sub-screen.active').forEach(function(s){s.classList.remove('active');});
     clearFocus();
+    window.scrollTo(0, 0);
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
   }
 
   function openSubScreen(sub) {
